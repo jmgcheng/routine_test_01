@@ -48,40 +48,40 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         let category = selectedCategories[Math.floor(Math.random() * selectedCategories.length)];
         
-        console.log('category is: ' + category);
+        // console.log('category is: ' + category);
         
         let maxRange = parseInt(txtRange.value) || 5;
 
-        console.log('maxRange is: ' + maxRange);
+        // console.log('maxRange is: ' + maxRange);
 
-        console.log('categories: ');
-        console.log(categories);
+        // console.log('categories: ');
+        // console.log(categories);
 
         let availableQuestions = categories[category].filter(num => num <= maxRange);
 
-        console.log('availableQuestions: ');
-        console.log(availableQuestions);
+        // console.log('availableQuestions: ');
+        // console.log(availableQuestions);
 
         if (availableQuestions.length === 0) return alert("No questions available in this range");
 
         let randomNumber = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
 
-        console.log('randomNumber: ' + randomNumber);
+        // console.log('randomNumber: ' + randomNumber);
 
         let questionFile = `./questions/${category}/${randomNumber}.html`;
 
-        console.log('questionFile: ' + questionFile);
+        // console.log('questionFile: ' + questionFile);
 
         try {
             const response = await fetch(questionFile);
             
-            console.log('response: ');
-            console.log(response);
+            // console.log('response: ');
+            // console.log(response);
             
             const html = await response.text();
 
-            console.log('html: ');
-            console.log(html);
+            // console.log('html: ');
+            // console.log(html);
 
 
             questionBody.innerHTML = html;
