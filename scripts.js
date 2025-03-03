@@ -93,6 +93,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
+
+
     // Show answer
     btnShow.addEventListener("click", () => {
         questionBody.querySelectorAll(".answer, .answer-pre").forEach(el => el.style.display = "block");
@@ -105,3 +107,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     await loadCategories();
     loadRandomQuestion();
 });
+
+function handleFocusOut(e) {
+    if (e.key == "Tab") {
+        e.preventDefault();
+        const start = this.selectionStart;
+        const end = this.selectionEnd;
+        this.value =
+        this.value.substring(0, start) + "\t" + this.value.substring(end);
+        this.selectionStart = this.selectionEnd = start + 1;
+    }
+}
