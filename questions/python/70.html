@@ -1,0 +1,170 @@
+<h6 class="card-title question-pre">Python: code. Dictionaries
+# create a customer variable. 
+# Assign it a dictionary with name, age, is_verified as its keys
+
+# print name property of the customer
+
+# print type property of the customer 
+# with default value using .get()
+
+# create dog var. 
+# Assign it a dictionary with name as it key
+
+# reassign dog name property to cheng or different value	
+
+# print dog name
+
+# print dog name using get()
+
+# print dog color using get() with default value	
+
+# print and check if color in dog
+# no loops	
+
+# assign key favorite food in dog	
+
+# make a copy of dog	
+
+# print keys() of dog	
+
+# print keys() of dog typecast list	
+
+# print values() of dog typecase list
+
+# print dog length
+
+# print and pop() dog name
+
+# del() dog favorite food
+
+# print the copy of dog
+
+# create point dictionary in 2 ways
+# assign x and y properties to point
+
+# assign 10 to x in point
+
+# assign 20 to z in point
+
+# print a property using .get
+# but check if a exist first
+# NO loops
+
+# delete x property
+
+# loop through point
+# print its key and value
+
+# loop through point usint .items
+# print its key and value
+
+</h6>
+<p class="card-text answer-pre">
+# create a customer variable. 
+# Assign it a dictionary with name, age, is_verified as its keys
+customer = {
+    "name": "John Smith",
+    "age": 30,
+    "is_verified": True
+}
+
+# print name property of the customer
+print(customer["name"] )
+
+# print type property of the customer 
+# with default value using .get()
+print(customer.get("type", "silver") )
+
+# create dog var. 
+# Assign it a dictionary with name as it key
+dog = {"name": "Roger"}
+
+# reassign dog name property to cheng or different value	
+dog["name"] = 'cheng'
+
+# print dog name
+print(dog["name"])
+
+# print dog name using get()
+print(dog.get("name"))
+
+# print dog color using get() with default value	
+print(dog.get("color", "default color"))
+
+# print and check if color in dog
+# no loops	
+print("color" in dog) # False
+
+# assign key favorite food in dog	
+dog["favorite food"] = "Meat"
+
+# make a copy of dog	
+dogCopy = dog.copy()
+
+# print keys() of dog	
+print(dog.keys()) 
+# dict_keys(['name', 'favorite food'])
+
+# print keys() of dog typecast list	
+print(list(dog.keys())) 
+# ['name', 'favorite food']
+
+# print values() of dog typecase list
+print(list(dog.values())) 
+# ['cheng', 'Meat']
+
+# print dog length
+print(len(dog)) # 2
+
+# print and pop() dog name
+print(dog.pop("name")) # cheng return and delete the item
+
+# del() dog favorite food
+del dog['favorite food']
+
+# print the copy of dog
+print(dogCopy) # {'name': 'cheng', 'favorite food': 'Meat'}
+
+# create point dictionary in 2 ways
+# assign x and y properties to point
+point = {"x": 1, "y": 2}
+#
+point = dict(x=1, y=2) # remember x=1 are called key arguments
+
+# assign 10 to x in point
+point["x"] = 10
+print(point)
+# {'x': 10, 'y': 2}
+
+# assign 20 to z in point
+point["z"] = 20
+print(point)
+# {'x': 10, 'y': 2, 'z': 20}
+
+# print a property using .get
+# but check if a exist first
+# NO loops
+if "a" in point:
+    print(point["a"])
+
+# delete x property
+del point["x"]
+print(point)
+# {'y': 2, 'z': 20}
+
+# loop through point
+# print its key and value
+for key in point:
+    print(key, point[key])
+    #
+        y 2
+        z 20
+
+# loop through point using .items
+# print its key and value
+for key, value in point.items():
+    print(key, value)
+    #
+        y 2
+        z 20
+</p>

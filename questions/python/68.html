@@ -1,0 +1,71 @@
+<h6 class="card-title question-pre">Python: code. Tuples
+# create a coordinates variable and assign a 1, 2, 3 tuples
+
+# unpack the coordinates tuple using x, y, and z variables. Destruct
+
+# create a point variable and assign 1, 2 tuples in two ways 
+
+# create a point variable and assign 1 tuple 
+
+# create a point variable and assign an empty tuple
+
+# concatenate tuples (1, 2) and (3, 4) 
+
+# generate (1, 2) tuples three times shortcut
+
+# convert list to tuple
+
+# convert a string into a tuple
+
+# get the 1st and 2nd item in the tuple. NO loop
+point = (1, 2, 3)
+
+# unpack tuple into x, y, and z
+point = (1, 2, 3)
+
+# check if 10 exist in a tuple. NO loop
+
+</h6>
+<p class="card-text answer-pre">
+# create a coordinates variable and assign a 1, 2, 3 tuples
+coordinates = (1, 2, 3)
+
+# unpack the coordinates tuple using x, y, and z variables. Destruct
+x, y, z = coordinates
+
+# create a point variable and assign 1, 2 tuples in two ways 
+point = (1, 2)
+point = 1, 2 # same
+
+# create a point variable and assign 1 tuple 
+point = 1, # trailing comma means still tuple
+
+# create a point variable and assign an empty tuple
+point = () # empty tuple
+
+# concatenate tuples (1, 2) and (3, 4) 
+point = (1, 2) + (3, 4)
+
+# generate (1, 2) tuples three times shortcut
+point = (1, 2) * 3
+
+# convert list to tuple
+point = tuple([1, 2])
+
+# convert a string into a tuple
+point = tuple("hello")
+# ('h', 'e', 'l', 'l', 'o')
+
+# get the 1st and 2nd item in the tuple. NO loop
+point = (1, 2, 3)
+print(point[0:2])
+# (1, 2)
+
+# unpack tuple into x, y, and z
+point = (1, 2, 3)
+x, y, z = point
+
+# check if 10 exist in a tuple. NO loop
+if 10 in point:
+    print('exists')
+</p>

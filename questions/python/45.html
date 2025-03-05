@@ -1,0 +1,16 @@
+<h6 class="card-title question-pre">Python: coding
+- create a program that ask the user's weight in kilo or lbs
+- convert his weight to the other unit
+    - lbs = kg / .45
+    - kg = lbs * .45
+</h6>
+<p class="card-text answer-pre">
+weight = float(input("Enter your weight: "))
+unit = input("(k)g or (l)bs: ")
+if unit == "k":
+    print("Your weight in lbs is: " + str(weight / .45))
+elif unit == "l":
+    print("Your weight in kg is: " + str(weight * .45))
+else:
+    print("Error")
+</p>

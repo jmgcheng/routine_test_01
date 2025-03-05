@@ -1,5 +1,6 @@
 {
     "sql": [1, 2],
     "javascript": [1, 2, 3],
-    "django": [1, 2]
+    "django": [1, 2],
+    "python": [70]
 }

@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         
         // console.log('category is: ' + category);
         
-        let maxRange = parseInt(txtRange.value) || 5;
+        let maxRange = parseInt(txtRange.value) || 100;
 
         // console.log('maxRange is: ' + maxRange);
 

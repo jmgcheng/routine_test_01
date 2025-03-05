@@ -1,0 +1,13 @@
+<h6 class="card-title question-pre">Python: Coding
+- asks the user for the house price and if the buyer has good credit
+- if good credit, print Down payment is: house price * 10%
+- if bad credit, print Down payment is: house price * 20%
+</h6>
+<p class="card-text answer-pre">house_price = float(input("Enter house price: "))
+is_good_credit = input("Does buyer have good credit (y/n): ").upper()
+if is_good_credit == 'Y':
+    print("Down payment: " + str(house_price * .10))
+elif is_good_credit == 'N':
+    print("Down payment: " + str(house_price * .20))
+else:
+    print("Credit not recognized")</p>

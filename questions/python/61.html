@@ -1,0 +1,36 @@
+<h6 class="card-title question-pre">Python: code. unpack/destruct number list
+# assign its items into first, second, and third variable
+numbers = [1, 2, 3]
+
+# assign its items into first, second, and the rest to other variable
+numbers = [1, 2, 3, 4, 4, 4, 4]
+
+# assign its 1 into first, 9 into last, 
+# all the rest in the middle into other variable
+numbers = [1, 2, 3, 4, 4, 4, 4, 9]
+</h6>
+<p class="card-text answer-pre">
+# unpack/destruct number list 
+# assign its items into first, second, and third variable
+numbers = [1, 2, 3]
+first, second, third = numbers
+# you need to unpack the same qty
+
+# assign its items into first, second, and the rest to other variable
+numbers = [1, 2, 3, 4, 4, 4, 4]
+first, second, *other = numbers
+print(first)
+    # 1
+print(other)
+    # [3, 4, 4, 4, 4]
+    # a list of the rest
+
+# assign its 1 into first, 9 into last, 
+# all the rest in the middle into other variable
+numbers = [1, 2, 3, 4, 4, 4, 4, 9]
+first, *other, last = numbers
+print(first, last)
+    # 1 9
+print(other)
+    # [2, 3, 4, 4, 4, 4]	
+</p>

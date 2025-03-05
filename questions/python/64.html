@@ -1,0 +1,50 @@
+<h6 class="card-title question-pre">Python: code. adding or removing items in list
+letters = ['a', 'b', 'c']
+# append d on the list
+
+# specific position. Add - at the beginning
+
+# remove the last item
+
+# remove first item by index
+
+# remove item b by first occurence
+
+# delete by index from first to fourth item
+
+# remove all
+
+</h6>
+<p class="card-text answer-pre">
+letters = ['a', 'b', 'c']
+# append d on the list
+letters.append('d')
+print(letters)
+# ['a', 'b', 'c', 'd']
+
+# specific position. Add - at the beginning
+letters.insert(0, '-')
+print(letters)
+# ['-', 'a', 'b', 'c', 'd']
+
+# remove the last item
+letters.pop()
+print(letters)
+# ['-', 'a', 'b', 'c']
+
+# remove first item by index
+letters.pop(0)
+print(letters)
+# ['a', 'b', 'c']
+
+# remove item b by first occurence
+letters.remove('b') # remove the first occurence of b
+print(letters)
+# ['a', 'c']
+
+# delete by index from first to fourth item
+del letters[0:3] # del you can remove a range of items
+
+# remove all
+letters.clear()
+</p>
