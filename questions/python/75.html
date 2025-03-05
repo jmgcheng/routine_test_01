@@ -1,0 +1,22 @@
+<h6 class="card-title question-pre">Python: code.
+- user will guess a secret number
+- guess limit is 3 only
+- print You Won if he guess correctly
+- else Sorry, you failed
+- use while loop
+- use break if success
+- use else in while 
+</h6>
+<p class="card-text answer-pre">
+secret_number = 9
+guess_count = 0
+guess_limit = 3
+while guess_count < guess_limit:
+    guess = int(input("Guess: "))
+    guess_count += 1
+    if guess == secret_number:
+        print("You won")
+        break
+else:
+    print("Sorry, you failed")
+</p>

@@ -1,0 +1,50 @@
+<h6 class="card-title question-pre">Python: code.
+# create greet function that prints hello. Call it
+
+# create greet function with name arg and use it in print
+
+# create greet function with name arg that has default value. Call it using default value
+    
+# create a greet def with name arg. It will print hello + name if name has value, otherwise just return. Use in both instance
+
+# create a greet def that returns a seperated values
+    
+# create greet function with first and last name arg. Call if with keyword argument
+
+</h6>
+<p class="card-text answer-pre">
+# create greet function that prints hello. Call it
+    def greet()
+        print('hello')
+    greet()
+
+# create greet function with name arg and use it in print
+    def greet(name)
+        print('hello ' + name)
+    greet('cheng')
+
+# create greet function with name arg that has default value. Call it using default value
+    def greet(name='bob')
+        print('hello ' + name)
+    greet()
+    
+# create a greet def with name arg. It will print hello + name if name has value, otherwise just return. Use in both instance
+    def greet(name):
+        if not name:
+            return
+        print('hello ' + name)
+    greet(False)
+    greet('cheng')
+
+# create a greet def that returns a seperated values
+    def greet(name):
+        print('hello ' + name)
+        return name, 'cheng', 8
+    print(greet('syd'))
+
+# create greet function with first and last name arg. Call if with keyword argument
+    def greet_user(first_name, last_name):
+        print(f'Hi {first_name} {last_name}')
+        print('Welcome aboard!')
+    greet_user(last_name='John', first_name='Smith')	    
+</p>
