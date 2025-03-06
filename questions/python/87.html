@@ -1,0 +1,43 @@
+<h6 class="card-title question-pre">Python: code. Open/Close file using try and with
+# using only try, except, else, finally
+# open a file
+# do some dummy input age coding inside to test try catch
+
+
+    
+# using only try, except, else, finally, and with
+# note: With statement is used to automatically release external resources
+# open a file
+# do some dummy input age coding inside to test try catch
+
+
+</h6>
+<p class="card-text answer-pre">
+# using only try, except, else, finally
+# open a file
+# do some dummy input age coding inside to test try catch
+try:
+    file = open("app.py")
+    age = int(input("Age: "))
+    xfactor = 10 / age
+except (ValueError, ZeroDivisionError):
+    print("You didn't enter a valid age.")
+else:
+    print("No exceptions were thrown")
+finally:
+    file.close()
+    
+# using only try, except, else, finally, and with
+# note: With statement is used to automatically release external resources
+# open a file
+# do some dummy input age coding inside to test try catch
+try:
+    with open("app.py") as file:
+        print("File opened.")
+    age = int(input("Age: "))
+    xfactor = 10 / age
+except (ValueError, ZeroDivisionError):
+    print("You didn't enter a valid age.")
+else:
+    print("No exceptions were thrown")
+</p>

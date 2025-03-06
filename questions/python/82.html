@@ -1,0 +1,16 @@
+<h6 class="card-title question-pre">Python: code. dictionary, sort
+- input a sentence
+- find the most repeated characters
+- sort in order
+</h6>
+<p class="card-text answer-pre">
+sentence = "This is a common interview question"
+char_frequency = {}
+for char in sentence:
+    if char in char_frequency:
+        char_frequency[char] += 1
+    else:
+        char_frequency[char] = 1
+char_frequency_sorted = sorted(char_frequency.items(), key=lambda kv:kv[1], reverse=True)
+print(char_frequency_sorted[0])
+</p>

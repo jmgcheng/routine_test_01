@@ -1,0 +1,327 @@
+<h6 class="card-title question-pre">Python: code. working with paths, directory, files
+# using Path, create a path to 'C:\Program Files\Microsoft'  
+
+
+# using Path, create a path to '\usr\local\bin'  
+
+
+# using Path, create a path to in you file current folder 
+
+
+# using Path, create a path to 'ecommerce\__init__.py'  
+
+
+# using Path, concat paths from current folder and 'ecommerce'
+
+
+# using Path, concat paths current folder, 'ecommerce', and '__init__.py'
+
+
+# using Path, get current user home path
+
+
+# using Path, check file if exist
+
+
+# check path if its a file
+
+
+# check path if its a directory
+
+
+# using Path, check complete filename with extension
+
+
+# using Path, check complete filename
+
+
+# using Path, check complete extension 
+
+
+# using Path, check file immediate parent directory
+
+
+# using Path, find a file with a name
+
+
+# create email directory if it does not exist, otherwise create
+
+
+# print all files with .py extension in current directory
+
+
+# using Path, print all files inside 'ecommerce' directory
+
+
+# open a 'demofile.txt'
+
+
+# open a 'demofile.txt'
+# print all contents
+
+
+# Open a file on a different location
+
+
+# open a 'demofile.txt'
+# print only 5 characters
+
+
+# open a 'demofile.txt'
+# show first line of text
+
+
+# open a 'demofile.txt'
+# show 2 lines of text
+
+
+# open a 'demofile.txt'
+# use loop to show all line contents
+
+
+# open a 'demofile.txt'
+# close file properly
+
+
+# open a 'demofile.txt' for appending
+# append a line of text to the file
+# close file properly
+# open a 'demofile.txt' for reading
+# show all lines
+# open a 'demofile.txt' for overwrite
+# write a line of text to the file
+# close file properly
+# open a 'demofile.txt' for reading
+# show all lines
+
+
+# create a file if not existing using x
+
+
+# Create a new file if it does not exist using w
+
+
+# avoid error, check if the file exists before you try to delete it
+
+
+# delete directory myfolder
+
+
+</h6>
+<p class="card-text answer-pre">
+# using Path, create a path to 'C:\Program Files\Microsoft'  
+from pathlib import Path
+print(Path("C:\\Program Files\\Microsoft"))
+# or
+Path(r"C:\Program Files\Microsoft")
+
+
+# using Path, create a path to '\usr\local\bin'  
+Path("/usr/local/bin")
+
+
+# using Path, create a path to in you file current folder 
+Path()
+
+
+# using Path, create a path to 'ecommerce\__init__.py'  
+Path("ecommerce/__init__.py")
+
+
+# using Path, concat paths from current folder and 'ecommerce'
+Path() / Path("ecommerce")
+
+
+# using Path, concat paths current folder, 'ecommerce', and '__init__.py'
+Path() / "ecommerce" / "__init__.py"
+
+
+# using Path, get current user home path
+Path.home()
+
+
+# using Path, check file if exist
+path = Path("ecommerce/__init__.py")
+print(path.exists())
+
+
+# check path if its a file
+print(path.is_file())
+
+
+# check path if its a directory
+print(path.is_dir())
+
+
+# using Path, check complete filename with extension
+print(path.name)
+
+
+# using Path, check complete filename
+print(path.stem)
+# __init__
+
+
+# using Path, check complete extension 
+print(path.suffix)
+# .py
+
+
+# using Path, check file immediate parent directory
+print(path.parent)
+# ecommerce
+
+
+# using Path, find a file with a name
+path = Path("ecommerce/__init__.py")
+path = path.with_name("file.txt")
+print(path)
+# ecommerce/file.txt
+# or
+print(path.absolute())
+# C:/.../file.txt    
+
+
+# create email directory if it does not exist, otherwise create
+path = Path("emails")
+if path.exists():
+    path.rmdir()
+else:
+    path.mkdir()
+
+
+# print all files with .py extension in current directory
+for file in path.glob('*.py'):
+    print(file)
+
+    
+# using Path, print all files inside 'ecommerce' directory
+from pathlib import Path
+path = Path("ecommerce")
+for p in path.iterdir():
+    print(p)
+    #
+        ecommerce/__init__.py
+        ecommerce/__pycache__
+        ecommerce/customer
+        ecommerce/shopping            
+
+
+# open a 'demofile.txt'
+f = open("demofile.txt")
+# same with
+f = open("demofile.txt", "rt")            
+# demofile.txt
+    Hello! Welcome to demofile.txt
+    This file is for testing purposes.
+    Good Luck!
+
+    
+# open a 'demofile.txt'
+# print all contents
+f = open("demofile.txt", "r")
+print(f.read())
+#
+    Hello! Welcome to demofile.txt
+    This file is for testing purposes.
+    Good Luck!
+    
+    
+# Open a file on a different location
+f = open("D:\\myfiles\welcome.txt", "r")
+print(f.read())
+
+
+# open a 'demofile.txt'
+# print only 5 characters
+f = open("demofile.txt", "r")
+print(f.read(5))
+# Hello
+
+
+# open a 'demofile.txt'
+# show first line of text
+f = open("demofile.txt", "r")
+print(f.readline())	
+# Hello! Welcome to demofile.txt
+
+
+# open a 'demofile.txt'
+# show 2 lines of text
+f = open("demofile.txt", "r")
+print(f.readline())
+print(f.readline())
+#
+    Hello! Welcome to demofile.txt
+    This file is for testing purposes.    
+
+
+# open a 'demofile.txt'
+# use loop to show all line contents
+f = open("demofile.txt", "r")
+for x in f:
+    print(x)	
+    #
+        Hello! Welcome to demofile.txt
+        This file is for testing purposes.
+        Good Luck!
+
+        
+# open a 'demofile.txt'
+# close file properly
+f = open("demofile.txt", "r")
+print(f.readline())
+f.close()    
+
+
+# open a 'demofile.txt' for appending
+# append a line of text to the file
+# close file properly
+# open a 'demofile.txt' for reading
+# show all lines
+# open a 'demofile.txt' for overwrite
+# write a line of text to the file
+# close file properly
+# open a 'demofile.txt' for reading
+# show all lines
+f = open("demofile2.txt", "a")
+f.write("Now the file has more content!")
+f.close()
+#open and read the file after the appending:
+f = open("demofile2.txt", "r")
+print(f.read())	
+#
+    Hello! Welcome to demofile2.txt
+    This file is for testing purposes.
+    Good Luck!Now the file has more content!		
+# overwrite 
+f = open("demofile3.txt", "w")
+f.write("Woops! I have deleted the content!")
+f.close()
+#open and read the file after the overwriting:
+f = open("demofile3.txt", "r")
+print(f.read())
+#
+    Woops! I have deleted the content!
+
+
+# create a file if not existing using x
+f = open("myfile.txt", "x")
+#
+    Result: a new empty file is created!
+# Create a new file if it does not exist using w
+f = open("myfile.txt", "w")
+    
+
+# avoid error, check if the file exists before you try to delete it
+import os
+if os.path.exists("demofile.txt"):
+    os.remove("demofile.txt")
+else:
+    print("The file does not exist")
+        
+
+# delete directory myfolder
+import os
+os.rmdir("myfolder") 
+</p>

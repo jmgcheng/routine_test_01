@@ -1,0 +1,65 @@
+<h6 class="card-title question-pre">Python: code. modules, packages, sub packages
+# create sales.py with def calc_tax and calc_shipping that has pass content
+# create app.py that imports calc_tax and calc_shipping from sales.py and use it
+
+
+# create ecommerce directory and make it as package by __init__ 
+# create sales.py in ecommerce directory with def calc_tax and calc_shipping that has pass content
+# create app.py that imports calc_tax and calc_shipping from sales.py and use it
+
+
+# create ecommerce directory and make it as package by __init__ 
+# create shopping directory in ecommerce directory and make it as subpackage by __init__ 
+# create sales.py in shopping directory with def calc_tax and calc_shipping that has pass content
+# create app.py that imports calc_tax and calc_shipping from sales.py and use it
+
+</h6>
+<p class="card-text answer-pre">
+# create sales.py with def calc_tax and calc_shipping that has pass content
+# create app.py that imports calc_tax and calc_shipping from sales.py and use it
+# sales.py
+    def calc_tax():
+        pass
+    def calc_shipping():
+        pass
+# app.py
+    from sales import calc_shipping, calc_tax
+    calc_shipping()    
+
+
+# create ecommerce directory and make it as package by __init__ 
+# create sales.py in ecommerce directory with def calc_tax and calc_shipping that has pass content
+# create app.py that imports calc_tax and calc_shipping from sales.py and use it
+# ecommerce/__init__.py
+    # python will treat this folder as a package if you have this file
+# ecommerce/sales.py
+    def calc_tax():
+        pass
+    def calc_shipping():
+        pass
+# app.py
+    import ecommerce.sales
+    ecommerce.sales.calc_tax()
+    # or
+    from ecommerce.sales import calc_tax, calc_shipping
+    calc_tax()
+    # or 
+    from ecommere import sales
+    sales.calc_tax    
+
+
+# create ecommerce directory and make it as package by __init__ 
+# create shopping directory in ecommerce directory and make it as subpackage by __init__ 
+# create sales.py in shopping directory with def calc_tax and calc_shipping that has pass content
+# create app.py that imports calc_tax and calc_shipping from sales.py and use it
+# ecommerce/shopping/sales.py
+    def calc_tax():
+        pass
+    def calc_shipping():
+        pass
+# ecommerce/shopping/__init__.py
+# ecommerece/__init__.py
+    # python will treat this folder as a package if you have this file
+# app.py
+    from ecommerce.shopping impor sales    
+</p>

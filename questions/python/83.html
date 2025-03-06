@@ -1,0 +1,30 @@
+<h6 class="card-title question-pre">Python: code. Stacks(Last In First Out) and Queus(First In First Out).
+- Stack 
+- create a simple code that emulates stacks using only append and pop
+
+- Queus
+- create a simple code that emulates stacks using only deque, append, and popleft
+</h6>
+<p class="card-text answer-pre">
+# Stack
+browsing_session = []
+browsing_session.append(1)
+browsing_session.append(2)
+browsing_session.append(3)
+print(browsing_session)
+# [1, 2, 3]
+browsing_session.pop()
+print(browsing_session)
+
+# Queus
+from collections import deque
+queue = deque([])
+queue.append(1)
+queue.append(2)
+queue.append(3)
+queue.popleft()
+print(queue)
+# deque([2, 3])
+if not queue:
+    print('empty')
+</p>

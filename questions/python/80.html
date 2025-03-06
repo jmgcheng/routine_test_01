@@ -1,50 +1,210 @@
-<h6 class="card-title question-pre">Python: code.
+<h6 class="card-title question-pre">Python: code. Functions, lambdas, sort, map, filter, comprehensions, reducers :)
 # create greet function that prints hello. Call it
 
 # create greet function with name arg and use it in print
 
 # create greet function with name arg that has default value. Call it using default value
-    
+
 # create a greet def with name arg. It will print hello + name if name has value, otherwise just return. Use in both instance
 
 # create a greet def that returns a seperated values
-    
+
 # create greet function with first and last name arg. Call if with keyword argument
+
+# create increment function with 'number' and 'by' keyword arguments
+
+# create increment function with 'number' and 'by' keyword arguments with default values
+
+# *args. Create multiply function with a single argument that can receive multiple numbers and returns the product 
+
+# **args. Create a save user function with a single argument that can receive multiple keyword argument. In the function, print all the property values of the keyword argument
+
+# create a nested function that will print each word of a sentence in a new line. Use string split and for loop
+
+# create a multiplication lambda function, use it	
+
+# sort a list of tuples using a lambda in key of .sort
+
+# print a list of numbers that was doubled using map() and lambda
+
+# create an item list of tuple ('product name', price). Use map and lambda to gather all 2nd items of each tuple into a different variable and make a list of that new variable
+
+# create a numbers list. Print a filtered numbers list of even numbers using filter, lambda, and list
+
+# create an item list of tuple ('product name', price). Use list, filter, and lambda to gather all tuple that has price greater than 10
+
+# create an item list of tuple ('product name', price). Use list comprehensions to gather all tuple that has price greater than 10
+
+# using for loop. loop a range(5) and multiple each item by 2 then place all results in a list
+
+# using list comprehension. loop a range(5) and multiple each item by 2 then place all results in a list
+
+# using list comprehension. loop a range(5) and multiple each item by 2 then place all results in a set
+
+# using list comprehension. loop a range(5) and multiple each item by 2 then place all results in a dictionary
+
+# using list comprehension. loop a range(5) and multiple each item by 2 then place all results in a tuple
+
+# create a tuple list expenses. Print the sum using reduce
 
 </h6>
 <p class="card-text answer-pre">
 # create greet function that prints hello. Call it
-    def greet()
-        print('hello')
-    greet()
+def greet()
+    print('hello')
+greet()
 
 # create greet function with name arg and use it in print
-    def greet(name)
-        print('hello ' + name)
-    greet('cheng')
+def greet(name)
+    print('hello ' + name)
+greet('cheng')
 
 # create greet function with name arg that has default value. Call it using default value
-    def greet(name='bob')
-        print('hello ' + name)
-    greet()
-    
+def greet(name='bob')
+    print('hello ' + name)
+greet()
+
 # create a greet def with name arg. It will print hello + name if name has value, otherwise just return. Use in both instance
-    def greet(name):
-        if not name:
-            return
-        print('hello ' + name)
-    greet(False)
-    greet('cheng')
+def greet(name):
+    if not name:
+        return
+    print('hello ' + name)
+greet(False)
+greet('cheng')
 
 # create a greet def that returns a seperated values
-    def greet(name):
-        print('hello ' + name)
-        return name, 'cheng', 8
-    print(greet('syd'))
+def greet(name):
+    print('hello ' + name)
+    return name, 'cheng', 8
+print(greet('syd'))
 
 # create greet function with first and last name arg. Call if with keyword argument
-    def greet_user(first_name, last_name):
-        print(f'Hi {first_name} {last_name}')
-        print('Welcome aboard!')
-    greet_user(last_name='John', first_name='Smith')	    
+def greet_user(first_name, last_name):
+    print(f'Hi {first_name} {last_name}')
+    print('Welcome aboard!')
+greet_user(last_name='John', first_name='Smith')	
+
+# create increment function with 'number' and 'by' keyword arguments
+def increment(number, by):
+    return number + by
+print(increment(2, by=1))
+
+# create increment function with 'number' and 'by' keyword arguments with default values
+def increment(number, by=1):
+    return number + by
+print(increment(2))
+
+# *args. Create multiply function with a single argument that can receive multiple numbers and returns the product 
+def multiply(*numbers):
+    total = 1
+    print(numbers) // returns a tuple. (value1, value2, ...)
+    for number in numbers:
+        print(number)
+        total *= number
+    return total
+print(multiply(2, 3, 4, 5))
+
+# **args. Create a save user function with a single argument that can receive multiple keyword argument. In the function, print all the property values of the keyword argument
+def save_user(**user):
+    print(user) // returns a dictionary. {'id': 1, 'name': 'John', 'age': 22}
+    print(user["id"])
+    print(user["name"])
+    print(user["age"])
+save_user(id=1, name="John", age=22)
+
+# create a nested function that will print each word of a sentence in a new line. Use string split and for loop
+def talk(phrase):
+    def say(word):
+        print(word)
+    words = phrase.split(' ')
+    for word in words:
+        say(word)
+talk('I am going to buy the milk')
+
+# create a multiplication lambda function, use it	
+multiply = lambda num : num * 2
+print(multiply(2))
+
+# sort a list of tuples using a lambda in key of .sort
+items = [
+    ("Product1", 10),
+    ("Product2", 9),
+    ("Product3", 12),
+]
+items.sort(key=lambda item:item[1])
+print(items)
+#
+    [
+        ("Product2", 9),
+        ("Product1", 10),
+        ("Product3", 12),
+    ]	
+
+# print a list of numbers that was doubled using map() and lambda
+numbers = [1, 2, 3]
+print(list(map(lambda a: a * 2, numbers)))
+
+# create an item list of tuple ('product name', price). Use map and lambda to gather all 2nd items of each tuple into a different variable and make a list of that new variable
+items = [
+    ("Product1", 10),
+    ("Product2", 9),
+    ("Product3", 12),
+]
+prices = list(map(lambda item: item[1], items))
+print(prices)
+    # [10, 9, 12]
+
+# create a numbers list. Print a filtered numbers list of even numbers using filter, lambda, and list
+numbers = [1, 2, 3, 4, 5, 6]
+print(list(filter(lambda n : n % 2 == 0, numbers)))
+
+# create an item list of tuple ('product name', price). Use list, filter, and lambda to gather all tuple that has price greater than 10
+items = [
+    ("Product1", 10),
+    ("Product2", 9),
+    ("Product3", 12),
+]
+filtered = list(filter(lambda item: item[1] >= 10, items))
+print(filtered)
+#
+    [('Product1', 10), ('Product3', 12)]
+
+# create an item list of tuple ('product name', price). Use list comprehensions to gather all tuple that has price greater than 10
+items = [
+    ("Product1", 10),
+    ("Product2", 9),
+    ("Product3", 12),
+]
+filtered = [item for item in items if item[1] >= 10]
+
+# using for loop. loop a range(5) and multiple each item by 2 then place all results in a list
+values = []
+for x in range(5):
+    values.append(x * 2)
+
+# using list comprehension. loop a range(5) and multiple each item by 2 then place all results in a list
+values = [x * 2 for x in range(5)]
+
+# using list comprehension. loop a range(5) and multiple each item by 2 then place all results in a set
+values = {x * 2 for x in range(5)}
+print(values)
+# {0, 2, 4, 6, 8}
+
+# using list comprehension. loop a range(5) and multiple each item by 2 then place all results in a dictionary
+values = {x: x * 2 for x in range(5)}
+print(values)
+# {0: 0, 1: 2, 2: 4, 3: 6, 4: 8}
+
+# using list comprehension. loop a range(5) and multiple each item by 2 then place all results in a tuple
+values = (x * 2 for x in range(5))
+print(values)
+
+# create a tuple list expenses. Print the sum using reduce
+from functools import reduce
+expenses = [
+    ('Dinner', 80),
+    ('Car repair', 120)
+]
+sum = reduce(lambda a, b: a[1] + b[1], expenses)
+print(sum)
 </p>
