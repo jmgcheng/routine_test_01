@@ -66,12 +66,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Load random question
     async function loadRandomQuestion() {
         questionBody.innerHTML = ""; // Clear previous
+        btnShow.innerHTML = "Show Answer";
         let selectedCategories = getSelectedCategories();
         if (selectedCategories.length === 0) return alert("Select at least one category");
 
         let { minRange, maxRange } = getRange(); // Get range from input
 
-        console.log('minRange, maxRange is ' + minRange, maxRange);
+        // console.log('minRange, maxRange is ' + minRange, maxRange);
 
         let category = selectedCategories[Math.floor(Math.random() * selectedCategories.length)];        
         let availableQuestions = categories[category].filter(num => num >= minRange && num <= maxRange);
@@ -94,7 +95,17 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Show answer
     btnShow.addEventListener("click", () => {
-        questionBody.querySelectorAll(".answer, .answer-pre").forEach(el => el.style.display = "block");
+        questionBody.querySelectorAll(".answer, .answer-pre").forEach(el => {
+            // el.style.display = "block"
+            if (el.style.display === "none") {
+                el.style.display = "block";
+                btnShow.innerHTML = "Hide Answer";     
+            } else {
+                el.style.display = "none";
+                btnShow.innerHTML = "Show Answer";
+            }            
+
+        });
     });
 
     // Next question
