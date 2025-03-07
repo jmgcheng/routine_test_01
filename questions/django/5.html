@@ -2,12 +2,14 @@
 <p class="card-text answer-pre">
 # generate
 python manage.py startapp pages
+python manage.py startapp products
 
 
 # settings.py
 INSTALLED_APPS = [
     ...
     'pages',
+    'products',
 ]
 
 
@@ -24,9 +26,41 @@ def sample_page(request):
     return render(request, "pages/sample-page.html", context)
 
 
+# products/views.py
+from django.shortcuts import render
+def index(request):
+    context = {
+        'products': [
+            {
+                'id': 1,
+                'name': 'apple'
+            },
+            {
+                'id': 2,
+                'name': 'banana'
+            },
+        ]
+    }
+    return render(requset, 'products/index.html', context)
+def detail(request):
+    return render(request, 'products/detail.html')
+
 
 # core/core/templates/base.html
-...
+&lt;html&gt;
+    &lt;head&gt;&lt;/head&gt;
+    &lt;body&gt;
+        &lt;header&gt;
+            header here
+        &lt;/header&gt;
+        &lt;main&gt;
+            {% block content %}{% endblock content %}
+        &lt;/main&gt;
+        &lt;footer&gt;
+            footer here
+        &lt;/footer&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
 
 
 # core/pages/templates/pages/sample-page.html
@@ -56,9 +90,29 @@ def sample_page(request):
 {% endblock %}
 
 
+# core/products/templates/products/index.html
+{% extends 'base.html' %}
+{% block content %}
+    &lt;h1&gt;Products&lt;/h1&gt;
+    &lt;ul&gt;
+        {% for product in products %}
+        &lt;li&gt;{{product.id}} - {{product.name}}&lt;/li&gt;
+        {% endfor %}
+    &lt;/ul&gt;
+{% endblock content %}
+
+
+# core/products/templates/products/detail.html
+{% extends 'base.html' %}
+{% block content %}
+    &lt;h1&gt;Product Detail&lt;/h1&gt;
+{% endblock content %}
+
+
 # core/urls.py
 from django.urls import path, include
 urlpatterns = [
+    path('products/', include('products.urls')),
     path('', include('pages.urls'))
 ]
 
@@ -70,6 +124,15 @@ urlpatterns = [
     path('', index, name='homepage'),
     path('about-us', about, name='about-us'),
     path('sample-page', sample_page, name='sample-page'),
+]
+
+
+# products/urls.py
+from django.urls import path
+from products.views import index, detail
+urlpatterns = [
+    path('', index),
+    path('detail', detail)
 ]
 
 
