@@ -1,2 +1,230 @@
-<h6 class="card-title question">Sample question djano 1</h6>
-<p class="card-text answer">Sample Answer</p>
+<h6 class="card-title question-pre">Django: installations
+# check python and pip version
+
+
+# setup environment
+
+
+# install django and start a new project
+
+
+# default settings.py
+
+
+# make migrations and migrate
+
+
+# create super user
+
+
+# create a new app pages, commons, users, employees, management_commands, products, books, authors
+
+
+# create and install requirements.txt
+
+
+# install gunicorn, django pandas, openpyxl, numpy, html-sanitizer, xhtml2pdf
+
+
+# install bootstrap
+
+
+# install django crispy forms
+
+
+# install python decouple
+
+
+# install debug toolbar 
+
+
+# install django dbbackup
+
+
+# install psycopg2 for postgresql db
+
+
+</h6>
+<p class="card-text answer-pre">
+# check python and pip version
+# cmd
+> python --version
+> pip --version
+
+
+# setup environment
+> mkdir projName
+> cd projName
+> python -m venv env
+> env\Scripts\activate
+> env\Scripts\deactivate
+
+
+# install django and start a new project
+> pip install Django
+> django --version
+> django-admin startproject core
+> cd core
+> code .
+> python manage.py runserver
+
+
+# default settings.py
+ALLOWED_HOSTS = ['yourdomain.com', '127.0.0.1', 'localhost', ...]
+INSTALLED_APPS = [
+    ...,
+    'core',
+]
+TEMPLATES = [
+    {
+        ...
+        'DIRS': [
+            BASE_DIR / 'templates'
+        ],
+        ...
+    },
+]
+...
+LANGUAGE_CODE = 'en-us'
+USE_TZ = True
+TIME_ZONE = 'Asia/Manila'
+USE_I18N = True
+...
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+LOGIN_REDIRECT_URL = 'profile'
+LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = 'login'
+
+
+# make migrations and migrate
+> python manage.py makemigrations
+> python manage.py migrate
+
+
+# create super user
+> python manage.py createsuperuser
+
+
+# create a new app pages, commons, users, employees, management_commands, products, books, authors
+> python manage.py startapp pages
+> python manage.py startapp users
+> python manage.py startapp employees
+> python manage.py startapp management_commands
+...
+# settings.py
+INSTALLED_APPS = [
+    ...,
+    'pages',
+    'users',
+    'employees',
+    ...
+]
+
+
+# create and install requirements.txt
+> pip freeze > requirements.txt
+> pip install -r requirements.txt
+
+
+# install gunicorn, django pandas, openpyxl, numpy, html-sanitizer, xhtml2pdf
+> pip install gunicorn
+> pip install django-pandas
+> pip install openpyxl
+> pip install numpy
+> pip install html-sanitizer
+> pip install xhtml2pdf
+
+
+# install bootstrap
+> pip install crispy-bootstrap4
+> pip install crispy-bootstrap5
+
+
+# install django crispy forms
+> pip install django-crispy-forms
+# settings.py
+INSTALLED_APPS = [
+    ...
+    'crispy_forms',
+    'crispy_bootstrap5',
+]
+...
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+# html model form eg. employee_form.html
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+# install python decouple
+> pip install python-decouple
+# settings.py
+from decouple import config
+MY_VARIABLE = config('MY_ENV_VARIABLE')
+# .env
+MY_ENV_VARIABLE=an_env_variable
+
+
+# install debug toolbar 
+> pip install django-debug-toolbar
+# settings.py
+DEBUG = config('DEBUG', default=False, cast=bool)
+INSTALLED_APPS = [
+    ...
+]
+if DEBUG:
+    INSTALLED_APPS += ['debug_toolbar']
+MIDDLEWARE = [
+    ...
+]
+if DEBUG:
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+    'ENABLE_STACKTRACES': True,
+    'INTERCEPT_REDIRECTS': False,
+}
+
+
+# install django dbbackup
+> pip install django-dbbackup
+INSTALLED_APPS = [
+    ...
+    'dbbackup',
+]
+...
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': 'backup/'}
+DBBACKUP_COMPRESS = False
+
+
+# install psycopg2 for postgresql db
+> pip install psycopg2
+> pip install psycopg2-binary
+# settings.py
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+if DOCKER_ENV:
+    DATABASE_HOST = config('DATABASE_HOST', default='localhost')
+else:
+    DATABASE_HOST = 'localhost'
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': config('DATABASE_NAME'),
+        'USER': config('DATABASE_USER'),
+        'PASSWORD': config('DATABASE_PASSWORD'),
+        'HOST': DATABASE_HOST,
+        # 'PORT': config('DATABASE_PORT', default=5432, cast=int),
+        'PORT': config('DATABASE_PORT', default=5432),
+    }
+}
+</p>

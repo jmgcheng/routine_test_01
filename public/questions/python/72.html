@@ -1,0 +1,132 @@
+<h6 class="card-title question-pre">Python: code.
+# create set1 variable and assign {"Roger", "Syd"}
+
+
+# create set2 variable and assign {"Roger"}
+
+
+# intersect set1 and set2 and print
+
+
+# union set1 and set2 and print
+
+
+# difference set1 and set2 and print	
+
+
+# isSuperSet set1 and set2 and print	
+
+# is that set has everything of the other set
+
+
+# print set1 as typecast list	
+
+
+# create a list of numbers and make sure its unique
+
+
+# create second variable and assign {1, 4}
+
+# add 5 in second set
+
+# remove 5 in second set
+
+# check length of second set
+
+
+# create a number list [1, 1, 2, 3, 4]
+
+
+# create a first variable and assign numbers as set
+
+
+# create a second variable and assign {1, 5}
+
+
+# get union of 2 sets
+
+
+# returns a new set that includes all the items that are in both 1st and 2nd sets
+
+
+# get difference
+
+
+# get sematic difference
+
+
+# check if 1 is in first set
+
+</h6>
+<p class="card-text answer-pre">
+# create set1 variable and assign {"Roger", "Syd"}
+set1 = {"Roger", "Syd"}
+
+# create set2 variable and assign {"Roger"}
+set2 = {"Roger"}
+
+# intersect set1 and set2 and print
+intersect = set1 & set2
+print(intersect) # {'Roger'}
+
+# union set1 and set2 and print
+union = set1 | set2
+print(union) # {'Syd', 'Roger'}
+
+# difference set1 and set2 and print	
+difference = set1 - set2
+print(difference) # {'Syd'}
+
+# isSuperSet set1 and set2 and print	
+isSuperSet = set1 > set2 
+# is that set has everything of the other set
+print(isSuperSet) # True
+
+# print set1 as typecast list	
+print(list(set1)) # ['Syd', 'Roger']
+
+# create a list of numbers and make sure its unique
+numbers = [1, 1, 2, 3, 4]
+uniques = set(numbers)
+print(uniques)
+#
+    {1, 2, 3, 4}
+
+# create second variable and assign {1, 4}
+second = {1, 4}
+# add 5 in second set
+second.add(5)
+# remove 5 in second set
+second.remove(5)
+# check length of second set
+len(second)
+
+# create a number list [1, 1, 2, 3, 4]
+numbers = [1, 1, 2, 3, 4]
+
+# create a first variable and assign numbers as set
+first = set(numbers)
+
+# create a second variable and assign {1, 5}
+second = {1, 5}
+
+# get union of 2 sets
+print(first | second)
+# {1, 2, 3, 4, 5}
+
+# returns a new set that includes all the items that are in both 1st and 2nd sets
+print(first & second)
+# {1}
+
+# get difference
+print(first - second)
+# {2, 3, 4}
+
+# get sematic difference
+print(first ^ second)
+# {2, 3, 4, 5}
+
+# check if 1 is in first set
+if 1 in first:
+    print("yes")	    
+</p>

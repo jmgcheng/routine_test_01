@@ -1,0 +1,157 @@
+<h6 class="card-title question">Django: sample of base.html</h6>
+<p class="card-text answer-pre">
+{% load static %}
+{% load group_tags %}
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+    &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;meta http-equiv="X-UA-Compatible" content="IE=edge" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" /&gt;
+
+    &lt;!-- Custom fonts for this template--&gt;
+    &lt;link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css" /&gt;
+    
+    &lt;!-- Custom styles for this template--&gt;
+    &lt;link href="{% static 'vendor/bootstrap/css/bootstrap.min.simplex.css' %}" rel="stylesheet"&gt;
+    
+    &lt;!-- &lt;link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" /&gt; --&gt;
+    &lt;link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"&gt;
+    
+    &lt;!-- Include Library styles before main.css for specific templates --&gt;
+    {% block styles_bmain %}
+    {% endblock %}
+
+    &lt;!-- Include common stylesheets --&gt;
+    &lt;link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" /&gt;
+
+    &lt;!-- Include specific stylesheets from child templates --&gt;
+    {% block styles %} 
+    {% endblock %}
+
+    &lt;title&gt;{% block title %}Sys 01{% endblock %}&lt;/title&gt;
+    &lt;/head&gt;
+
+    &lt;body id="page-top" class="sidebar-toggled psys"&gt;
+    &lt;!-- Page Wrapper --&gt;
+    &lt;div id="wrapper"&gt;
+
+        &lt;!-- Content Wrapper --&gt;
+        &lt;div id="content-wrapper" class="d-flex flex-column"&gt;
+        &lt;!-- Main Content --&gt;
+        &lt;div id="content"&gt;
+            &lt;!-- Topbar --&gt;
+
+            &lt;nav class="navbar navbar-dark bg-primary navbar-expand-lg mb-4 shadow"&gt;
+            &lt;div class="container-fluid"&gt;
+                &lt;a class="navbar-brand" href="{% url 'profile' %}"&gt;
+                &lt;i class="fas fa-drafting-compass"&gt;&lt;/i&gt;
+                &lt;/a&gt;
+                &lt;button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"&gt;
+                &lt;span class="navbar-toggler-icon"&gt;&lt;/span&gt;
+                &lt;/button&gt;
+                &lt;div class="collapse navbar-collapse" id="navbarSupportedContent"&gt;
+                &lt;ul class="navbar-nav me-auto mb-2 mb-lg-0"&gt;
+                    
+                    {% if perms.employees.add_employee or perms.employees.change_employee or perms.employees.delete_employee or perms.employees.view_employee %}
+                    &lt;li class="nav-item dropdown"&gt;
+                    &lt;a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"&gt;
+                        Employees
+                    &lt;/a&gt;
+                    &lt;ul class="dropdown-menu"&gt;
+                        {% if perms.employees.view_employee %}
+                        &lt;li&gt;&lt;a class="dropdown-item" href="{% url 'employees:employee-list' %}"&gt;List&lt;/a&gt;&lt;/li&gt;
+                        {% endif %}
+
+                        {% if perms.employees.view_employee and perms.employees.add_employee and perms.employees.change_employee %}
+                        &lt;li&gt;&lt;a class="dropdown-item" href="{% url 'employees:employee-create' %}"&gt;Create&lt;/a&gt;&lt;/li&gt;
+                        {% endif %}
+                        
+                    &lt;/ul&gt;
+                    &lt;/li&gt;
+                    {% endif %}
+
+                &lt;/ul&gt;
+
+                &lt;ul class="navbar-nav"&gt;
+                    &lt;li class="nav-item dropdown"&gt;
+                    &lt;a class="nav-link dropdown-toggle dropdown-toggle-no-arrow" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"&gt;
+                        &lt;span class="mr-2 d-none d-lg-inline small"&gt;Hello, {{ user.get_username }}&lt;/span&gt;
+                        &lt;img class="img-profile rounded-circle" src="{% static 'img/undraw_profile.svg' %}" /&gt;
+                    &lt;/a&gt;
+                    &lt;ul class="dropdown-menu dropdown-menu-end"&gt;
+                        &lt;li&gt;
+                        &lt;a class="dropdown-item" href="{% url 'profile' %}"&gt;
+                            &lt;i class="fas fa-cog fa-sm fa-fw mr-2 text-gray-400"&gt;&lt;/i&gt; Profile
+                        &lt;/a&gt;
+                        &lt;/li&gt;
+                        
+                        &lt;li&gt;&lt;hr class="dropdown-divider"&gt;&lt;/li&gt;
+                        
+                        &lt;li&gt;
+                        &lt;form action="{% url 'logout' %}" method="post"&gt;
+                            {% csrf_token %}
+                            &lt;button type="submit" class="dropdown-item"&gt;
+                            &lt;i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"&gt;&lt;/i&gt;
+                            Logout
+                            &lt;/button&gt;
+                        &lt;/form&gt;
+                        &lt;/li&gt;
+                        
+                    &lt;/ul&gt;
+                    &lt;/li&gt;
+                &lt;/ul&gt;
+
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;/nav&gt;
+
+
+            {% if messages %} 
+            {% for message in messages %}
+                &lt;div class="alert alert-{{ message.tags }}"&gt;{{ message }}&lt;/div&gt;
+            {% endfor %} 
+            {% endif %} 
+            
+
+            {% block content %}
+            {% endblock %}
+
+
+        &lt;/div&gt;
+        &lt;!-- End of Main Content --&gt;
+
+        &lt;!-- Footer --&gt;
+        &lt;footer class="sticky-footer bg-white"&gt;
+            &lt;div class="container my-auto"&gt;
+            &lt;div class="copyright text-center mt-3 mb-3"&gt;
+                &lt;span&gt;Sys &copy; 2025~26&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/footer&gt;
+        &lt;!-- End of Footer --&gt;
+        &lt;/div&gt;
+        &lt;!-- End of Content Wrapper --&gt;
+    &lt;/div&gt;
+    &lt;!-- End of Page Wrapper --&gt;
+
+
+    &lt;!-- Bootstrap core JavaScript--&gt;
+    &lt;script src="{% static 'vendor/jquery/jquery.min.js' %}"&gt;&lt;/script&gt;
+    &lt;script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"&gt;&lt;/script&gt;
+    &lt;!-- Core plugin JavaScript--&gt;
+    &lt;script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"&gt;&lt;/script&gt;
+    &lt;!-- Custom scripts for all pages--&gt;
+
+    {% block scripts_bmain %}
+    {% endblock %}
+
+    &lt;!-- Include common scripts --&gt;
+    &lt;script src="{% static 'js/main.js' %}"&gt;&lt;/script&gt;
+
+    &lt;!-- Include specific scripts from child templates --&gt;
+    {% block scripts %}
+    {% endblock %}
+    &lt;/body&gt;
+&lt;/html&gt;    
+</p>

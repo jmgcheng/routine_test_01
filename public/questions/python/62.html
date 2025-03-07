@@ -1,0 +1,20 @@
+<h6 class="card-title question-pre">Python: code. unpacking operator. spread operator
+# combine a range of 5 and a hello string in a single list
+
+# combine 2 dictionaries
+first = {"x": 1}
+second = {"x": 10, "y": 2}
+
+</h6>
+<p class="card-text answer-pre">
+# combine a range of 5 and a hello string in a single list
+values = [*range(5), *"Hello"]
+# [0, 1, 2, 3, 4, 'H', 'e', 'l', 'l', 'o']
+
+# combine 2 dictionaries
+first = {"x": 1}
+second = {"x": 10, "y": 2}
+combined = {**first, **second, "z": 1}
+print(combined)
+# {'x': 10, 'y': 2, 'z': 1}
+</p>

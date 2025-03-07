@@ -1,0 +1,25 @@
+<h6 class="card-title question-pre">Python: code.
+- create the dictionary below
+    dict = {
+        "1": "One",
+        "2": "Two",
+        "3": "Three",
+        "4": "Four"
+    }
+- ask user to input a phone number from 1 to 4
+- program should output equivalent word of the number
+- use for loop
+</h6>
+<p class="card-text answer-pre">
+dict = {
+    "1": "One",
+    "2": "Two",
+    "3": "Three",
+    "4": "Four"
+}
+phone = input("Phone: ")
+output = ''
+for ch in phone:
+    output += dict.get(ch, "!") + ' '
+print(output)
+</p>

@@ -1,0 +1,78 @@
+<h6 class="card-title question">Django: a sample page to visit</h6>
+<p class="card-text answer-pre">
+# generate
+python manage.py startapp pages
+
+
+# settings.py
+INSTALLED_APPS = [
+    ...
+    'pages',
+]
+
+
+# pages/views.py
+from django.http import HttpResponse
+from django.shortcuts import HttpResponseRedirect, reverse
+def index(request):
+    return HttpResponseRedirect(reverse('profile'))
+def about(request):
+    return HttpResponse('About Us')
+def sample_page(request):
+    records = Model.objects.all()
+    context = {"records": records}
+    return render(request, "pages/sample-page.html", context)
+
+
+
+# core/core/templates/base.html
+...
+
+
+# core/pages/templates/pages/sample-page.html
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Sample Page{% endblock %}
+{% block styles_bmain %}
+{% endblock %}
+{% block styles %}
+{% endblock %}
+{% block content %}
+    &lt;h1&gt;About Page&lt;/h1&gt;
+    &lt;p&gt;
+        The quick brown fox jumps over the lazy dog.
+    &lt;/p&gt;
+    {% if records %}
+    {% for record in records %}
+    &lt;p&gt;{{record.column}}&lt;/p&gt;
+    {% endfor %}
+    {% endif %}
+{% endblock %}
+{% block scripts_bmain %}
+{% endblock %}
+{% block scripts %}
+    &lt;script src="{% static 'js/sample-page.js' %}"&gt;&lt;/script&gt;
+{% endblock %}
+
+
+# core/urls.py
+from django.urls import path, include
+urlpatterns = [
+    path('', include('pages.urls'))
+]
+
+
+# pages/urls.py
+from django.urls import path
+from pages.views import index, about, sample_page
+urlpatterns = [
+    path('', index, name='homepage'),
+    path('about-us', about, name='about-us'),
+    path('sample-page', sample_page, name='sample-page'),
+]
+
+
+# server
+> python manage.py runserver    
+</p>

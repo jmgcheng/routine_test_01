@@ -26,8 +26,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                 <input type="checkbox" class="btn-check category-checkbox" id="${id}" data-category="${cat}" checked>
                 <label class="btn btn-outline-primary" for="${id}">${cat}</label>
             `;
-
-            
         });
 
     }
@@ -38,52 +36,54 @@ document.addEventListener("DOMContentLoaded", async function () {
             .map(cb => cb.dataset.category);
     }
 
+    function getRange() {
+        let rangeValue = txtRange.value.trim(); // Get input and remove spaces
+        let minRange = 1, maxRange = 100; // Default range
+    
+        // console.log('rangeValue: ' + rangeValue);
+
+        if (rangeValue.includes("-")) {
+            // console.log('hermit1');
+            // If it's a range like "50-70"
+            let parts = rangeValue.split("-").map(num => parseInt(num.trim()));
+            if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                minRange = Math.min(parts[0], parts[1]);
+                maxRange = Math.max(parts[0], parts[1]);
+            }
+        } else {
+            // console.log('hermit2');
+            // If it's a single number (e.g., "100")
+            let singleNum = parseInt(rangeValue);
+            if (!isNaN(singleNum)) {
+                minRange = 1;
+                maxRange = singleNum;
+            }
+        }
+    
+        return { minRange, maxRange };
+    }
+
     // Load random question
     async function loadRandomQuestion() {
-        
-
         questionBody.innerHTML = ""; // Clear previous
+        btnShow.innerHTML = "Show Answer";
         let selectedCategories = getSelectedCategories();
         if (selectedCategories.length === 0) return alert("Select at least one category");
 
-        let category = selectedCategories[Math.floor(Math.random() * selectedCategories.length)];
-        
-        console.log('category is: ' + category);
-        
-        let maxRange = parseInt(txtRange.value) || 5;
+        let { minRange, maxRange } = getRange(); // Get range from input
 
-        console.log('maxRange is: ' + maxRange);
+        // console.log('minRange, maxRange is ' + minRange, maxRange);
 
-        console.log('categories: ');
-        console.log(categories);
-
-        let availableQuestions = categories[category].filter(num => num <= maxRange);
-
-        console.log('availableQuestions: ');
-        console.log(availableQuestions);
-
-        if (availableQuestions.length === 0) return alert("No questions available in this range");
+        let category = selectedCategories[Math.floor(Math.random() * selectedCategories.length)];        
+        let availableQuestions = categories[category].filter(num => num >= minRange && num <= maxRange);
+        if (availableQuestions.length === 0) return alert("No questions in " +category+ " available on range from " + minRange +" to "+ maxRange + ". Check json file if unsure");
 
         let randomNumber = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
-
-        console.log('randomNumber: ' + randomNumber);
-
         let questionFile = `./questions/${category}/${randomNumber}.html`;
 
-        console.log('questionFile: ' + questionFile);
-
         try {
-            const response = await fetch(questionFile);
-            
-            console.log('response: ');
-            console.log(response);
-            
+            const response = await fetch(questionFile);            
             const html = await response.text();
-
-            console.log('html: ');
-            console.log(html);
-
-
             questionBody.innerHTML = html;
 
             // Hide answer initially
@@ -95,7 +95,17 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Show answer
     btnShow.addEventListener("click", () => {
-        questionBody.querySelectorAll(".answer, .answer-pre").forEach(el => el.style.display = "block");
+        questionBody.querySelectorAll(".answer, .answer-pre").forEach(el => {
+            // el.style.display = "block"
+            if (el.style.display === "none") {
+                el.style.display = "block";
+                btnShow.innerHTML = "Hide Answer";     
+            } else {
+                el.style.display = "none";
+                btnShow.innerHTML = "Show Answer";
+            }            
+
+        });
     });
 
     // Next question
@@ -105,3 +115,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     await loadCategories();
     loadRandomQuestion();
 });
+
+function handleFocusOut(e) {
+    if (e.key == "Tab") {
+        e.preventDefault();
+        const start = this.selectionStart;
+        const end = this.selectionEnd;
+        this.value =
+        this.value.substring(0, start) + "\t" + this.value.substring(end);
+        this.selectionStart = this.selectionEnd = start + 1;
+    }
+}
