@@ -1,144 +1,559 @@
-<h6 class="card-title question">Django: create sample of models for users, employees, customers, products, purchases</h6>
+<h6 class="card-title question-pre">Django: create a simple blog with login, logout, register, about us, using simplest bootstrap
+# installations
+
+
+# settings
+
+
+# core/urls.py
+
+
+# pages/urls.py
+
+
+# accounts/urls.py
+
+
+# posts/urls.py
+
+
+# pages/models.py
+
+
+# accounts/models.py
+
+
+# posts/models.py
+
+
+# accounts/forms.py
+
+
+# posts/forms.py
+
+
+# core/templates/base.html
+
+
+# pages/templates/pages/about.html
+
+
+# accounts/templates/accounts/login.html
+
+
+# accounts/templates/accounts/password_reset_complete.html
+
+
+# accounts/templates/accounts/password_reset_confirm.html
+
+
+# accounts/templates/accounts/password_reset_done.html
+
+
+# accounts/templates/accounts/password_reset_form.html
+
+
+# accounts/templates/accounts/profile.html
+
+
+# accounts/templates/accounts/profile_update.html
+
+
+# accounts/templates/accounts/register.html
+
+
+# posts/templates/posts/post_detail.html
+
+
+# posts/templates/posts/post_form.html
+
+
+# posts/templates/posts/post_list.html
+
+
+# pages/views.py
+
+
+# accounts/views.py
+
+
+# posts/views.py
+
+
+</h6>
+
 <p class="card-text answer-pre">
-# users/models.py
-# not needed
+# installations
+> python -m venv env
+> env\Scripts\activate
+> pip install Django
+> django-admin startproject core
+> cd core
+> code .
+> python manage.py startapp pages
+> python manage.py startapp accounts
+> python manage.py startapp posts
+> pip install crispy-bootstrap5
+> python manage.py makemigrations posts
+> python manage.py migrate
+> python manage.py runserver
 
 
-# employees/models.py
+
+# settings
+import os
+INSTALLED_APPS = [
+        ...
+
+    'core',
+    'crispy_forms',
+    'crispy_bootstrap5',
+    'pages',
+    'accounts',
+    'posts',
+]
+TEMPLATES = [
+    {
+        'BACKEND': ...
+        'DIRS': [
+            BASE_DIR / 'templates'
+        ],
+        ...
+    },
+]
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+LOGIN_REDIRECT_URL = 'post-list'
+LOGOUT_REDIRECT_URL = 'post-list'
+LOGIN_URL = 'login'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"  # For testing email sending
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
+
+# core/urls.py
+from django.contrib import admin
+from django.urls import path, include
+from django.contrib.auth import views as auth_views
+from accounts.views import register, profile, profile_update
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path("posts/", include("posts.urls")),
+    path("register/", register, name="register"),
+    path("login/", auth_views.LoginView.as_view(template_name="accounts/login.html"), name="login"),
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path("profile/", profile, name="profile"),
+    path("profile/update/", profile_update, name="profile_update"),
+    path("password-reset/", auth_views.PasswordResetView.as_view(template_name="accounts/password_reset_form.html"), name="password_reset"),
+    path("password-reset/done/", auth_views.PasswordResetDoneView.as_view(template_name="accounts/password_reset_done.html"), name="password_reset_done"),
+    path("password-reset-confirm/<uidb64>/<token>/", auth_views.PasswordResetConfirmView.as_view(template_name="accounts/password_reset_confirm.html"), name="password_reset_confirm"),
+    path("password-reset-complete/", auth_views.PasswordResetCompleteView.as_view(template_name="accounts/password_reset_complete.html"), name="password_reset_complete"),
+    path('', include('pages.urls')),
+]
+
+
+
+# pages/urls.py
+from django.urls import path
+from pages.views import index, about
+urlpatterns = [
+    path('', index, name='homepage'),
+    path('about-us', about, name='about-us'),
+]
+
+
+
+# accounts/urls.py
+# none
+
+
+
+# posts/urls.py
+from django.urls import path
+from posts.views import post_list, post_create, post_update, post_delete
+urlpatterns = [
+    path("", post_list, name="post-list"),
+    path("<int:pk>/", post_detail, name="post-detail"),
+    path("create/", post_create, name="post-create"),
+    path("<int:pk>/update/", post_update, name="post-update"),
+    path("<int:pk>/delete/", post_delete, name="post-delete"),
+]
+
+
+
+# pages/models.py
+# none
+
+
+
+# accounts/models.py
+# none
+
+
+
+# posts/models.py
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from django.utils import timezone
-from datetime import timedelta
-def validate_age(value):
-    today = timezone.now().date()
-    age_limit = today - timedelta(days=18*365.25)
-    if value > age_limit:
-        raise ValidationError('Employee must be at least 18 years old.')
-class EmployeeStatus(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+from django.utils.timezone import now
+class Post(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=now)
+    updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
-        return self.name
-class EmployeeJob(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    def __str__(self):
-        return self.name
-class EmployeeJobLevel(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    def __str__(self):
-        return self.name
-class EmployeeJobSpecialty(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    def __str__(self):
-        return self.name
-class Employee(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    company_id = models.CharField(max_length=50, unique=True)
-    contact = models.CharField(max_length=100)
-    middle_name = models.CharField(max_length=100, blank=True)
-    gender = models.CharField(max_length=10, choices=[('MALE', 'MALE'), ('FEMALE', 'FEMALE')])
-    birth_date = models.DateField(validators=[validate_age], blank=True, null=True)
-    address = models.CharField(max_length=255, blank=True, null=True)
-    status = models.ForeignKey(EmployeeStatus, on_delete=models.SET_NULL, null=True)
-    start_date = models.DateField(blank=True, null=True)
-    regular_date = models.DateField(blank=True, null=True)
-    separation_date = models.DateField(blank=True, null=True)
-    position = models.ForeignKey(EmployeeJob, on_delete=models.SET_NULL, null=True)
-    position_level = models.ForeignKey(EmployeeJobLevel, on_delete=models.SET_NULL, null=True)
-    position_specialties = models.ManyToManyField(EmployeeJobSpecialty, blank=True)
-    def __str__(self):
-        return self.company_id
+        return self.title
 
 
-# customers/models.py
-from django.db import models
-class CustomerCategory(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    def __str__(self):
-        return self.name
-class Customer(models.Model):
-    customer_id = models.CharField(max_length=50, unique=True, default='')
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    middle_name = models.CharField(max_length=100, blank=True)
-    category = models.ForeignKey(CustomerCategory, on_delete=models.SET_NULL, null=True)
-    def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+
+# accounts/forms.py
+from django import forms
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+class RegisterForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    class Meta:
+        model = User
+        fields = ["username", "email", "password1", "password2"]
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["username", "email", "first_name", "last_name"]
 
 
-# products/models.py
-from django.db import models
-from html_sanitizer.django import get_sanitizer
-class ProductUnit(models.Model):
-    name = models.CharField(max_length=20, unique=True)
-    def __str__(self):
-        return self.name
-class ProductSize(models.Model):
-    name = models.CharField(max_length=20, unique=True)
-    def __str__(self):
-        return self.name
-class ProductColor(models.Model):
-    name = models.CharField(max_length=20, unique=True)
-    def __str__(self):
-        return self.name
-class Product(models.Model):
-    code = models.CharField(max_length=30, unique=True, blank=False, null=False)
-    name = models.CharField(max_length=50, unique=True, blank=False, null=False)
-    excerpt = models.CharField(max_length=200, blank=True)
-    description = models.TextField(blank=True)
-    image_url = models.CharField(max_length=2083, blank=True, null=True)
-    def __str__(self):
-        return self.name
-    def save(self, *args, **kwargs):
-        sanitizer = get_sanitizer()
-        self.excerpt = sanitizer.sanitize(self.excerpt)
-        self.description = sanitizer.sanitize(self.description)
-        super().save(*args, **kwargs)
-class ProductVariation(models.Model):
-    code = models.CharField(max_length=30, unique=True, blank=False, null=False)
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=False, null=True, related_name="product")
-    name = models.CharField(max_length=50, unique=True, blank=False, null=False)
-    excerpt = models.CharField(max_length=200, blank=True)
-    description = models.TextField(blank=True)
-    unit = models.ForeignKey(ProductUnit, on_delete=models.SET_NULL, blank=False, null=True, related_name="product_unit")
-    size = models.ForeignKey(ProductSize, on_delete=models.SET_NULL, blank=True, null=True, related_name="product_size")
-    color = models.ForeignKey(ProductColor, on_delete=models.SET_NULL, blank=True, null=True, related_name="product_color")
-    image_url = models.CharField(max_length=2083, blank=True, null=True)
-    quantity_alert = models.IntegerField(default=100)
-    def __str__(self):
-        return self.name
-    def save(self, *args, **kwargs):
-        sanitizer = get_sanitizer()
-        self.excerpt = sanitizer.sanitize(self.excerpt)
-        self.description = sanitizer.sanitize(self.description)
-        super().save(*args, **kwargs)
 
 
-# purchases/models.py
-from django.db import models
-from products.models import ProductVariation
-from employees.models import Employee
-from vendors.models import Vendor
-class PurchaseRequestStatus(models.Model):
-    name = models.CharField(max_length=50, unique=True, null=False)
-    def save(self, *args, **kwargs):
-        self.name = self.name.upper()
-        super().save(*args, **kwargs)
-    def __str__(self):
-        return self.name
-class PurchaseRequestHeader(models.Model):
-    code = models.CharField(max_length=50, unique=True, blank=False, null=False)
-    date = models.DateField()
-    requestor = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="purchase_request_requestor")
-    approver = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="purchase_request_approver", blank=True, null=True)
-    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, blank=True, null=True)
-    status = models.ForeignKey(PurchaseRequestStatus, on_delete=models.CASCADE)
-    def __str__(self):
-        return f"PurchaseRequestHeader #{self.code}"
-class PurchaseRequestDetail(models.Model):
-    purchase_request_header = models.ForeignKey(PurchaseRequestHeader, on_delete=models.CASCADE, blank=False, null=True, related_name="purchase_request_detail")
-    product_variation = models.ForeignKey(ProductVariation, on_delete=models.CASCADE, related_name="purchase_request_product_variation")
-    quantity_request = models.PositiveIntegerField(default=0, blank=False, null=False)
-    def __str__(self):
-        return f"PurchaseRequestDetail #{self.id}"
+# posts/forms.py
+from django import forms
+from posts.models import Post
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ["title", "content"]
+
+
+
+
+# core/templates/base.html
+{% load static %} 
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container"&gt;
+    &lt;header class="p-3 mb-3 border-bottom"&gt;
+        &lt;div class="container"&gt;
+        &lt;div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"&gt;
+            &lt;a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none"&gt;
+            &lt;svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"&gt;&lt;use xlink:href="#bootstrap"&gt;&lt;/use&gt;&lt;/svg&gt;
+            &lt;/a&gt;
+            &lt;ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0"&gt;
+            &lt;li&gt;&lt;a href="{% url 'homepage' %}" class="nav-link px-2 link-secondary"&gt;Home&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="{% url 'about-us' %}" class="nav-link px-2"&gt;About&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+            {% if user.is_authenticated %}
+            &lt;div class="dropdown text-end"&gt;
+                &lt;a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"&gt;
+                &lt;img src="https://github.com/jmgcheng.png" width="32" height="32" class="rounded-circle"&gt;
+                &lt;/a&gt;
+                &lt;ul class="dropdown-menu text-small"&gt;
+                &lt;li&gt;&lt;a class="dropdown-item" href="{% url 'profile' %}"&gt;Profile&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;hr class="dropdown-divider"&gt;&lt;/li&gt;
+                &lt;li&gt;
+                    &lt;form action="{% url 'logout' %}" method="post"&gt;
+                    {% csrf_token %}
+                    &lt;button type="submit" class="dropdown-item"&gt;
+                        Logout
+                    &lt;/button&gt;
+                    &lt;/form&gt;
+                &lt;/li&gt;
+                &lt;/ul&gt;  
+            &lt;/div&gt;
+            {% else %}
+            &lt;div class="text-end"&gt;
+                &lt;a href="{% url 'login' %}" class="btn btn-outline-primary me-2"&gt;Login&lt;/a&gt;
+                &lt;a href="{% url 'register' %}" class="btn btn-primary"&gt;Register&lt;/a&gt;
+            &lt;/div&gt;
+            {% endif %}
+        &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/header&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col"&gt;
+        {% block content %}
+        {% endblock %}
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;/div&gt;  
+    &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+
+
+# pages/templates/pages/about.html
+{% extends "base.html" %}
+{% block content %}
+&lt;h2&gt;About Us&lt;/h2&gt;
+{% endblock %}
+
+
+
+# accounts/templates/accounts/login.html
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+&lt;h2&gt;Login&lt;/h2&gt;
+&lt;form method="post"&gt;
+    {% csrf_token %}
+    {{ form | crispy }}
+    &lt;hr&gt;
+    &lt;button class="btn btn-primary btn-block" type="submit"&gt;Login&lt;/button&gt;
+    &lt;a href="{% url 'password_reset' %}" class="btn btn-secondary"&gt;Forgot Password?&lt;/a&gt;
+&lt;/form&gt;
+{% endblock %}
+
+
+
+# accounts/templates/accounts/password_reset_complete.html
+{% extends "base.html" %}
+{% block content %}
+&lt;p&gt;Your password has been successfully reset. You may now &lt;a href="{% url 'login' %}"&gt;login&lt;/a&gt;.&lt;/p&gt;
+{% endblock %}
+
+
+
+
+# accounts/templates/accounts/password_reset_confirm.html
+{% extends "base.html" %}
+{% block content %}
+&lt;h2&gt;Set New Password&lt;/h2&gt;
+&lt;form method="post"&gt;
+    {% csrf_token %}
+    {{ form.as_p }}
+    &lt;button type="submit"&gt;Reset Password&lt;/button&gt;
+&lt;/form&gt;
+{% endblock %}
+
+
+
+
+# accounts/templates/accounts/password_reset_done.html
+{% extends "base.html" %}
+{% block content %}
+&lt;p&gt;An email has been sent with instructions to reset your password.&lt;/p&gt;
+{% endblock %}
+
+
+
+
+# accounts/templates/accounts/password_reset_form.html
+{% extends "base.html" %}
+{% block content %}
+&lt;h2&gt;Reset Password&lt;/h2&gt;
+&lt;form method="post"&gt;
+    {% csrf_token %}
+    {{ form.as_p }}
+    &lt;button type="submit"&gt;Reset Password&lt;/button&gt;
+&lt;/form&gt;
+{% endblock %}
+
+
+
+# accounts/templates/accounts/profile.html
+{% extends "base.html" %}
+{% block content %}
+&lt;h2&gt;Profile&lt;/h2&gt;
+&lt;p&gt;Username: {{ user.username }}&lt;/p&gt;
+&lt;p&gt;Email: {{ user.email }}&lt;/p&gt;
+&lt;p&gt;&lt;a href="{% url 'profile_update' %}"&gt;Update Profile&lt;/a&gt;&lt;/p&gt;
+{% endblock %}
+
+
+
+
+# accounts/templates/accounts/profile_update.html
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+&lt;h2&gt;Update Profile&lt;/h2&gt;
+&lt;form method="post"&gt;
+    {% csrf_token %}
+    {{ form | crispy }}
+    &lt;hr&gt;
+    &lt;button class="btn btn-primary btn-block" type="submit"&gt;Save Changes&lt;/button&gt;
+&lt;/form&gt;
+{% endblock %}
+
+
+
+# accounts/templates/accounts/register.html
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+&lt;h2&gt;Register&lt;/h2&gt;
+&lt;form method="post"&gt;
+    {% csrf_token %}
+    {{ form | crispy }}
+    &lt;hr&gt;
+    &lt;button class="btn btn-primary btn-block" type="submit"&gt;Register&lt;/button&gt;
+&lt;/form&gt;
+{% endblock %}
+
+
+
+
+# posts/templates/posts/post_detail.html
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+&lt;h2&gt;{{ post.title }}&lt;/h2&gt;
+&lt;p&gt;{{ post.content }}&lt;/p&gt;
+&lt;p&gt;&lt;small&gt;By {{ post.author.username }} on {{ post.created_at }}&lt;/small&gt;&lt;/p&gt;
+{% if post.author == request.user %}
+    &lt;form action="{% url 'post-delete' post.pk %}" method="post" style="display:inline;"&gt;
+        {% csrf_token %}
+        &lt;a href="{% url 'post-update' post.pk %}" class="btn btn-primary"&gt;Edit&lt;/a&gt;
+        &lt;button class="btn btn-danger" type="submit"&gt;Delete&lt;/button&gt;
+    &lt;/form&gt;
+{% endif %}
+&lt;a href="{% url 'post-list' %}" class="btn btn-secondary"&gt;Back to Posts&lt;/a&gt;
+{% endblock %}
+
+
+
+# posts/templates/posts/post_form.html
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+&lt;h2&gt;{% if form.instance.pk %}Edit Post{% else %}Create Post{% endif %}&lt;/h2&gt;
+&lt;form method="post"&gt;
+    {% csrf_token %}
+    {{ form | crispy }}
+    &lt;hr&gt;
+    &lt;button class="btn btn-primary" type="submit"&gt;Save&lt;/button&gt;
+    &lt;a href="{% url 'post-list' %}" class="btn btn-secondary"&gt;Back to Posts&lt;/a&gt;
+&lt;/form&gt;
+{% endblock %}
+
+
+
+
+# posts/templates/posts/post_list.html
+{% extends "base.html" %}
+{% block content %}
+&lt;h2&gt;All Posts&lt;/h2&gt;
+&lt;a href="{% url 'post-create' %}"&gt;Create New Post&lt;/a&gt;
+&lt;ul&gt;
+    {% for post in posts %}
+        &lt;li&gt;
+            &lt;a href="{% url 'post-detail' post.pk %}"&gt;{{ post.title }}&lt;/a&gt; by {{ post.author.username }} | {{ post.created_at }}
+        &lt;/li&gt;
+    {% endfor %}
+&lt;/ul&gt;
+{% endblock %}
+
+
+
+# pages/views.py
+from django.http import HttpResponse
+from django.shortcuts import HttpResponseRedirect, reverse, render
+def index(request):
+    return HttpResponseRedirect(reverse('post-list'))
+def about(request):
+    # return HttpResponse('About Us')
+    return render(request, "pages/about.html")
+
+
+# accounts/views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib import messages
+from .forms import RegisterForm, ProfileUpdateForm
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Account created successfully! You can now log in.")
+            return redirect("login")
+    else:
+        form = RegisterForm()
+    return render(request, "accounts/register.html", {"form": form})
+@login_required
+def profile(request):
+    return render(request, "accounts/profile.html")
+@login_required
+def profile_update(request):
+    if request.method == "POST":
+        form = ProfileUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your profile has been updated!")
+            return redirect("profile")
+    else:
+        form = ProfileUpdateForm(instance=request.user)
+    return render(request, "accounts/profile_update.html", {"form": form})
+
+
+
+
+# posts/views.py
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from posts.models import Post
+from posts.forms import PostForm
+def post_list(request):
+    posts = Post.objects.all().order_by("-created_at")
+    return render(request, "posts/post_list.html", {"posts": posts})
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    return render(request, "posts/post_detail.html", {"post": post})
+@login_required
+def post_create(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            messages.success(request, "Post created successfully!")
+            return redirect("post-list")
+    else:
+        form = PostForm()
+    return render(request, "posts/post_form.html", {"form": form})
+@login_required
+def post_update(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if post.author != request.user:
+        messages.error(request, "You are not allowed to edit this post.")
+        return redirect("post-list")
+    if request.method == "POST":
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Post updated successfully!")
+            return redirect("post-detail", pk=pk)
+    else:
+        form = PostForm(instance=post)
+    return render(request, "posts/post_form.html", {"form": form})
+@login_required
+def post_delete(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if post.author != request.user:
+        messages.error(request, "You are not allowed to delete this post.")
+        return redirect("post-list")
+    post.delete()
+    messages.success(request, "Post deleted successfully!")
+    return redirect("post-list")
 </p>
