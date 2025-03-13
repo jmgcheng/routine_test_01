@@ -1,0 +1,758 @@
+<h6 class="card-title question-pre">Django: Different implementation of forms.py and usage of Create/Update
+# Form class style ---
+
+# reviews/models.py
+
+
+# reviews/forms.py
+
+
+# reviews/views.py
+
+
+# review.html
+
+
+
+
+
+
+# Model Form class style ---
+
+# reviews/forms.py
+
+
+# reviews/views.py
+
+
+
+
+
+
+# Model Form class style ---
+
+# employees/forms.py
+
+
+# employees/views.py
+
+
+# employee_form.html
+
+
+
+
+
+
+# Model Form class style ---
+
+# products/forms.py
+
+
+# products/views.py
+
+
+
+
+
+
+# Model Form class style ---
+
+# purchases/forms.py
+
+
+# purchases/views.py
+
+
+# purchase_request_form.html
+
+
+# purchase_request_form.js
+
+</h6>
+<p class="card-text answer-pre">
+# Form class style ---
+
+# reviews/models.py
+from django.db import models
+class Review(models.Model):
+    user_name = models.CharField(max_length=100)
+    review_text = models.TextField()
+    rating = models.IntegerField()
+
+# reviews/forms.py
+from django import forms
+class ReviewForm(forms.Form):
+    user_name = forms.CharField(label="Your Name", max_length=100, error_messages={
+        "required": "Your name must not be empty!",
+        "max_length": "Please enter a shorter name!"
+    })
+    review_text = forms.CharField(label="Your Feedback", widget=forms.Textarea, max_length=200)
+    rating = forms.IntegerField(label="Your Rating", min_value=1, max_value=5)
+
+# reviews/views.py
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from .forms import ReviewForm
+from .models import Review
+def review(request):
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = Review(
+            user_name=form.cleaned_data['user_name'],
+            review_text=form.cleaned_data['review_text'],
+            rating=form.cleaned_data['rating'])
+            review.save()
+            return HttpResponseRedirect("/thank-you")
+    else:
+        form = ReviewForm()
+    return render(request, "reviews/review.html", {
+        "form": form
+    })
+def thank_you(request):
+    return render(request, "reviews/thank_you.html")
+
+# review.html
+&lt;form action="/" method="POST"&gt;
+    {% csrf_token %}
+    {% for field in form %}
+    &lt;div class="form-control {% if field.errors %}errors{% endif %}"&gt;
+    {{ field.label_tag }}
+    {{ field }}
+    {{ field.errors }}
+    &lt;/div&gt;
+    {% endfor %}
+    &lt;button type="submit"&gt;Send&lt;/button&gt;
+&lt;/form&gt;
+
+
+
+
+
+# Model Form class style ---
+
+# reviews/forms.py
+from django import forms
+from .models import Review
+class ReviewForm(forms.ModelForm):
+    class Meta:
+    model = Review
+    fields = "__all__"
+    # exclude = ['owner_comment']
+    labels = {
+        "user_name": "Your Name",
+        "review_text": "Your Feedback",
+        "rating": "Your Rating"
+    }
+    error_messages = {
+        "user_name": {
+            "required": "Your name must not be empty!",
+            "max_length": "Please enter a shorter name!"
+        }
+    }
+
+# reviews/views.py
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from .forms import ReviewForm
+def review(request):
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("/thank-you")
+    else:
+        form = ReviewForm()
+    return render(request, "reviews/review.html", {
+        "form": form
+    })
+def thank_you(request):
+    return render(request, "reviews/thank_you.html")
+
+
+
+
+
+# Model Form class style ---
+
+# employees/forms.py
+from django import forms
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from employees.models import Employee, EmployeeJob, EmployeeJobLevel, EmployeeJobSpecialty, EmployeeStatus
+from employees.utils import generate_username
+class EmployeeCreationForm(forms.ModelForm):
+    birth_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=True)
+    start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=True)
+    password1 = forms.CharField(widget=forms.PasswordInput())
+    password2 = forms.CharField(widget=forms.PasswordInput())
+    first_name = forms.CharField(max_length=100, required=True)
+    last_name = forms.CharField(max_length=100, required=True)
+    gender = forms.ChoiceField(choices=[('MALE', 'MALE'), ('FEMALE', 'FEMALE')])
+    email = forms.EmailField(required=True)
+    class Meta:
+        model = Employee
+        fields = [
+            'company_id',
+            'email',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'gender',
+            'contact',
+            'birth_date',
+            'address',
+            'start_date',
+            'status',
+            'position',
+            'position_level',
+            'position_specialties',
+            'password1',
+            'password2',
+        ]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password1'].initial = 'welcome01'
+        self.fields['password2'].initial = 'welcome01'
+        self.fields['password1'].widget.attrs['value'] = 'welcome01'
+        self.fields['password2'].widget.attrs['value'] = 'welcome01'
+        self.fields['password1'].widget = forms.HiddenInput()
+        self.fields['password2'].widget = forms.HiddenInput()
+    def clean_password1(self):
+        return 'welcome01'
+    def clean_password2(self):
+        return 'welcome01'
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise ValidationError("A user with that username already exists.")
+        return username
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("A user with that email already exists.")
+        return email
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+        start_date = cleaned_data.get('start_date')
+        regular_date = cleaned_data.get('regular_date')
+        if (password1 and password2) and (password1 != password2):
+            raise forms.ValidationError("Passwords do not match.")
+        if not start_date:
+            raise ValidationError({'start_date': 'Start date is required.'})
+        if (regular_date and start_date) and (regular_date < start_date):
+            raise ValidationError({'regular_date': 'Regular date cannot be earlier than start date.'})
+        return cleaned_data
+    def clean_company_id(self):
+        return self.cleaned_data['company_id'].upper()
+    def save(self, commit=True):
+        first_name = self.cleaned_data.get('first_name')
+        last_name = self.cleaned_data.get('last_name')
+        username = generate_username(first_name)
+        email = self.cleaned_data.get('email')
+        user = User(
+            username=username,
+            email=email,
+            first_name=first_name,
+            last_name=last_name
+        )
+        user.set_password(self.cleaned_data['password1'])
+        if commit:
+            user.save()
+        employee = super().save(commit=False)
+        employee.user = user
+        if commit:
+            employee.save()
+            self.save_m2m()
+        return employee
+class EmployeeUpdateForm(forms.ModelForm):
+    birth_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=True)
+    start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=True)
+    first_name = forms.CharField(max_length=100, required=True)
+    last_name = forms.CharField(max_length=100, required=True)
+    gender = forms.ChoiceField(choices=[('MALE', 'MALE'), ('FEMALE', 'FEMALE')])
+    email = forms.EmailField(required=True)
+    username = forms.CharField(max_length=150)
+    class Meta:
+        model = Employee
+        fields = [
+            'company_id',
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'gender',
+            'contact',
+            'birth_date',
+            'address',
+            'start_date',
+            'status',
+            'position',
+            'position_level',
+            'position_specialties',
+        ]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.user:
+            self.fields['email'].initial = self.instance.user.email
+            self.fields['first_name'].initial = self.instance.user.first_name
+            self.fields['last_name'].initial = self.instance.user.last_name
+            self.fields['username'].initial = self.instance.user.username
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exclude(pk=self.instance.user.pk).exists():
+            raise ValidationError("A user with that username already exists.")
+        return username
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email:
+            if User.objects.filter(email=email).exclude(pk=self.instance.user.pk).exists():
+                raise ValidationError("A user with that email already exists.")
+        return email
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        regular_date = cleaned_data.get('regular_date')
+        if not start_date:
+            raise ValidationError({'start_date': 'Start date is required.'})
+        if (regular_date and start_date) and (regular_date < start_date):
+            raise ValidationError({'regular_date': 'Regular date cannot be earlier than start date.'})
+        return cleaned_data
+    def clean_company_id(self):
+        return self.cleaned_data['company_id'].upper()
+    def save(self, commit=True):
+        employee = super().save(commit=False)
+        user = employee.user
+        user.username = self.cleaned_data['username']
+        user.email = self.cleaned_data['email']
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        if commit:
+            user.save()
+            employee.save()
+            self.save_m2m()
+        return employee
+class EmployeeExcelUploadForm(forms.Form):
+    file = forms.FileField()
+
+# employees/views.py
+class EmployeeCreateView(LoginRequiredMixin, CreateView):
+    model = Employee
+    form_class = EmployeeCreationForm
+    template_name = 'employees/employee_form.html'
+    success_url = reverse_lazy('employees:employee-list')
+class EmployeeUpdateView(LoginRequiredMixin, UpdateView):
+    model = Employee
+    form_class = EmployeeUpdateForm
+    template_name = 'employees/employee_form.html'
+    success_url = reverse_lazy('employees:employee-list')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Employee updated successfully.')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.warning(self.request, 'Please check errors below')
+        return super().form_invalid(form)
+
+# employee_form.html
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Create Employee{% endblock %}
+{% block styles_bmain %}
+{% endblock %}
+{% block styles %}
+{% endblock %}
+{% block content %}
+    &lt;div class="container-fluid"&gt;
+    &lt;!-- Page Heading --&gt;
+    &lt;div class="d-sm-flex align-items-center justify-content-between mb-4"&gt;
+        &lt;h1 class="h3 mb-0 text-gray-800"&gt;Employee&lt;/h1&gt;
+    &lt;/div&gt;
+    &lt;!-- Content Row --&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col"&gt;
+        &lt;div class="card shadow mb-4"&gt;
+            &lt;div class="card-header py-3"&gt;
+            &lt;h6 class="m-0 font-weight-bold text-primary"&gt;
+                Employee - 
+                {% if object %}
+                Update
+                {% else %}
+                Add New
+                {% endif %}              
+            &lt;/h6&gt;
+            &lt;/div&gt;
+            &lt;div class="card-body"&gt;
+            &lt;form method="POST"&gt;
+                {% csrf_token %}
+                {{ form | crispy }}
+                &lt;div class="text-right"&gt;
+                {% if object %}
+                    &lt;button class="btn btn-primary" type="submit"&gt;Update Employee&lt;/button&gt;
+                {% else %}
+                    &lt;button class="btn btn-primary" type="submit"&gt;Add New Employee&lt;/button&gt;
+                {% endif %}
+                &lt;/div&gt;
+            &lt;/form&gt;
+            &lt;hr&gt;
+            &lt;div class="text-right"&gt;
+                &lt;a class="btn btn-secondary" href="{% url 'employees:employee-list' %}"&gt;Cancel&lt;/a&gt;
+            &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;/div&gt;
+{% endblock %}
+{% block scripts_bmain %}
+{% endblock %}
+{% block scripts %}
+    &lt;script src="{% static 'js/employee_form.js' %}"&gt;&lt;/script&gt;
+{% endblock %}
+
+
+
+
+
+# Model Form class style ---
+
+# products/forms.py
+from django import forms
+from products.models import Product, ProductVariation
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['code', 'name', 'excerpt', 'description', 'image_url']
+    def clean(self):
+        cleaned_data = super().clean()
+        code = cleaned_data.get('code', '')
+        name = cleaned_data.get('name', '')
+        cleaned_data['code'] = code.upper().replace(' ', '-')
+        cleaned_data['name'] = name.upper()
+        return cleaned_data
+class ProductVariationForm(forms.ModelForm):
+    class Meta:
+        model = ProductVariation
+        fields = ['code', 'product', 'name', 'excerpt', 'description', 'unit', 'size', 'color', 'image_url', 'quantity_alert']
+    def clean(self):
+        cleaned_data = super().clean()
+        code = cleaned_data.get('code', '')
+        cleaned_data['code'] = code.upper().replace(' ', '-')
+        # cleaned_data['name'] = name.upper()
+        return cleaned_data
+
+# products/views.py
+class ProductCreateView(LoginRequiredMixin, CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'products/product_form.html'
+    success_url = reverse_lazy('products:product-list')
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'products/product_form.html'
+    success_url = reverse_lazy('products:product-list')
+    def form_valid(self, form):
+        messages.success(self.request, 'Product updated successfully.')
+        return super().form_valid(form)
+    def form_invalid(self, form):
+        messages.warning(self.request, 'Please check errors below')
+        return super().form_invalid(form)
+class ProductVariationCreateView(LoginRequiredMixin, CreateView):
+    model = ProductVariation
+    form_class = ProductVariationForm
+    template_name = 'products/product_variation_form.html'
+    success_url = reverse_lazy('products:product-variation-list')
+class ProductVariationUpdateView(LoginRequiredMixin, UpdateView):
+    model = ProductVariation
+    form_class = ProductVariationForm
+    template_name = 'products/product_variation_form.html'
+    success_url = reverse_lazy('products:product-variation-list')
+    def form_valid(self, form):
+        messages.success(self.request, 'Product Variation updated successfully.')
+        return super().form_valid(form)
+    def form_invalid(self, form):
+        messages.warning(self.request, 'Please check errors below')
+        return super().form_invalid(form)
+
+
+
+
+
+# Model Form class style ---
+
+# purchases/forms.py
+from django import forms
+from purchases.models import PurchaseRequestHeader, PurchaseRequestDetail
+from django.forms import inlineformset_factory
+class PurchaseRequestHeaderForm(forms.ModelForm):
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=True)
+    class Meta:
+        model = PurchaseRequestHeader
+        fields = ['code', 'date', 'vendor', 'status']
+    def clean(self):
+        cleaned_data = super().clean()
+        code = cleaned_data.get('code', '')
+        cleaned_data['code'] = code.upper().replace(' ', '-')
+        return cleaned_data
+class PurchaseRequestDetailForm(forms.ModelForm):
+    class Meta:
+        model = PurchaseRequestDetail
+        fields = ['product_variation', 'quantity_request']
+# in use for extra 1
+PurchaseRequestInlineFormSet = inlineformset_factory(
+    PurchaseRequestHeader,
+    PurchaseRequestDetail,
+    form=PurchaseRequestDetailForm,
+    fields=['product_variation', 'quantity_request'],
+    extra=1,  # Set the number of empty forms to display
+    can_delete=True,
+)
+# in use for extra is 0
+PurchaseRequestInlineFormSetNoExtra = inlineformset_factory(
+    PurchaseRequestHeader,
+    PurchaseRequestDetail,
+    form=PurchaseRequestDetailForm,
+    fields=['product_variation', 'quantity_request'],
+    extra=0,  # Set the number of empty forms to display
+    can_delete=True,
+)
+
+# purchases/views.py
+class PurchaseRequestCreateView(LoginRequiredMixin, CreateView):
+    model = PurchaseRequestHeader
+    template_name = 'purchases/purchase_request_form.html'
+    form_class = PurchaseRequestHeaderForm
+    success_url = reverse_lazy('purchases:purchase-request-list')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = PurchaseRequestInlineFormSet(self.request.POST, prefix='purchase_request_detail', instance=self.object)
+        else:
+            context['formset'] = PurchaseRequestInlineFormSet(prefix='purchase_request_detail', instance=self.object)
+        return context
+    def form_valid(self, form):
+        context = self.get_context_data()
+        form.instance.requestor = self.request.user.employee
+        form.instance.status = PurchaseRequestStatus.objects.get(name='OPEN (FOR APPROVAL)')
+        formset = context['formset']
+        if formset.is_valid():
+            purchase_request_header = form.save()
+            formset.instance = purchase_request_header
+            formset.save()
+            messages.success(self.request, 'Purchase Request created successfully.')
+            return super().form_valid(form)
+        else:
+            messages.warning(self.request, 'Please check errors below')
+            return self.form_invalid(form)
+class PurchaseRequestUpdateView(LoginRequiredMixin, UpdateView):
+    model = PurchaseRequestHeader
+    template_name = 'purchases/purchase_request_form.html'
+    form_class = PurchaseRequestHeaderForm
+    success_url = reverse_lazy('purchases:purchase-request-list')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            # Load existing PurchaseRequestDetail objects for the header instance
+            context['formset'] = PurchaseRequestInlineFormSetNoExtra(self.request.POST, instance=self.object, prefix='purchase_request_detail', )
+        else:
+            # Populate the formset with the existing details for the header instance
+            context['formset'] = PurchaseRequestInlineFormSetNoExtra(instance=self.object, prefix='purchase_request_detail',)
+        return context
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        if formset.is_valid():
+            # Save the updated header instance
+            purchase_header = form.save()
+            # Save the updated details for the header instance
+            formset.instance = purchase_header
+            formset.save()
+            messages.success(self.request, 'Purchase Request updated successfully.')
+            return super().form_valid(form)
+        else:
+            messages.warning(self.request, 'Please check errors below')
+            return self.form_invalid(form)
+
+# purchase_request_form.html
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Create Purchase Request{% endblock %}
+{% block styles_bmain %}
+{% endblock %}
+{% block styles %}
+{% endblock %}
+{% block content %}
+    &lt;div class="container-fluid"&gt;
+    &lt;!-- Page Heading --&gt;
+    &lt;div class="d-sm-flex align-items-center justify-content-between mb-4"&gt;
+        &lt;h1 class="h3 mb-0 text-gray-800"&gt;Purchase Request&lt;/h1&gt;
+    &lt;/div&gt;
+    &lt;!-- Content Row --&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col"&gt;
+        &lt;div class="card shadow mb-4"&gt;
+            &lt;div class="card-header py-3"&gt;
+            &lt;h6 class="m-0 font-weight-bold text-primary"&gt;
+                Purchase Request - 
+                {% if object %}
+                Update
+                {% else %}
+                Add New
+                {% endif %}              
+            &lt;/h6&gt;
+            &lt;/div&gt;
+            &lt;div class="card-body"&gt;
+            &lt;form method="POST"&gt;
+                &lt;h3&gt;Header&lt;/h3&gt;
+                {% csrf_token %}
+                {{ form | crispy }}
+                &lt;div id="formset"&gt;
+                &lt;h3&gt;Details&lt;/h3&gt;
+                {{ formset.management_form }} &lt;!-- type hidden --&gt;
+                {% for form in formset %}
+                &lt;div class="formset-row"&gt;
+                        {{ form.id }}
+                        &lt;div class="row"&gt;
+                        &lt;div class="col"&gt;
+                            {{ form.product_variation|as_crispy_field }}
+                        &lt;/div&gt;
+                        &lt;div class="col"&gt;
+                            {{ form.quantity_request|as_crispy_field }}
+                        &lt;/div&gt;
+                        &lt;div class="col"&gt;
+                            &lt;div class="d-none"&gt;  &lt;!-- d-none --&gt;
+                            {{ form.DELETE.label_tag }}
+                            {{ form.DELETE }}
+                            &lt;/div&gt;
+                            &lt;div class="form-label"&gt;
+                            &#160; &lt;!-- vertical spacer --&gt;
+                            &lt;/div&gt;
+                            &lt;button type="button" class="btn btn-warning delete-row"&gt;Delete&lt;/button&gt;
+                        &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    {% if form.errors %}
+                    &lt;div class="formset-errors"&gt;
+                        {% for field, error in form.errors.items %}
+                        {{ error }}
+                        {% endfor %}
+                    &lt;/div&gt;
+                    {% endif %}
+                {% endfor %}
+                {% if formset.non_form_errors %}
+                    &lt;div class="formset-non-form-errors"&gt;
+                    {% for error in formset.non_form_errors %}
+                        {{ error }}
+                    {% endfor %}
+                    &lt;/div&gt;
+                {% endif %}                 
+                &lt;/div&gt;
+                &lt;div&gt;
+                &lt;button class="btn btn-secondary" type="button" id="add-product"&gt;Add Product&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;br&gt;&lt;br&gt;&lt;br&gt;
+                &lt;div class="text-right"&gt;
+                {% if object %}
+                    &lt;button class="btn btn-primary" type="submit"&gt;Update Purchase Request&lt;/button&gt;
+                {% else %}
+                    &lt;button class="btn btn-primary" type="submit"&gt;Add New Purchase Request&lt;/button&gt;
+                {% endif %}
+                &lt;/div&gt;
+            &lt;/form&gt;
+            &lt;hr&gt;
+            &lt;div class="text-right"&gt;
+                &lt;a class="btn btn-secondary" href="{% url 'purchases:purchase-request-list' %}"&gt;Cancel&lt;/a&gt;
+            &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;/div&gt;
+{% endblock %}
+{% block scripts_bmain %}
+{% endblock %}
+{% block scripts %}
+    &lt;script src="{% static 'js/purchase_request_form.js' %}"&gt;&lt;/script&gt;
+{% endblock %}
+
+# purchase_request_form.js
+window.addEventListener('DOMContentLoaded', () => {
+    console.log('purchase_request_form.js ready');
+    const formset = document.getElementById("formset");
+    // id_purchase_request_detail-TOTAL_FORMS auto created by {{ formset.management_form }}
+    const totalForms = document.getElementById('id_purchase_request_detail-TOTAL_FORMS');
+    const addProductButton = document.getElementById("add-product");
+    function PlusCaps() {
+        nextValue = parseInt(totalForms.value) + 1;
+        setNextValue(nextValue);
+    }
+    function MinusCaps() {
+        nextValue = parseInt(totalForms.value) - 1;
+        setNextValue(nextValue);
+    } 
+    function setNextValue(nextValue) {
+        totalForms.value = nextValue;
+    }
+    function renumberAttributes() {
+        // const outer = document.getElementById("formset");
+        const innerDivs = formset.querySelectorAll(".formset-row");
+        innerDivs.forEach(function (div, index) {
+            div.querySelectorAll('label, select, input').forEach(function (element) {
+                const attributes = ['for', 'name', 'id'];
+                attributes.forEach(function (attr) {
+                    let value = element.getAttribute(attr);
+                    if (value) {
+                        // Replace the numeric part of the attribute with the new index
+                        value = value.replace(/\d+/g, index);
+                        element.setAttribute(attr, value);
+                    }
+                });
+            });
+        });
+    }
+    function sureSingleDetail() {
+        if ($('.formset-row:visible').length == 1) {
+            console.log('disable please');
+            $('.formset-row:visible').find('.delete-row').prop('disabled', true);
+        }
+        else {
+            console.log('enable please');
+            $('.formset-row:visible').find('.delete-row').prop('disabled', false);
+        }
+    }
+    sureSingleDetail();
+    addProductButton.addEventListener("click", function () {
+        const firstRow = formset.querySelector(".formset-row");
+        if (firstRow) {
+            const newRow = firstRow.cloneNode(true);
+            formset.appendChild(newRow);
+            $(newRow).find('select').val('');
+            $(newRow).find('input[type=number]').val(0);
+            $(newRow).find('input[type=checkbox]').prop('checked', false);
+            $(newRow).show();
+            PlusCaps();
+            renumberAttributes();
+            sureSingleDetail();
+        }
+    });
+    formset.addEventListener("click", function (event) {
+        if (event.target.classList.contains("delete-row")) {
+            let row = event.target.parentElement;
+            // get closest parent
+            row = $(row).closest('.formset-row')
+            $(row).find('input[type=checkbox]').prop('checked', true);
+            // just hide row so backend can log what to delete
+            $(row).hide();
+            sureSingleDetail();
+        }
+    });
+});
+</p>

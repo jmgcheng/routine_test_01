@@ -1,0 +1,1430 @@
+<h6 class="card-title question-pre">Django: Practice Query
+# create sample models. Blog(category), Author, Entry, Book
+
+
+# create a django query for - insert a record in Blog
+
+
+# create a django query for - update a record column in recently created Blog
+
+
+# create a django query for - update an Entry record Foreignkey Entry.blog value
+
+
+# create a django query for - add an author in Entry.authors ManytoManyField  
+
+
+# create a django query for - add several authors in Entry.authors ManytoManyField   
+
+
+# create a django query for - select a record in Entry using pk
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        "entry"."mod_date",
+#        "entry"."number_of_comments",
+#        "entry"."number_of_pingbacks",
+#        "entry"."rating"
+#    FROM "entry"
+#    WHERE "entry"."id" = 1
+#    LIMIT 21
+
+
+# create a django query for - select Blog records using pk in 
+# sample converted query
+#    SELECT 
+#        "blog"."id",
+#        "blog"."name",
+#        "blog"."tagline"
+#    FROM "blog"
+#    WHERE "blog"."id" IN (1, 4, 7)
+
+
+# create a django query for - select a record in Entry using get
+
+
+# create a django query for - select all Blog where Blog.name is "beatles blog" case insensitive 
+# sample converted query
+#    SELECT "blog"."id",
+#        "blog"."name",
+#        "blog"."tagline"
+#    FROM "blog"
+#    WHERE "blog"."name" LIKE 'beatles blog' ESCAPE '\'
+#    LIMIT 21
+
+
+# create a django query for - select all Entry where Entry.headline contains a "Lennon" string
+# sample converted query
+#    SELECT "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        "entry"."mod_date",
+#        "entry"."number_of_comments",
+#        "entry"."number_of_pingbacks",
+#        "entry"."rating"
+#    FROM "entry"
+#    WHERE "entry"."headline" LIKE '%Lennon%' ESCAPE '\'
+#    LIMIT 21
+
+
+# create a django query for - select all Entry records
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        "entry"."mod_date",
+#        "entry"."number_of_comments",
+#        "entry"."number_of_pingbacks",
+#        "entry"."rating"
+#    FROM "entry"
+
+
+# create a django query for - select all Entry records limit 5
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        ...
+#    FROM "entry"
+#    LIMIT 5
+
+
+# create a django query for - select all Entry records offset 5 limit 5 
+# get records of a model OFFSET 5 LIMIT 5
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        ...
+#    FROM "entry"
+#    LIMIT 5
+#    OFFSET 5    
+
+
+# create a django query for - select all Entry records where Entry.pub_date is greater or equal to '2006-01-01'
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        ...
+#    FROM "entry"
+#    WHERE "entry"."pub_date" <= '2006-01-01'
+
+
+# create a django query for - select all Entry records where Entry.pub_date is BETWEEN '2006-01-01' AND '2006-12-31'
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        ...
+#    FROM "entry"
+#    WHERE "entry"."pub_date" BETWEEN '2006-01-01' AND '2006-12-31'
+
+
+# create a django query for - using chain filter and exclude, select all Entry records where Entry.headline starts with "What", Entry.pub_date excludes '2025-03-12', Entry.pub_date is greater or equal to '2005-01-30'
+# sample converted query    	
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        "entry"."mod_date",
+#        "entry"."number_of_comments",
+#        "entry"."number_of_pingbacks",
+#        "entry"."rating"
+#    FROM "entry"
+#    WHERE ("entry"."headline" LIKE 'What%' ESCAPE '\' AND NOT ("entry"."pub_date" >= '2025-03-12') AND "entry"."pub_date" >= '2005-01-30')
+
+
+# create a django query for - using Q(), select all Poll where Poll.question starts with "Who" and ( Poll.pub_date is date(2005, 5, 2) OR Poll.pub_date is date(2005, 5, 6) )
+# sample converted query
+#    SELECT 
+#        * 
+#    From polls 
+#    WHERE question 
+#        LIKE 'Who%'
+#        AND (pub_date = '2005-05-02' OR pub_date = '2005-05-06')
+
+
+# create a django query for - select all Entry where Blog.name is "Beatles Blog"
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        "entry"."mod_date",
+#        "entry"."number_of_comments",
+#        "entry"."number_of_pingbacks",
+#        "entry"."rating"
+#    FROM 
+#        "entry"
+#    INNER JOIN 
+#        "blog"
+#        ON ("entry"."blog_id" = "blog"."id")
+#    WHERE "blog"."name" = 'Beatles Blog'
+
+
+# create a django query for - select all Blog where Entry.headline contains 'Lennon'
+# sample converted query
+#    SELECT 
+#        "blog"."id",
+#        "blog"."name",
+#        "blog"."tagline"
+#    FROM 
+#        "blog"
+#    INNER JOIN 
+#        "entry"
+#        ON ("blog"."id" = "entry"."blog_id")
+#    WHERE "entry"."headline" LIKE '%Lennon%' ESCAPE '\'
+
+
+# create a django query for - select all Blog where Entry.author.name is "Lennon"
+# sample converted query
+#    SELECT 
+#        "blog"."id",
+#        "blog"."name",
+#        "blog"."tagline"
+#    FROM 
+#        "blog"
+#    INNER JOIN "entry"
+#        ON ("blog"."id" = "entry"."blog_id")
+#    INNER JOIN "entry_authors"
+#        ON ("entry"."id" = "entry_authors"."entry_id")
+#    INNER JOIN "author"
+#        ON ("entry_authors"."author_id" = "author"."id")
+#    WHERE "author"."name" = 'Lennon'
+
+
+# create a django query for - select all Blog where Entry.authors IS NOT NULL and Author.name IS NOT NULL
+# sample converted query
+#    SELECT 
+#        "blog"."id",
+#        "blog"."name",
+#        "blog"."tagline"
+#    FROM "blog"
+#    INNER JOIN "entry"
+#        ON ("blog"."id" = "entry"."blog_id")
+#    INNER JOIN "entry_authors"
+#        ON ("entry"."id" = "entry_authors"."entry_id")
+#    INNER JOIN "author"
+#        ON ("entry_authors"."author_id" = "author"."id")
+#    WHERE ("entry_authors"."author_id" IS NOT NULL AND "author"."name" IS NULL)
+
+
+# create a django query for - select all Blog excluded in Entry ( Entry.headline contains "Lennon" and Entry.pub_date is 2008 ) 
+# sample converted query
+#    SELECT 
+#        "blog"."id",
+#        "blog"."name",
+#        "blog"."tagline"
+#    FROM "blog"
+#    WHERE NOT (EXISTS(SELECT 1 AS "a" FROM "entry" V1 WHERE (V1."id" IN (SELECT U0."id" FROM "entry" U0 WHERE (U0."headline" LIKE '%Lennon%' ESCAPE '\' AND U0."pub_date" BETWEEN '2008-01-01' AND '2008-12-31')) AND V1."blog_id" = ("blog"."id")) LIMIT 1))
+
+
+# create a django query for - using F(), select all Entry where Entry.number_of_comments is greater than Entry.number_of_pingbacks
+# from django.db.models import F
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        "entry"."mod_date",
+#        "entry"."number_of_comments",
+#        "entry"."number_of_pingbacks",
+#        "entry"."rating"
+#    FROM "entry"
+#    WHERE "entry"."number_of_comments" > ("entry"."number_of_pingbacks")
+
+
+# create a django query for - using F(), select all Entry where Entry.rating is lesser than ( Entry.number_of_comments + Entry.number_of_pingbacks )
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        ...
+#        "entry"."number_of_comments",
+#        "entry"."number_of_pingbacks",
+#        "entry"."rating"
+#    FROM "entry"
+#    WHERE "entry"."rating" < ("entry"."number_of_comments" + "entry"."number_of_pingbacks")    
+
+
+# create a django query for - using F(), select all Entry where Author.name is equal to Blog.name
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        ...
+#    FROM "entry"
+#    INNER JOIN "blog"
+#        ON ("entry"."blog_id" = "blog"."id")
+#    INNER JOIN "entry_authors"
+#        ON ("entry"."id" = "entry_authors"."entry_id")
+#    INNER JOIN "author"
+#        ON ("entry_authors"."author_id" = "author"."id")
+#    WHERE "author"."name" = ("blog"."name")
+
+
+# create a django query for - using aggregate() and Min(), select/get the first published year in Entry 
+# from django.db.models import Min
+# sample converted query
+#    SELECT 
+#        MIN(django_date_extract('year', "entry"."pub_date")) AS "first_published_year"
+#    FROM 
+#        "entry"
+
+
+# create a django query for - using annotate() and Count(), select all Author and get how many Book they created as book_count
+# sample converted query
+#    SELECT 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email",
+#        COUNT("book"."id") AS "book_count"
+#    FROM 
+#        "author"
+#    LEFT OUTER JOIN 
+#        "book"
+#        ON ("author"."id" = "book"."author_id")
+#    GROUP BY 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email"
+
+
+# create a django query for - using annotate() and Avg(), select all Author and get the average price of their book as avg_price
+# sample converted query
+#    SELECT 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email",
+#        (CAST(AVG("book"."price") AS NUMERIC)) AS "avg_price"
+#    FROM 
+#        "author"
+#    LEFT OUTER JOIN 
+#        "book"
+#        ON ("author"."id" = "book"."author_id")
+#    GROUP BY 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email"
+
+
+# create a django query for - using annotate(), Count(), Avg(), and Max(), select all Author and get their book counts as book_count, get the average price of their books as avg_price, get the latest publish date of their book as latest_book
+# sample converted query
+#    SELECT 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email",
+#        COUNT("book"."id") AS "book_count",
+#        (CAST(AVG("book"."price") AS NUMERIC)) AS "avg_price",
+#        MAX("book"."published_date") AS "latest_book"
+#    FROM 
+#        "author"
+#    LEFT OUTER JOIN 
+#        "book"
+#        ON ("author"."id" = "book"."author_id")
+#    GROUP BY 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email"
+
+
+# create a django query for - using annotate() and Subquery(), select all Author and get their latest book price as latest_book_price
+# We want to get the price of the latest book for each author.
+from django.db.models import Subquery, OuterRef
+# sample converted query
+#    SELECT 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email",
+#        (
+#            SELECT U0."price"
+#            FROM "book" U0
+#            WHERE U0."author_id" = ("author"."id")
+#            ORDER BY U0."published_date" DESC
+#            LIMIT 1
+#        ) AS "latest_book_price"
+#    FROM 
+#        "author"
+
+
+# create a django query for - using annotate() and Subquery(), select all Author and get their first book title as first_book
+# sample converted query
+#    SELECT 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email",
+#        (
+#            SELECT U0."title"
+#           FROM "book" U0
+#            WHERE U0."author_id" = ("author"."id")
+#            ORDER BY U0."published_date" ASC
+#            LIMIT 1
+#        ) AS "first_book"
+#    FROM 
+#        "author"
+
+
+# create a django query for - using annotate() and Subquery(), select all Author and get their latest book title as latest_book_title and also get their latest book price as latest_book_price
+# sample converted query
+#    SELECT 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email",
+#        (
+#            SELECT U0."title"
+#           FROM "book" U0
+#            WHERE U0."author_id" = ("author"."id")
+#            ORDER BY U0."published_date" DESC
+#            LIMIT 1
+#        ) AS "latest_book_title",
+#        (
+#            SELECT U0."price"
+#            FROM "book" U0
+#            WHERE U0."author_id" = ("author"."id")
+#            ORDER BY U0."published_date" DESC
+#            LIMIT 1
+#        ) AS "latest_book_price"
+#    FROM "author"    
+
+
+# create a django query for - using annotate(), Subquery(), and Sum(), select all Entry and get their top rating as top_rating and also total comments as total_comments and finally the published date year as pub_date__year 
+# sample converted query
+#    SELECT 
+#        (
+#            SELECT U0."rating"
+#            FROM "entry" U0
+#            WHERE django_date_extract('year', U0."pub_date") = (django_date_extract('year', "entry"."pub_date"))
+#            ORDER BY U0."rating" DESC
+#            LIMIT 1
+#        ) AS "top_rating",
+#        SUM("entry"."number_of_comments") AS "total_comments",
+#        django_date_extract('year', "entry"."pub_date") AS "pub_date__year"
+#    FROM 
+#        "entry"
+#    GROUP BY 
+#        1, 3    
+
+
+
+
+
+
+
+
+
+
+
+# create a django ajax view for datatables to get all employees with their foreign keys 'status', 'position', 'position_level', 'user' and ManyToManyField 'position_specialties'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# create a django ajax view for datatables to get information about your inventory. It should return all your product variation with 'qty_manual_add', 'qty_manual_deduct', 'qty_purchasing', 'qty_purchasing_receive', 'qty_sale_releasing', 'qty_sold', and 'qty_on_hand'
+# utils.py
+
+# views.py
+
+
+</h6>
+<p class="card-text answer-pre">
+# create sample models. Blog(category), Author, Entry, Book
+from datetime import date
+from django.db import models
+class Blog(models.Model):
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    tagline = models.TextField()
+    def __str__(self):
+        return self.name
+class Author(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.EmailField()
+    def __str__(self):
+        return self.name
+class Entry(models.Model):
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    headline = models.CharField(max_length=255)
+    body_text = models.TextField()
+    pub_date = models.DateField()
+    mod_date = models.DateField(default=date.today)
+    authors = models.ManyToManyField(Author)
+    number_of_comments = models.IntegerField(default=0)
+    number_of_pingbacks = models.IntegerField(default=0)
+    rating = models.IntegerField(default=5)
+    def __str__(self):
+        return self.headline
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+
+
+
+# create a django query for - insert a record in Blog
+from blogs.models import Blog
+b = Blog(name="Beatles Blog", tagline="All the latest Beatles news.")
+b.save()
+# or
+b = Blog.objects.create(name="Beatles Blog", tagline="All the latest Beatles news.")
+
+
+
+# create a django query for - update a record column in recently created Blog
+b.name = "new name"
+b.save()
+
+
+
+# create a django query for - update an Entry record Foreignkey Entry.blog value
+from blog.models import Blog, Entry
+entry = Entry.objects.get(pk=1)
+cheese_blog = Blog.objects.get(name="Cheddar Talk")
+entry.blog = cheese_blog
+entry.save()
+
+
+
+# create a django query for - add an author in Entry.authors ManytoManyField  
+from blog.models import Author
+joe = Author.objects.create(name="Joe")
+entry.authors.add(joe)
+
+
+
+# create a django query for - add several authors in Entry.authors ManytoManyField   
+john = Author.objects.create(name="John")
+paul = Author.objects.create(name="Paul")
+george = Author.objects.create(name="George")
+ringo = Author.objects.create(name="Ringo")
+entry.authors.add(john, paul, george, ringo)
+
+
+
+# create a django query for - select a record in Entry using pk
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        "entry"."mod_date",
+#        "entry"."number_of_comments",
+#        "entry"."number_of_pingbacks",
+#        "entry"."rating"
+#    FROM "entry"
+#    WHERE "entry"."id" = 1
+#    LIMIT 21
+from blog.models import Entry
+entry = Entry.objects.get(pk=1)
+
+
+
+# create a django query for - select Blog records using pk in 
+# sample converted query
+#    SELECT 
+#        "blog"."id",
+#        "blog"."name",
+#        "blog"."tagline"
+#    FROM "blog"
+#    WHERE "blog"."id" IN (1, 4, 7)
+Blog.objects.filter(pk__in=[1, 4, 7])
+
+
+
+# create a django query for - select a record in Entry using get
+Entry.objects.get(id=1)
+
+
+
+# create a django query for - select all Blog where Blog.name is "beatles blog" case insensitive 
+# sample converted query
+#    SELECT "blog"."id",
+#        "blog"."name",
+#        "blog"."tagline"
+#    FROM "blog"
+#    WHERE "blog"."name" LIKE 'beatles blog' ESCAPE '\'
+#    LIMIT 21
+Blog.objects.get(name__iexact="beatles blog")
+
+
+
+# create a django query for - select all Entry where Entry.headline contains a "Lennon" string
+# sample converted query
+#    SELECT "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        "entry"."mod_date",
+#        "entry"."number_of_comments",
+#        "entry"."number_of_pingbacks",
+#        "entry"."rating"
+#    FROM "entry"
+#    WHERE "entry"."headline" LIKE '%Lennon%' ESCAPE '\'
+#    LIMIT 21
+Entry.objects.get(headline__contains="Lennon")
+
+
+
+# create a django query for - select all Entry records
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        "entry"."mod_date",
+#        "entry"."number_of_comments",
+#        "entry"."number_of_pingbacks",
+#        "entry"."rating"
+#    FROM "entry"
+entries = Entry.objects.all()
+
+
+
+# create a django query for - select all Entry records limit 5
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        ...
+#    FROM "entry"
+#    LIMIT 5
+Entry.objects.all()[:5]
+
+
+
+# create a django query for - select all Entry records offset 5 limit 5 
+# get records of a model OFFSET 5 LIMIT 5
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        ...
+#    FROM "entry"
+#    LIMIT 5
+#    OFFSET 5    
+Entry.objects.all()[5:10]
+
+
+
+# create a django query for - select all Entry records where Entry.pub_date is greater or equal to '2006-01-01'
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        ...
+#    FROM "entry"
+#    WHERE "entry"."pub_date" <= '2006-01-01'
+Entry.objects.filter(pub_date__lte="2006-01-01")
+
+
+
+# create a django query for - select all Entry records where Entry.pub_date is BETWEEN '2006-01-01' AND '2006-12-31'
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        ...
+#    FROM "entry"
+#    WHERE "entry"."pub_date" BETWEEN '2006-01-01' AND '2006-12-31'
+Entry.objects.filter(pub_date__year=2006)
+
+
+
+# create a django query for - using chain filter and exclude, select all Entry records where Entry.headline starts with "What", Entry.pub_date excludes '2025-03-12', Entry.pub_date is greater or equal to '2005-01-30'
+# sample converted query    	
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        "entry"."mod_date",
+#        "entry"."number_of_comments",
+#        "entry"."number_of_pingbacks",
+#        "entry"."rating"
+#    FROM "entry"
+#    WHERE ("entry"."headline" LIKE 'What%' ESCAPE '\' AND NOT ("entry"."pub_date" >= '2025-03-12') AND "entry"."pub_date" >= '2005-01-30')
+Entry.objects.filter(headline__startswith="What").exclude(
+        pub_date__gte=datetime.date.today()
+    ).filter(pub_date__gte=datetime.date(2005, 1, 30))
+# or
+q1 = Entry.objects.filter(headline__startswith="What")
+q1 = q1.exclude(pub_date__gte='2025-03-12')
+q1 = q1.filter(pub_date__gte='2005-01-30')
+
+
+
+# create a django query for - using Q(), select all Poll where Poll.question starts with "Who" and ( Poll.pub_date is date(2005, 5, 2) OR Poll.pub_date is date(2005, 5, 6) )
+# sample converted query
+#    SELECT 
+#        * 
+#    From polls 
+#    WHERE question 
+#        LIKE 'Who%'
+#        AND (pub_date = '2005-05-02' OR pub_date = '2005-05-06')
+Poll.objects.get(
+    Q(question__startswith="Who"),
+    Q(pub_date=date(2005, 5, 2)) | Q(pub_date=date(2005, 5, 6)),
+)
+
+
+
+# create a django query for - select all Entry where Blog.name is "Beatles Blog"
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        "entry"."mod_date",
+#        "entry"."number_of_comments",
+#        "entry"."number_of_pingbacks",
+#        "entry"."rating"
+#    FROM 
+#        "entry"
+#    INNER JOIN 
+#        "blog"
+#        ON ("entry"."blog_id" = "blog"."id")
+#    WHERE "blog"."name" = 'Beatles Blog'
+Entry.objects.filter(blog__name="Beatles Blog")
+
+
+
+# create a django query for - select all Blog where Entry.headline contains 'Lennon'
+# sample converted query
+#    SELECT 
+#        "blog"."id",
+#        "blog"."name",
+#        "blog"."tagline"
+#    FROM 
+#        "blog"
+#    INNER JOIN 
+#        "entry"
+#        ON ("blog"."id" = "entry"."blog_id")
+#    WHERE "entry"."headline" LIKE '%Lennon%' ESCAPE '\'
+Blog.objects.filter(entry__headline__contains="Lennon")
+
+
+
+# create a django query for - select all Blog where Entry.author.name is "Lennon"
+# sample converted query
+#    SELECT 
+#        "blog"."id",
+#        "blog"."name",
+#        "blog"."tagline"
+#    FROM 
+#        "blog"
+#    INNER JOIN "entry"
+#        ON ("blog"."id" = "entry"."blog_id")
+#    INNER JOIN "entry_authors"
+#        ON ("entry"."id" = "entry_authors"."entry_id")
+#    INNER JOIN "author"
+#        ON ("entry_authors"."author_id" = "author"."id")
+#    WHERE "author"."name" = 'Lennon'
+Blog.objects.filter(entry__authors__name="Lennon")
+
+
+
+# create a django query for - select all Blog where Entry.authors IS NOT NULL and Author.name IS NOT NULL
+# sample converted query
+#    SELECT 
+#        "blog"."id",
+#        "blog"."name",
+#        "blog"."tagline"
+#    FROM "blog"
+#    INNER JOIN "entry"
+#        ON ("blog"."id" = "entry"."blog_id")
+#    INNER JOIN "entry_authors"
+#        ON ("entry"."id" = "entry_authors"."entry_id")
+#    INNER JOIN "author"
+#        ON ("entry_authors"."author_id" = "author"."id")
+#    WHERE ("entry_authors"."author_id" IS NOT NULL AND "author"."name" IS NULL)
+Blog.objects.filter(entry__authors__isnull=False, entry__authors__name__isnull=True)
+
+
+
+# create a django query for - select all Blog excluded in Entry ( Entry.headline contains "Lennon" and Entry.pub_date is 2008 ) 
+# sample converted query
+#    SELECT 
+#        "blog"."id",
+#        "blog"."name",
+#        "blog"."tagline"
+#    FROM "blog"
+#    WHERE NOT (EXISTS(SELECT 1 AS "a" FROM "entry" V1 WHERE (V1."id" IN (SELECT U0."id" FROM "entry" U0 WHERE (U0."headline" LIKE '%Lennon%' ESCAPE '\' AND U0."pub_date" BETWEEN '2008-01-01' AND '2008-12-31')) AND V1."blog_id" = ("blog"."id")) LIMIT 1))
+Blog.objects.exclude(
+    entry__in=Entry.objects.filter(
+        headline__contains="Lennon",
+        pub_date__year=2008,
+    ),
+)
+
+
+
+# create a django query for - using F(), select all Entry where Entry.number_of_comments is greater than Entry.number_of_pingbacks
+# from django.db.models import F
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        "entry"."body_text",
+#        "entry"."pub_date",
+#        "entry"."mod_date",
+#        "entry"."number_of_comments",
+#        "entry"."number_of_pingbacks",
+#        "entry"."rating"
+#    FROM "entry"
+#    WHERE "entry"."number_of_comments" > ("entry"."number_of_pingbacks")
+Entry.objects.filter(number_of_comments__gt=F("number_of_pingbacks"))
+
+
+
+# create a django query for - using F(), select all Entry where Entry.rating is lesser than ( Entry.number_of_comments + Entry.number_of_pingbacks )
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        ...
+#        "entry"."number_of_comments",
+#        "entry"."number_of_pingbacks",
+#        "entry"."rating"
+#    FROM "entry"
+#    WHERE "entry"."rating" < ("entry"."number_of_comments" + "entry"."number_of_pingbacks")    
+Entry.objects.filter(rating__lt=F("number_of_comments") + F("number_of_pingbacks"))
+
+
+
+# create a django query for - using F(), select all Entry where Author.name is equal to Blog.name
+# sample converted query
+#    SELECT 
+#        "entry"."id",
+#        "entry"."blog_id",
+#        "entry"."headline",
+#        ...
+#    FROM "entry"
+#    INNER JOIN "blog"
+#        ON ("entry"."blog_id" = "blog"."id")
+#    INNER JOIN "entry_authors"
+#        ON ("entry"."id" = "entry_authors"."entry_id")
+#    INNER JOIN "author"
+#        ON ("entry_authors"."author_id" = "author"."id")
+#    WHERE "author"."name" = ("blog"."name")
+Entry.objects.filter(authors__name=F("blog__name"))
+
+
+
+# create a django query for - using aggregate() and Min(), select/get the first published year in Entry 
+# from django.db.models import Min
+# sample converted query
+#    SELECT 
+#        MIN(django_date_extract('year', "entry"."pub_date")) AS "first_published_year"
+#    FROM 
+#        "entry"
+Entry.objects.aggregate(first_published_year=Min("pub_date__year"))
+
+
+
+# create a django query for - using annotate() and Count(), select all Author and get how many Book they created as book_count
+# sample converted query
+#    SELECT 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email",
+#        COUNT("book"."id") AS "book_count"
+#    FROM 
+#        "author"
+#    LEFT OUTER JOIN 
+#        "book"
+#        ON ("author"."id" = "book"."author_id")
+#    GROUP BY 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email"
+from django.db.models import Count
+authors = Author.objects.annotate(book_count=Count('book'))
+
+
+
+# create a django query for - using annotate() and Avg(), select all Author and get the average price of their book as avg_price
+# sample converted query
+#    SELECT 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email",
+#        (CAST(AVG("book"."price") AS NUMERIC)) AS "avg_price"
+#    FROM 
+#        "author"
+#    LEFT OUTER JOIN 
+#        "book"
+#        ON ("author"."id" = "book"."author_id")
+#    GROUP BY 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email"
+from django.db.models import Avg
+authors = Author.objects.annotate(avg_price=Avg('book__price'))
+
+
+
+# create a django query for - using annotate(), Count(), Avg(), and Max(), select all Author and get their book counts as book_count, get the average price of their books as avg_price, get the latest publish date of their book as latest_book
+# sample converted query
+#    SELECT 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email",
+#        COUNT("book"."id") AS "book_count",
+#        (CAST(AVG("book"."price") AS NUMERIC)) AS "avg_price",
+#        MAX("book"."published_date") AS "latest_book"
+#    FROM 
+#        "author"
+#    LEFT OUTER JOIN 
+#        "book"
+#        ON ("author"."id" = "book"."author_id")
+#    GROUP BY 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email"
+authors = Author.objects.annotate(
+    book_count=Count('book'),
+    avg_price=Avg('book__price'),
+    latest_book=Max('book__published_date')
+)
+
+
+
+# create a django query for - using annotate() and Subquery(), select all Author and get their latest book price as latest_book_price
+# We want to get the price of the latest book for each author.
+from django.db.models import Subquery, OuterRef
+# sample converted query
+#    SELECT 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email",
+#        (
+#            SELECT U0."price"
+#            FROM "book" U0
+#            WHERE U0."author_id" = ("author"."id")
+#            ORDER BY U0."published_date" DESC
+#            LIMIT 1
+#        ) AS "latest_book_price"
+#    FROM 
+#        "author"
+latest_book_price = Book.objects.filter(
+    author=OuterRef('id')
+).order_by('-published_date').values('price')[:1]
+authors = Author.objects.annotate(latest_book_price=Subquery(latest_book_price))
+
+
+
+# create a django query for - using annotate() and Subquery(), select all Author and get their first book title as first_book
+# sample converted query
+#    SELECT 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email",
+#        (
+#            SELECT U0."title"
+#           FROM "book" U0
+#            WHERE U0."author_id" = ("author"."id")
+#            ORDER BY U0."published_date" ASC
+#            LIMIT 1
+#        ) AS "first_book"
+#    FROM 
+#        "author"
+first_book_title = Book.objects.filter(
+    author=OuterRef('id')
+).order_by('published_date').values('title')[:1]
+authors = Author.objects.annotate(first_book=Subquery(first_book_title))
+
+
+
+# create a django query for - using annotate() and Subquery(), select all Author and get their latest book title as latest_book_title and also get their latest book price as latest_book_price
+# sample converted query
+#    SELECT 
+#        "author"."id",
+#        "author"."name",
+#        "author"."email",
+#        (
+#            SELECT U0."title"
+#           FROM "book" U0
+#            WHERE U0."author_id" = ("author"."id")
+#            ORDER BY U0."published_date" DESC
+#            LIMIT 1
+#        ) AS "latest_book_title",
+#        (
+#            SELECT U0."price"
+#            FROM "book" U0
+#            WHERE U0."author_id" = ("author"."id")
+#            ORDER BY U0."published_date" DESC
+#            LIMIT 1
+#        ) AS "latest_book_price"
+#    FROM "author"    
+latest_book = Book.objects.filter(
+    author=OuterRef('id')
+).order_by('-published_date')
+authors = Author.objects.annotate(
+    latest_book_title=Subquery(latest_book.values('title')[:1]),
+    latest_book_price=Subquery(latest_book.values('price')[:1])
+)
+
+
+
+# create a django query for - using annotate(), Subquery(), and Sum(), select all Entry and get their top rating as top_rating and also total comments as total_comments and finally the published date year as pub_date__year 
+# sample converted query
+#    SELECT 
+#        (
+#            SELECT U0."rating"
+#            FROM "entry" U0
+#            WHERE django_date_extract('year', U0."pub_date") = (django_date_extract('year', "entry"."pub_date"))
+#            ORDER BY U0."rating" DESC
+#            LIMIT 1
+#        ) AS "top_rating",
+#        SUM("entry"."number_of_comments") AS "total_comments",
+#        django_date_extract('year', "entry"."pub_date") AS "pub_date__year"
+#    FROM 
+#        "entry"
+#    GROUP BY 
+#        1, 3    
+from django.db.models import OuterRef, Subquery, Sum
+Entry.objects.values("pub_date__year").annotate(
+        top_rating=Subquery(
+            Entry.objects.filter(
+                pub_date__year=OuterRef("pub_date__year"),
+            )
+            .order_by("-rating")
+            .values("rating")[:1]
+        ),
+        total_comments=Sum("number_of_comments"),
+    )
+
+
+
+
+
+
+
+
+
+
+# create a django ajax view for datatables to get all employees with their foreign keys 'status', 'position', 'position_level', 'user' and ManyToManyField 'position_specialties'
+@login_required
+def ajx_employee_list(request):
+
+    draw = int(request.GET.get('draw', 1))
+    start = int(request.GET.get('start', 0))
+    length = int(request.GET.get('length', 10))
+    search_value = request.GET.get('search[value]', '')
+
+    position_filter = request.GET.getlist('position[]', [])
+    specialty_filter = request.GET.getlist('specialty[]', [])
+    gender_filter = request.GET.getlist('gender[]', [])
+    employee_status_filter = request.GET.getlist('employee_status[]', [])
+
+    employees = Employee.objects.all()
+
+    if search_value:
+        employees = employees.filter(
+            Q(company_id__icontains=search_value) |
+            Q(start_date__icontains=search_value) |
+            Q(user__last_name__icontains=search_value) |
+            Q(user__first_name__icontains=search_value) |
+            Q(middle_name__icontains=search_value) |
+            Q(position__name__icontains=search_value) |
+            Q(position_specialties__name__icontains=search_value) |
+            Q(position_level__name__icontains=search_value) |
+            Q(gender__icontains=search_value) |
+            Q(status__name__icontains=search_value)
+        ).distinct()
+
+    if position_filter:
+        employees = employees.filter(position__name__in=position_filter)
+
+    if specialty_filter:
+        employees = employees.filter(
+            position_specialties__name__in=specialty_filter)
+
+    if gender_filter:
+        employees = employees.filter(gender__in=gender_filter)
+
+    if employee_status_filter:
+        employees = employees.filter(status__name__in=employee_status_filter)
+
+    employees = employees.filter(
+        user__is_active=True, user__is_superuser=False)
+
+    employees = employees.annotate(
+        specialties_agg=Coalesce(
+            StringAgg('position_specialties__name', ', ', distinct=True),
+            Value(''),
+            output_field=TextField()
+        )
+    )
+
+    # Handle ordering
+    order_column_index = int(request.GET.get('order[0][column]', 0))
+    order_direction = request.GET.get('order[0][dir]', 'asc')
+    order_column = request.GET.get(f'columns[{order_column_index}][data]', 'id')
+
+    if order_column == 'last_name':
+        order_column = 'user__last_name'
+        if order_direction == 'desc':
+            employees = employees.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            employees = employees.order_by(F(order_column).asc(nulls_last=True))
+    elif order_column == 'specialties':
+        order_column = 'specialties_agg'
+        if order_direction == 'desc':
+            employees = employees.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            employees = employees.order_by(F(order_column).asc(nulls_last=True))
+    elif order_column == 'first_name':
+        order_column = 'user__first_name'
+        if order_direction == 'desc':
+            employees = employees.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            employees = employees.order_by(F(order_column).asc(nulls_last=True))
+    elif order_column == 'level':
+        order_column = 'position_level'
+        if order_direction == 'desc':
+            employees = employees.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            employees = employees.order_by(F(order_column).asc(nulls_last=True))
+    else:
+        if order_direction == 'desc':
+            order_column = f'-{order_column}'
+        employees = employees.order_by(order_column)
+
+    #
+    employees = employees.select_related(
+        'status', 'position', 'position_level', 'user')
+    employees = employees.prefetch_related('position_specialties')
+
+    paginator = Paginator(employees, length)
+    total_records = paginator.count
+    employees_page = paginator.get_page(start // length + 1)
+
+    #
+    data = []
+
+    for emp in employees_page:
+        specialties = ', '.join([specialty.name for specialty in emp.position_specialties.all(
+        )]) if emp.position_specialties else ''
+
+        data.append({
+            'company_id': f"&lt;a href='/employees/{emp.id}/'&gt;{emp.company_id}&lt;/a&gt;",
+            'start_date': emp.start_date,
+            'last_name': emp.user.last_name,
+            'first_name': emp.user.first_name,
+            'middle_name': emp.middle_name,
+            'position': emp.position.name if emp.position else '',
+            'specialties': specialties,
+            'level': emp.position_level.name if emp.position_level else '',
+            'gender': emp.gender,
+            'status': emp.status.name if emp.status else ''
+        })
+
+    response = {
+        'draw': draw,
+        'recordsTotal': total_records,
+        'recordsFiltered': total_records,
+        'data': data
+    }
+
+    return JsonResponse(response)
+
+
+
+
+
+
+
+
+
+
+
+
+# create a django ajax view for datatables to get information about your inventory. It should return all your product variation with 'qty_manual_add', 'qty_manual_deduct', 'qty_purchasing', 'qty_purchasing_receive', 'qty_sale_releasing', 'qty_sold', and 'qty_on_hand'
+# utils.py
+from django.db.models import OuterRef, Subquery, Sum, IntegerField
+from django.db.models.functions import Coalesce
+from purchases.models import PurchaseRequestDetail, PurchaseReceiveDetail
+from sales.models import SaleInvoiceDetail, OfficialReceiptDetail
+from inventories.models import InventoryAddDetail, InventoryDeductDetail
+def get_quantity_purchasing_subquery():
+    return Subquery(
+        PurchaseRequestDetail.objects.filter(
+            product_variation=OuterRef('pk'),
+            purchase_request_header__status__name="OPEN (PURCHASING)"
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_request')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_purchasing_receive_subquery():
+    return Subquery(
+        PurchaseReceiveDetail.objects.filter(
+            product_variation=OuterRef('pk'),
+            purchase_receive_header__status__name__in=[
+                "RECEIVED (NO ISSUE)", "RECEIVED (WITH ISSUE)", "CLOSED"
+            ]
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_received')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_sale_releasing_subquery():
+    return Subquery(
+        SaleInvoiceDetail.objects.filter(
+            product_variation=OuterRef('pk'),
+            sale_invoice_header__status__name="OPEN (FOR PAYMENT)"
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_request')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_sold_subquery():
+    return Subquery(
+        OfficialReceiptDetail.objects.filter(
+            product_variation=OuterRef('pk'),
+            official_receipt_header__status__name="PAID"
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_paid')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_inventory_add_subquery():
+    return Subquery(
+        InventoryAddDetail.objects.filter(
+            product_variation=OuterRef('pk')
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_added')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_inventory_deduct_subquery():
+    return Subquery(
+        InventoryDeductDetail.objects.filter(
+            product_variation=OuterRef('pk')
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_deducted')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_purchase_request_subquery():
+    return Subquery(
+        PurchaseRequestDetail.objects.filter(
+            product_variation=OuterRef('pk')
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_request')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_purchase_receive_subquery():
+    return Subquery(
+        PurchaseReceiveDetail.objects.filter(
+            product_variation=OuterRef('pk')
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_received')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_sale_invoice_subquery():
+    return Subquery(
+        SaleInvoiceDetail.objects.filter(
+            product_variation=OuterRef('pk')
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_request')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_official_receipt_subquery():
+    return Subquery(
+        OfficialReceiptDetail.objects.filter(
+            product_variation=OuterRef('pk')
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_paid')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+    
+# views.py
+@login_required
+def ajx_inventory_list(request):
+
+draw = int(request.GET.get('draw', 1))
+start = int(request.GET.get('start', 0))
+length = int(request.GET.get('length', 10))
+search_value = request.GET.get('search[value]', '')
+
+#
+product_variations = ProductVariation.objects.all()
+
+if search_value:
+    product_variations = product_variations.filter(
+        Q(code__icontains=search_value) |
+        Q(product__name__icontains=search_value) |
+        Q(name__icontains=search_value)
+    ).distinct()
+
+# filter
+
+# annotate
+product_variations = product_variations.annotate(
+    quantity_manual_add_annotated=Coalesce(
+        get_quantity_inventory_add_subquery(), 0),
+    quantity_manual_deduct_annotated=Coalesce(
+        get_quantity_inventory_deduct_subquery(), 0),
+    quantity_purchasing_annotated=Coalesce(
+        get_quantity_purchasing_subquery(), 0),
+    quantity_purchasing_receive_annotated=Coalesce(
+        get_quantity_purchasing_receive_subquery(), 0),
+    quantity_sale_releasing_annotated=Coalesce(
+        get_quantity_sale_releasing_subquery(), 0),
+    quantity_sold_annotated=Coalesce(get_quantity_sold_subquery(), 0),
+    quantity_on_hand_annotated=(
+        Coalesce(get_quantity_purchasing_receive_subquery(), 0)
+        + Coalesce(get_quantity_inventory_add_subquery(), 0)
+        - Coalesce(get_quantity_inventory_deduct_subquery(), 0)
+        - Coalesce(get_quantity_sold_subquery(), 0)
+    )
+)
+
+# Handle ordering
+order_column_index = int(request.GET.get('order[0][column]', 0))
+order_direction = request.GET.get('order[0][dir]', 'asc')
+order_column = request.GET.get(
+    f'columns[{order_column_index}][data]', 'id')
+
+if order_column == 'product':
+    order_column = 'product__name'
+    if order_direction == 'desc':
+        product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+    else:
+        product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+elif order_column == 'qty_manual_add':
+    order_column = 'quantity_manual_add_annotated'
+    if order_direction == 'desc':
+        product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+    else:
+        product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+elif order_column == 'qty_manual_deduct':
+    order_column = 'quantity_manual_deduct_annotated'
+    if order_direction == 'desc':
+        product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+    else:
+        product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+elif order_column == 'qty_purchasing':
+    order_column = 'quantity_purchasing_annotated'
+    if order_direction == 'desc':
+        product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+    else:
+        product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+elif order_column == 'qty_purchasing_receive':
+    order_column = 'quantity_purchasing_receive_annotated'
+    if order_direction == 'desc':
+        product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+    else:
+        product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+elif order_column == 'qty_sale_releasing':
+    order_column = 'quantity_sale_releasing_annotated'
+    if order_direction == 'desc':
+        product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+    else:
+        product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+elif order_column == 'qty_sold':
+    order_column = 'quantity_sold_annotated'
+    if order_direction == 'desc':
+        product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+    else:
+        product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+elif order_column == 'qty_on_hand':
+    order_column = 'quantity_on_hand_annotated'
+    if order_direction == 'desc':
+        product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+    else:
+        product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+else:
+    if order_direction == 'desc':
+        order_column = f'-{order_column}'
+    product_variations = product_variations.order_by(order_column)
+
+#
+product_variations = product_variations.select_related('product')
+
+paginator = Paginator(product_variations, length)
+total_records = paginator.count
+product_variations_page = paginator.get_page(start // length + 1)
+
+#
+data = []
+
+for pv in product_variations_page:
+
+    data.append({
+        'code': f"&lt;a href='/products/variations/{pv.id}/'&gt;{pv.code}&lt;/a&gt;",
+        'name': pv.name,
+        'product': pv.product.name if pv.product.name else '',
+        'qty_manual_add': pv.quantity_manual_add(),
+        'qty_manual_deduct': pv.quantity_manual_deduct(),
+        'qty_purchasing': pv.quantity_purchasing(),
+        'qty_purchasing_receive': pv.quantity_purchasing_receive(),
+        'qty_sale_releasing': pv.quantity_sale_releasing(),
+        'qty_sold': pv.quantity_sold(),
+        'qty_on_hand': pv.quantity_on_hand(),
+    })
+
+response = {
+    'draw': draw,
+    'recordsTotal': total_records,
+    'recordsFiltered': total_records,
+    'data': data
+}
+
+return JsonResponse(response)
+
+</p>

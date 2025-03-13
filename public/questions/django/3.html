@@ -1,0 +1,163 @@
+<h6 class="card-title question-pre">Django: urls
+# core/urls.py
+
+
+# pages/urls.py
+
+
+# employees/urls.py
+
+
+# products/urls.py
+
+
+# purchases/urls.py
+
+
+# apis/urls.py
+
+
+</h6>
+<p class="card-text answer-pre">
+# core/urls.py
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.contrib.auth import views as auth_views
+from users import views as user_views
+from users.forms import CustomLoginForm
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('employees/', include('employees.urls')),
+    path('api/', include('apis.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('profile/', user_views.profile, name='profile'),
+    path('profile/password/', user_views.change_password, name='change_password'),
+    path('accounts/login/', auth_views.LoginView.as_view(
+        template_name='registration/login.html',
+        authentication_form=CustomLoginForm),
+        name='login'),
+    # Include Django auth URLs for login/logout
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('', include('pages.urls')),
+]
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                        document_root=settings.MEDIA_ROOT)
+
+
+# pages/urls.py
+from django.urls import path
+from . import views
+urlpatterns = [
+    path('', views.home, name='home'),
+]
+
+
+# employees/urls.py
+from django.urls import path
+from employees.views import EmployeeListView, 
+                            EmployeeCreateView, 
+                            EmployeeDetailView, 
+                            EmployeeUpdateView, 
+                            ajx_employee_list, 
+                            ajx_export_excel_all_employees, 
+                            ajx_export_excel_filtered_employees, 
+                            ajx_import_insert_excel_employees_celery, 
+                            ajx_import_update_excel_employees_celery, 
+                            ajx_tasks_status
+app_name = 'employees'
+urlpatterns = [
+    path('create/', EmployeeCreateView.as_view(), name='employee-create'),
+    path('<int:pk>/', EmployeeDetailView.as_view(), name='employee-detail'),
+    path('<int:pk>/update/', EmployeeUpdateView.as_view(), name='employee-update'),
+    # path('<int:pk>/delete/', EmployeeDeleteView.as_view(), name='employee-delete'),
+    path('ajx_employee_list/', ajx_employee_list, name='ajx_employee_list'),
+    path('ajx_export_excel_all_employees/', ajx_export_excel_all_employees, name='ajx_export_excel_all_employees'),
+    path('ajx_export_excel_filtered_employees/', ajx_export_excel_filtered_employees, name='ajx_export_excel_filtered_employees'),
+    path('ajx_import_insert_excel_employees_celery', ajx_import_insert_excel_employees_celery, name='ajx_import_insert_excel_employees_celery'),
+    path('ajx_import_update_excel_employees_celery', ajx_import_update_excel_employees_celery, name='ajx_import_update_excel_employees_celery'),
+    path('ajx_tasks_status/<str:task_id>', ajx_tasks_status, name='ajx_tasks_status'),
+    path('', EmployeeListView.as_view(), name='employee-list'),
+]
+
+
+# products/urls.py
+from django.urls import path
+from products.views import ProductListView, ProductCreateView, ProductDetailView, ProductUpdateView, ProductVariationListView, ProductVariationCreateView, ProductVariationDetailView, ProductVariationUpdateView, ajx_product_list, ajx_product_variation_list
+app_name = 'products'
+urlpatterns = [
+    path('create/', ProductCreateView.as_view(), name='product-create'),
+    path('variations/create/', ProductVariationCreateView.as_view(), name='product-variation-create'),
+    path('<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
+    path('variations/<int:pk>/', ProductVariationDetailView.as_view(), name='product-variation-detail'),
+    path('<int:pk>/update/', ProductUpdateView.as_view(), name='product-update'),
+    path('variations/<int:pk>/update/', ProductVariationUpdateView.as_view(), name='product-variation-update'),
+    path('ajx_product_list/', ajx_product_list, name='ajx_product_list'),
+    path('variations/ajx_product_variation_list/', ajx_product_variation_list, name='ajx_product_variation_list'),
+    path('', ProductListView.as_view(), name='product-list'),
+    path('variations/', ProductVariationListView.as_view(), name='product-variation-list'),
+]
+
+
+# purchases/urls.py
+from django.urls import path
+from purchases.views import PurchaseRequestCreateView, PurchaseRequestUpdateView, PurchaseRequestListView, PurchaseRequestDetailView, PurchaseRequestApproveView, PurchaseReceiveCreateView, PurchaseReceiveUpdateView, PurchaseReceiveDetailView, PurchaseReceiveListView, ajx_purchase_request_list, ajx_purchase_receive_list
+app_name = 'purchases'
+urlpatterns = [
+    path('requests/create/', PurchaseRequestCreateView.as_view(), name='purchase-request-create'),
+    path('receives/create/', PurchaseReceiveCreateView.as_view(), name='purchase-receive-create'),
+    path('requests/<int:pk>/update/', PurchaseRequestUpdateView.as_view(), name='purchase-request-update'),
+    path('receives/<int:pk>/update/', PurchaseReceiveUpdateView.as_view(), name='purchase-receive-update'),
+    path('requests/<int:pk>/', PurchaseRequestDetailView.as_view(), name='purchase-request-detail'),
+    path('receives/<int:pk>/', PurchaseReceiveDetailView.as_view(), name='purchase-receive-detail'),
+    path('requests/<int:pk>/approve/', PurchaseRequestApproveView.as_view(), name='purchase-request-approve'),
+    path('requests/ajx_purchase_request_list/', ajx_purchase_request_list, name='ajx_purchase_request_list'),
+    path('receives/ajx_purchase_receive_list/', ajx_purchase_receive_list, name='ajx_purchase_receive_list'),
+    path('requests/', PurchaseRequestListView.as_view(), name='purchase-request-list'),
+    path('receives/', PurchaseReceiveListView.as_view(), name='purchase-receive-list'),
+]
+
+
+# apis/urls.py
+from django.urls import path
+from products.views import ProductListCreateViewApi, 
+                            ProductRetrieveUpdateDestroyViewApi, 
+                            ProductVariationListCreateViewApi, 
+                            ProductVariationRetrieveUpdateDestroyViewApi
+from employees.views import EmployeeListCreateViewApi, 
+                            EmployeeRetrieveUpdateDestroyViewApi
+from purchases.views import PurchaseRequestListCreateViewApi, 
+                            PurchaseRequestRetrieveUpdateDestroyViewApi, 
+                            PurchaseReceiveListCreateViewApi, 
+                            PurchaseReceiveRetrieveUpdateDestroyViewApi
+from sales.views import SaleInvoiceListCreateViewApi, 
+                        SaleInvoiceRetrieveUpdateDestroyViewApi, 
+                        OfficialReceiptListCreateViewApi, 
+                        OfficialReceiptRetrieveUpdateDestroyViewApi
+from inventories.views import InventoryListViewAPI
+from apis.views import GetCustomAuthToken
+from rest_framework.authtoken import views
+app_name = 'api'
+urlpatterns = [
+    path('products/', ProductListCreateViewApi.as_view()),
+    path('products/<int:pk>/', ProductRetrieveUpdateDestroyViewApi.as_view()),
+    path('products/variations/', ProductVariationListCreateViewApi.as_view()),
+    path('products/variations/<int:pk>/', ProductVariationRetrieveUpdateDestroyViewApi.as_view()),
+    path('employees/', EmployeeListCreateViewApi.as_view()),
+    path('employees/<int:pk>/', EmployeeRetrieveUpdateDestroyViewApi.as_view()),
+    path('purchase-requests/', PurchaseRequestListCreateViewApi.as_view()),
+    path('purchase-requests/<int:pk>/', PurchaseRequestRetrieveUpdateDestroyViewApi.as_view()),
+    ...
+    path('inventory-summary/', InventoryListViewAPI.as_view()),
+    # use this one if you don't want a customize response
+    # path('login/', views.obtain_auth_token),
+    path('login/', GetCustomAuthToken.as_view()),
+]
+</p>

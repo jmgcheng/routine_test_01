@@ -1,0 +1,12 @@
+<h6 class="card-title question-pre">Django: Tricks
+# in a detail.html, loop through specialities(ManytoManyField) of the shown record
+    
+</h6>
+<p class="card-text answer-pre">
+# in a detail.html, loop through specialities(ManytoManyField) of the shown record
+{% for specialty in object.position_specialties.all %}
+{{ specialty.name }}
+{% if not forloop.last %}, {% endif %}
+{% endfor %}
+
+</p>

@@ -1,0 +1,272 @@
+<h6 class="card-title question">Django: Setup docker, celery, rabbitmq, nginx, gunicorn</h6>
+<p class="card-text answer-pre">
+    # installations
+    pip install python-decouple
+    pip install gunicorn
+    pip install celery
+    pip install django-celery-results
+    pip install flower
+
+
+
+    # nginx/nginx.conf
+    server {
+        listen 80;
+        location /static/ {
+            alias /app/static/;
+        }
+        location /media/ {
+            alias /app/media/;
+        }
+        location / {
+            include /etc/nginx/conf.d/proxy_params;
+            proxy_buffer_size 128k;
+            proxy_buffers 4 256k;
+            proxy_busy_buffers_size 256k;
+            # 2MB limit max upload 
+            client_max_body_size 2000k;         
+            proxy_pass http://web:8000;
+        }
+    }
+
+
+
+    # nginx/proxy_params
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;    
+
+
+
+    # shscripts/entrypoint.sh
+    !/bin/sh
+    # Apply database migrations
+    python manage.py migrate --noinput
+    # Collect static files
+    python manage.py collectstatic --noinput
+    echo '----------------------hermit ENVIRONMENT VARIABLES------------------------------------'
+    printenv | grep -E "DATABASE_PSYS_NAME|DATABASE_PSYS_USER|DATABASE_PSYS_PORT|DATABASE_PSYS_PASSWORD|DATABASE_PSYS_HOST|DOCKER_ENV|DJANGO_SECRET_KEY_SYS01"
+    echo '----------------------hermit ENVIRONMENT VARIABLES------------------------------------'
+    # prep for cron environment variables
+    printenv | grep -E "DATABASE_PSYS_NAME|DATABASE_PSYS_USER|DATABASE_PSYS_PORT|DATABASE_PSYS_PASSWORD|DATABASE_PSYS_HOST|DOCKER_ENV|DJANGO_SECRET_KEY_SYS01" >> /etc/environment
+    set -a
+    . /etc/environment
+    set +a
+    # # crons
+    # chmod +x /shscripts/cron_dbbackup.sh
+    # service cron restart
+    # echo "0 0 * * * /shscripts/cron_dbbackup.sh" >> /tmp/mycron
+    # crontab /tmp/mycron
+    # service cron restart
+    # ------------------------------------------------
+    # Start the Gunicorn server
+    gunicorn core.wsgi:application --bind 0.0.0.0:8000
+
+
+
+    # core/core/__init__.py
+    from __future__ import absolute_import, unicode_literals
+    from .celery import app as celery_app
+    __all__ = ('celery_app',)    
+
+
+
+    # core/core/celery.py
+    from __future__ import absolute_import, unicode_literals
+    import os
+    from celery import Celery
+    # set the default Django settings module for the 'celery' program.
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+    app = Celery('core')
+    # Using a string here means the worker doesn't have to serialize
+    # the configuration object to child processes.
+    app.config_from_object('django.conf:settings', namespace='CELERY')
+    # Load task modules from all registered Django app configs.
+    app.autodiscover_tasks()    
+
+
+
+    # core/core/settings.py
+    from decouple import config
+    DOCKER_ENV = config('DOCKER_ENV', default=False, cast=bool)
+    INSTALLED_APPS = [
+        ...
+        'django_celery_results',
+    ]    
+    # Celery settings
+    if DOCKER_ENV:
+        CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='amqp://guest:guest@rabbitmq:5672//')
+        CELERY_ACCEPT_CONTENT = ['json']
+        CELERY_TASK_SERIALIZER = 'json'
+        CELERY_RESULT_SERIALIZER = 'json'
+    else:
+        CELERY_BROKER_URL = 'amqp://localhost'
+    CELERY_RESULT_BACKEND = 'django-db'
+    ...
+    INTERNAL_IPS = [
+        '127.0.0.1',
+    ]
+
+    
+
+    # Dockerfile
+    # Use the official Python image from the Docker Hub
+    FROM python:3.12.4-slim
+    # Set environment variables
+    ENV PYTHONDONTWRITEBYTECODE=1
+    ENV PYTHONUNBUFFERED=1
+    # Set work directory
+    WORKDIR /app
+    # Install necessary dependencies
+    RUN apt-get update && apt-get install -y libpq-dev gcc python3-dev build-essential cron wget lsb-release gnupg2
+    # Add PostgreSQL's official APT repository for version 16
+    RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+    # Update package lists and install the PostgreSQL client version 16
+    RUN apt-get update && apt-get install -y postgresql-client-16
+    # Install pip requirements
+    COPY core/requirements.txt /app/
+    RUN pip install --upgrade pip
+    RUN pip install -r requirements.txt
+    # Copy project
+    COPY core /app/
+    # Define build arguments
+    ARG DATABASE_PSYS_NAME
+    ARG DATABASE_PSYS_USER
+    ARG DATABASE_PSYS_PASSWORD
+    ARG DATABASE_PSYS_HOST
+    ARG DATABASE_PSYS_PORT
+    ARG DOCKER_ENV
+    ARG DJANGO_SECRET_KEY_SYS01
+    # Set environment variables
+    ENV DATABASE_NAME=$DATABASE_PSYS_NAME
+    ENV DATABASE_USER=$DATABASE_PSYS_USER
+    ENV DATABASE_PASSWORD=$DATABASE_PSYS_PASSWORD
+    ENV DATABASE_HOST=$DATABASE_PSYS_HOST
+    ENV DATABASE_PORT=$DATABASE_PSYS_PORT
+    ENV DOCKER_ENV=$DOCKER_ENV
+    ENV DJANGO_SECRET_KEY_ISI=$DJANGO_SECRET_KEY_SYS01
+    COPY shscripts /shscripts
+    RUN chmod +x /shscripts/entrypoint.sh
+    ENTRYPOINT ["/shscripts/entrypoint.sh"]
+    
+    
+
+    # docker-compose.yml
+    services:
+        web:
+            build:
+                context: .
+                dockerfile: Dockerfile
+            restart: always
+            environment:
+                DATABASE_PSYS_NAME: ${DATABASE_PSYS_NAME}
+                DATABASE_PSYS_USER: ${DATABASE_PSYS_USER}
+                DATABASE_PSYS_PASSWORD: ${DATABASE_PSYS_PASSWORD}
+                DATABASE_PSYS_HOST: ${DATABASE_PSYS_HOST}
+                DATABASE_PSYS_PORT: ${DATABASE_PSYS_PORT}
+                DOCKER_ENV: "True"
+                DJANGO_SECRET_KEY_SYS01: ${DJANGO_SECRET_KEY_SYS01}
+                CELERY_BROKER_URL: "amqp://rabbitmq:5672//"
+            volumes:
+                - ./core:/app
+                - ./core/static:/app/static
+                - ./shscripts:/shscripts
+                - /etc/localtime:/etc/localtime:ro
+                - /etc/timezone:/etc/timezone:ro
+            ports:
+                - "8000:8000"
+            depends_on:
+                - db
+                - rabbitmq
+        db:
+            image: postgres:16.3
+            restart: always
+            volumes:
+                - postgres_data:/var/lib/postgresql/data/
+                - /etc/localtime:/etc/localtime:ro
+                - /etc/timezone:/etc/timezone:ro
+            environment:
+                POSTGRES_DB: ${DATABASE_PSYS_NAME}
+                POSTGRES_USER: ${DATABASE_PSYS_USER}
+                POSTGRES_PASSWORD: ${DATABASE_PSYS_PASSWORD}
+                POSTGRES_HOST: ${DATABASE_PSYS_HOST}
+                POSTGRES_PORT: ${DATABASE_PSYS_PORT}
+        nginx:
+            image: nginx:1.24
+            restart: always
+            ports:
+                - "80:80"
+            volumes:
+                - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+                - ./nginx/proxy_params:/etc/nginx/conf.d/proxy_params
+                - ./core/static:/app/static
+                - ./core/media:/app/media
+                - /etc/localtime:/etc/localtime:ro
+                - /etc/timezone:/etc/timezone:ro
+            depends_on:
+                - web
+    
+        rabbitmq:
+            image: rabbitmq:management
+            restart: always
+            ports:
+                - "5672:5672"
+                - "15672:15672"
+            environment:
+                RABBITMQ_DEFAULT_VHOST: "/"
+                RABBITMQ_DEFAULT_USER: "guest"
+                RABBITMQ_DEFAULT_PASS: "guest"
+                CELERY_BROKER_URL: "amqp://guest:guest@rabbitmq:5672//"
+            volumes:
+                - /etc/localtime:/etc/localtime:ro
+                - /etc/timezone:/etc/timezone:ro
+        celery:
+            # image: jmgcheng/p_sys01_repo01_web:latest
+            #
+            # build:
+            #   context: .
+            #   dockerfile: Dockerfile\
+            #
+            image: p_sys01_repo01-web:latest # Use the locally built 'web' service image
+            #
+            command: /bin/sh -c "sleep 10 && celery -A core worker --loglevel=info -P threads"
+            restart: always
+            depends_on:
+                - web
+                - rabbitmq
+                - db
+            environment:
+                DATABASE_PSYS_NAME: ${DATABASE_PSYS_NAME}
+                DATABASE_PSYS_USER: ${DATABASE_PSYS_USER}
+                DATABASE_PSYS_PASSWORD: ${DATABASE_PSYS_PASSWORD}
+                DATABASE_PSYS_HOST: ${DATABASE_PSYS_HOST}
+                DATABASE_PSYS_PORT: ${DATABASE_PSYS_PORT}
+                DOCKER_ENV: "True"
+                DJANGO_SECRET_KEY_SYS01: ${DJANGO_SECRET_KEY_SYS01}
+                CELERY_BROKER_URL: "amqp://guest:guest@rabbitmq:5672//"
+            volumes:
+                - ./core:/app
+                - /etc/localtime:/etc/localtime:ro
+                - /etc/timezone:/etc/timezone:ro
+            entrypoint: []
+        flower:
+            image: mher/flower
+            restart: always
+            ports:
+                - "5555:5555"
+            volumes:
+                - /etc/localtime:/etc/localtime:ro
+                - /etc/timezone:/etc/timezone:ro
+            environment:
+                FLOWER_BASIC_AUTH: "user:password"
+                CELERY_BROKER_URL: "amqp://guest:guest@rabbitmq:5672//"
+            command: /bin/sh -c "sleep 30 && celery --broker=amqp://guest:guest@rabbitmq:5672// flower --port=5555"
+            depends_on:
+                - rabbitmq
+                - celery
+    volumes:
+        postgres_data:
+  
+
+</p>

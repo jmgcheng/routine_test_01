@@ -1,0 +1,144 @@
+<h6 class="card-title question">Django: create sample of models for users, employees, customers, products, purchases</h6>
+<p class="card-text answer-pre">
+# users/models.py
+# not needed
+
+
+# employees/models.py
+from django.db import models
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+from datetime import timedelta
+def validate_age(value):
+    today = timezone.now().date()
+    age_limit = today - timedelta(days=18*365.25)
+    if value > age_limit:
+        raise ValidationError('Employee must be at least 18 years old.')
+class EmployeeStatus(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    def __str__(self):
+        return self.name
+class EmployeeJob(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    def __str__(self):
+        return self.name
+class EmployeeJobLevel(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    def __str__(self):
+        return self.name
+class EmployeeJobSpecialty(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    def __str__(self):
+        return self.name
+class Employee(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    company_id = models.CharField(max_length=50, unique=True)
+    contact = models.CharField(max_length=100)
+    middle_name = models.CharField(max_length=100, blank=True)
+    gender = models.CharField(max_length=10, choices=[('MALE', 'MALE'), ('FEMALE', 'FEMALE')])
+    birth_date = models.DateField(validators=[validate_age], blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    status = models.ForeignKey(EmployeeStatus, on_delete=models.SET_NULL, null=True)
+    start_date = models.DateField(blank=True, null=True)
+    regular_date = models.DateField(blank=True, null=True)
+    separation_date = models.DateField(blank=True, null=True)
+    position = models.ForeignKey(EmployeeJob, on_delete=models.SET_NULL, null=True)
+    position_level = models.ForeignKey(EmployeeJobLevel, on_delete=models.SET_NULL, null=True)
+    position_specialties = models.ManyToManyField(EmployeeJobSpecialty, blank=True)
+    def __str__(self):
+        return self.company_id
+
+
+# customers/models.py
+from django.db import models
+class CustomerCategory(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    def __str__(self):
+        return self.name
+class Customer(models.Model):
+    customer_id = models.CharField(max_length=50, unique=True, default='')
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    middle_name = models.CharField(max_length=100, blank=True)
+    category = models.ForeignKey(CustomerCategory, on_delete=models.SET_NULL, null=True)
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
+
+
+# products/models.py
+from django.db import models
+from html_sanitizer.django import get_sanitizer
+class ProductUnit(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+    def __str__(self):
+        return self.name
+class ProductSize(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+    def __str__(self):
+        return self.name
+class ProductColor(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+    def __str__(self):
+        return self.name
+class Product(models.Model):
+    code = models.CharField(max_length=30, unique=True, blank=False, null=False)
+    name = models.CharField(max_length=50, unique=True, blank=False, null=False)
+    excerpt = models.CharField(max_length=200, blank=True)
+    description = models.TextField(blank=True)
+    image_url = models.CharField(max_length=2083, blank=True, null=True)
+    def __str__(self):
+        return self.name
+    def save(self, *args, **kwargs):
+        sanitizer = get_sanitizer()
+        self.excerpt = sanitizer.sanitize(self.excerpt)
+        self.description = sanitizer.sanitize(self.description)
+        super().save(*args, **kwargs)
+class ProductVariation(models.Model):
+    code = models.CharField(max_length=30, unique=True, blank=False, null=False)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=False, null=True, related_name="product")
+    name = models.CharField(max_length=50, unique=True, blank=False, null=False)
+    excerpt = models.CharField(max_length=200, blank=True)
+    description = models.TextField(blank=True)
+    unit = models.ForeignKey(ProductUnit, on_delete=models.SET_NULL, blank=False, null=True, related_name="product_unit")
+    size = models.ForeignKey(ProductSize, on_delete=models.SET_NULL, blank=True, null=True, related_name="product_size")
+    color = models.ForeignKey(ProductColor, on_delete=models.SET_NULL, blank=True, null=True, related_name="product_color")
+    image_url = models.CharField(max_length=2083, blank=True, null=True)
+    quantity_alert = models.IntegerField(default=100)
+    def __str__(self):
+        return self.name
+    def save(self, *args, **kwargs):
+        sanitizer = get_sanitizer()
+        self.excerpt = sanitizer.sanitize(self.excerpt)
+        self.description = sanitizer.sanitize(self.description)
+        super().save(*args, **kwargs)
+
+
+# purchases/models.py
+from django.db import models
+from products.models import ProductVariation
+from employees.models import Employee
+from vendors.models import Vendor
+class PurchaseRequestStatus(models.Model):
+    name = models.CharField(max_length=50, unique=True, null=False)
+    def save(self, *args, **kwargs):
+        self.name = self.name.upper()
+        super().save(*args, **kwargs)
+    def __str__(self):
+        return self.name
+class PurchaseRequestHeader(models.Model):
+    code = models.CharField(max_length=50, unique=True, blank=False, null=False)
+    date = models.DateField()
+    requestor = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="purchase_request_requestor")
+    approver = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="purchase_request_approver", blank=True, null=True)
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, blank=True, null=True)
+    status = models.ForeignKey(PurchaseRequestStatus, on_delete=models.CASCADE)
+    def __str__(self):
+        return f"PurchaseRequestHeader #{self.code}"
+class PurchaseRequestDetail(models.Model):
+    purchase_request_header = models.ForeignKey(PurchaseRequestHeader, on_delete=models.CASCADE, blank=False, null=True, related_name="purchase_request_detail")
+    product_variation = models.ForeignKey(ProductVariation, on_delete=models.CASCADE, related_name="purchase_request_product_variation")
+    quantity_request = models.PositiveIntegerField(default=0, blank=False, null=False)
+    def __str__(self):
+        return f"PurchaseRequestDetail #{self.id}"
+</p>

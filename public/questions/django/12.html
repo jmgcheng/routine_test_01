@@ -1,0 +1,1224 @@
+<h6 class="card-title question-pre">Django: Different implementation showing list of records and detail
+# TemplateView ---
+
+# reviews/views/py
+
+
+# review_list.html
+
+
+
+
+
+
+# ListView and DetailView ---
+
+# reviews/views.py
+
+
+
+
+
+
+# ListView and DetailView ---
+
+# inventories/utils.py
+
+
+# products/views.py
+
+
+# product_list.js
+
+
+# product_variation_list.js
+
+
+# product_list.html
+
+
+# product_detail.html
+
+
+# product_variation_list.html
+
+
+# product_variation_detail.html
+
+
+
+
+
+
+# ListView ---
+
+# inventories/views.py
+
+
+# inventory_list.js
+
+
+
+# inventory_list.html
+
+</h6>
+<p class="card-text answer-pre">
+# TemplateView ---
+
+# reviews/views/py
+class ReviewsListView(TemplateView):
+    template_name = "reviews/review_list.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        reviews = Review.objects.all()
+        context["reviews"] = reviews
+        return context
+class SingleReviewView(TemplateView):
+    template_name = "reviews/single_review.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        review_id = kwargs["id"]
+        selected_review = Review.objects.get(pk=review_id)
+        context["review"] = selected_review
+        return context 
+
+# review_list.html
+&lt;ul&gt;
+    {% for review in reviews %}
+    &lt;li&gt;{{ review.user_name }} (Rating: {{ review.rating }})&lt;/li&gt;
+    {% endfor %}
+&lt;/ul&gt;
+
+# single_review.html
+&lt;h1&gt;{{ review.user_name }}&lt;/h1&gt;
+&lt;p&gt;Rating: {{ review.rating }}&lt;/p&gt;
+&lt;p&gt;{{ review.review_text }}&lt;/p&gt;
+
+
+
+
+
+# ListView and DetailView ---
+
+# reviews/views.py
+from reviews.models import Review
+from django.views.generic import ListView, DetailView
+from .models import Review
+class ReviewsListView(ListView):
+    template_name = "reviews/review_list.html"
+    model = Review
+    context_object_name = "reviews"
+class SingleReviewView(DetailView):
+    template_name = "reviews/single_review.html"
+    model = Review 
+
+
+
+
+
+# ListView and DetailView ---
+
+# inventories/utils.py
+from django.db.models import OuterRef, Subquery, Sum, IntegerField
+from purchases.models import PurchaseRequestDetail, PurchaseReceiveDetail
+from sales.models import SaleInvoiceDetail, OfficialReceiptDetail
+from inventories.models import InventoryAddDetail, InventoryDeductDetail
+def get_quantity_purchasing_subquery():
+    return Subquery(
+        PurchaseRequestDetail.objects.filter(
+            product_variation=OuterRef('pk'),
+            purchase_request_header__status__name="OPEN (PURCHASING)"
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_request')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_purchasing_receive_subquery():
+    return Subquery(
+        PurchaseReceiveDetail.objects.filter(
+            product_variation=OuterRef('pk'),
+            purchase_receive_header__status__name__in=[
+                "RECEIVED (NO ISSUE)", "RECEIVED (WITH ISSUE)", "CLOSED"
+            ]
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_received')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_sale_releasing_subquery():
+    return Subquery(
+        SaleInvoiceDetail.objects.filter(
+            product_variation=OuterRef('pk'),
+            sale_invoice_header__status__name="OPEN (FOR PAYMENT)"
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_request')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_sold_subquery():
+    return Subquery(
+        OfficialReceiptDetail.objects.filter(
+            product_variation=OuterRef('pk'),
+            official_receipt_header__status__name="PAID"
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_paid')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_inventory_add_subquery():
+    return Subquery(
+        InventoryAddDetail.objects.filter(
+            product_variation=OuterRef('pk')
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_added')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_inventory_deduct_subquery():
+    return Subquery(
+        InventoryDeductDetail.objects.filter(
+            product_variation=OuterRef('pk')
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_deducted')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_purchase_request_subquery():
+    return Subquery(
+        PurchaseRequestDetail.objects.filter(
+            product_variation=OuterRef('pk')
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_request')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_purchase_receive_subquery():
+    return Subquery(
+        PurchaseReceiveDetail.objects.filter(
+            product_variation=OuterRef('pk')
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_received')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_sale_invoice_subquery():
+    return Subquery(
+        SaleInvoiceDetail.objects.filter(
+            product_variation=OuterRef('pk')
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_request')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+def get_quantity_official_receipt_subquery():
+    return Subquery(
+        OfficialReceiptDetail.objects.filter(
+            product_variation=OuterRef('pk')
+        ).values('product_variation').annotate(
+            total_quantity=Sum('quantity_paid')
+        ).values('total_quantity'),
+        output_field=IntegerField()
+    )
+
+# products/views.py
+class ProductListView(LoginRequiredMixin, ListView):
+    model = Product
+    template_name = 'products/product_list.html'
+class ProductDetailView(LoginRequiredMixin, DetailView):
+    model = Product
+    template_name = 'products/product_detail.html'
+class ProductVariationListView(LoginRequiredMixin, ListView):
+    model = ProductVariation
+    template_name = 'products/product_variation_list.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['colors'] = ProductColor.objects.all()
+        context['sizes'] = ProductSize.objects.all()
+        context['units'] = ProductUnit.objects.all()
+        context['products'] = Product.objects.all()
+        return context
+class ProductVariationDetailView(LoginRequiredMixin, DetailView):
+    model = ProductVariation
+    template_name = 'products/product_variation_detail.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product_variation = get_object_or_404(ProductVariation, pk=self.kwargs['pk'])
+        # Annotate the object with reusable subqueries
+        product_variation = ProductVariation.objects.filter(pk=product_variation.pk).annotate(
+            quantity_manual_add=Coalesce(
+                get_quantity_inventory_add_subquery(), 0),
+            quantity_manual_deduct=Coalesce(
+                get_quantity_inventory_deduct_subquery(), 0),
+            quantity_purchasing=Coalesce(
+                get_quantity_purchasing_subquery(), 0),
+            quantity_purchasing_receive=Coalesce(
+                get_quantity_purchasing_receive_subquery(), 0),
+            quantity_sale_releasing=Coalesce(
+                get_quantity_sale_releasing_subquery(), 0),
+            quantity_sold=Coalesce(get_quantity_sold_subquery(), 0),
+            quantity_on_hand=(
+                Coalesce(get_quantity_purchasing_receive_subquery(), 0)
+                + Coalesce(get_quantity_inventory_add_subquery(), 0)
+                - Coalesce(get_quantity_inventory_deduct_subquery(), 0)
+                - Coalesce(get_quantity_sold_subquery(), 0)
+            )
+        ).first()
+        # Add the annotated object to the context
+        context['annotated_product_variation'] = product_variation
+        return context
+@login_required
+def ajx_product_list(request):
+    draw = int(request.GET.get('draw', 1))
+    start = int(request.GET.get('start', 0))
+    length = int(request.GET.get('length', 10))
+    search_value = request.GET.get('search[value]', '')
+    #
+    products = Product.objects.all()
+    if search_value:
+        products = products.filter(
+            Q(code__icontains=search_value) |
+            Q(name__icontains=search_value)
+        ).distinct()
+    # Handle ordering
+    order_column_index = int(request.GET.get('order[0][column]', 0))
+    order_direction = request.GET.get('order[0][dir]', 'asc')
+    order_column = request.GET.get(f'columns[{order_column_index}][data]', 'id')
+    if order_direction == 'desc':
+        order_column = f'-{order_column}'
+    products = products.order_by(order_column)
+    paginator = Paginator(products, length)
+    total_records = paginator.count
+    products_page = paginator.get_page(start // length + 1)
+    #
+    data = []
+    for p in products_page:
+        data.append({
+            'code': f"&lt;a href='/products/{p.id}/'&gt;{p.code}&lt;/a&gt;",
+            'name': p.name,
+        })
+    response = {
+        'draw': draw,
+        'recordsTotal': total_records,
+        'recordsFiltered': total_records,
+        'data': data
+    }
+    return JsonResponse(response)
+@login_required
+def ajx_product_variation_list(request):
+    draw = int(request.GET.get('draw', 1))
+    start = int(request.GET.get('start', 0))
+    length = int(request.GET.get('length', 10))
+    search_value = request.GET.get('search[value]', '')
+    product_filter = request.GET.getlist('product[]', [])
+    unit_filter = request.GET.getlist('unit[]', [])
+    size_filter = request.GET.getlist('size[]', [])
+    color_filter = request.GET.getlist('color[]', [])
+    #
+    product_variations = ProductVariation.objects.all()
+    if search_value:
+        product_variations = product_variations.filter(
+            Q(code__icontains=search_value) |
+            Q(product__name__icontains=search_value) |
+            Q(name__icontains=search_value) |
+            Q(unit__name__icontains=search_value) |
+            Q(size__name__icontains=search_value) |
+            Q(color__name__icontains=search_value)
+        ).distinct()
+    if product_filter:
+        product_variations = product_variations.filter(product__name__in=product_filter)
+    if unit_filter:
+        product_variations = product_variations.filter(unit__name__in=unit_filter)
+    if size_filter:
+        product_variations = product_variations.filter(size__name__in=size_filter)
+    if color_filter:
+        product_variations = product_variations.filter(color__name__in=color_filter)
+    # Handle ordering
+    order_column_index = int(request.GET.get('order[0][column]', 0))
+    order_direction = request.GET.get('order[0][dir]', 'asc')
+    order_column = request.GET.get(f'columns[{order_column_index}][data]', 'id')
+    if order_column == 'product':
+        order_column = 'product__name'
+        if order_direction == 'desc':
+            product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+    elif order_column == 'unit':
+        order_column = 'unit__name'
+        if order_direction == 'desc':
+            product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+    elif order_column == 'color':
+        order_column = 'color__name'
+        if order_direction == 'desc':
+            product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+    else:
+        if order_direction == 'desc':
+            order_column = f'-{order_column}'
+        product_variations = product_variations.order_by(order_column)
+    #
+    product_variations = product_variations.select_related('product', 'unit', 'size', 'color')
+    paginator = Paginator(product_variations, length)
+    total_records = paginator.count
+    product_variations_page = paginator.get_page(start // length + 1)
+    #
+    data = []
+    for pv in product_variations_page:
+        data.append({
+            'code': f"&lt;a href='/products/variations/{pv.id}/'&gt;{pv.code}&lt;/a&gt;",
+            'name': pv.name,
+            'size': pv.size.name if pv.size else '',
+            'unit': pv.unit.name if pv.unit else '',
+            'color': pv.color.name if pv.color else '',
+            'product': pv.product.name if pv.product.name else '',
+            'quantity_alert': pv.quantity_alert if pv.quantity_alert else '',
+        })
+    response = {
+        'draw': draw,
+        'recordsTotal': total_records,
+        'recordsFiltered': total_records,
+        'data': data
+    }
+    return JsonResponse(response)
+
+# product_list.js
+$(document).ready(function() {
+    console.log('product_list.js ready');
+    let table = $('#dataTable').DataTable({
+        processing: true,
+        serverSide: true,
+        scrollX: true,
+        ajax: {
+            url: "/products/ajx_product_list/",
+            type: 'GET',
+            data: function(d) {}
+        },
+        columns: [
+            { data: 'code' },
+            { data: 'name' },
+        ],
+        layout: {,
+            topStart: 'search',
+            top2End: 'info',
+            topEnd: 'pageLength',
+            bottomStart: 'paging',
+            bottomEnd: 'info',
+        },
+        order: [[0, 'asc']],
+        pageLength: 25,
+    });
+});
+
+# product_variation_list.js
+$(document).ready(function() {
+    console.log('product_variation_list.js ready');
+    let table = $('#dataTable').DataTable({
+        processing: true,
+        serverSide: true,
+        scrollX: true,
+        ajax: {
+            url: "/products/variations/ajx_product_variation_list/",
+            type: 'GET',
+            data: function(d) {
+                d.product = getCheckedValues('chkProduct');
+                d.unit = getCheckedValues('chkUnit');
+                d.size = getCheckedValues('chkSize');
+                d.color = getCheckedValues('chkColor');
+            }
+        },
+        columns: [
+            { data: 'code' },
+            { data: 'name' },
+            { data: 'size' },
+            { data: 'unit' },
+            { data: 'color' },
+            { data: 'product' },
+            { data: 'quantity_alert' },
+        ],
+        layout: {
+            // topStart: 'pageLength',
+            // topEnd: 'search',
+            // bottomStart: 'info',
+            // bottomEnd: 'paging'
+            // top2Start: 'pageLength',
+            topStart: 'search',
+            top2End: 'info',
+            topEnd: 'pageLength',
+            bottomStart: 'paging',
+            bottomEnd: 'info',
+            // bottom2Start: 'info',
+            // bottom2End: 'paging'
+        },
+        order: [[0, 'asc']],
+        pageLength: 25,
+    });
+    $('input[type=checkbox][name=chkProduct], input[type=checkbox][name=chkUnit], input[type=checkbox][name=chkSize], input[type=checkbox][name=chkColor]').change(function() {
+        let groupName = $(this).attr("name");
+        // get the master checkbox for this group
+        let groupAllCheckbox = $('#'+groupName+'-0');
+        // 
+        // get the other group checkbox that is not master 
+        let otherCheckboxes = $('input[type=checkbox][name='+groupName+']').not(groupAllCheckbox);
+        // is this the master your changing?
+        if ($(this).is(groupAllCheckbox)) {
+            if (groupAllCheckbox.prop('checked')) {
+                otherCheckboxes.prop('checked', true);
+            } else {
+                otherCheckboxes.prop('checked', false);
+            }
+        } else {
+            if (otherCheckboxes.filter(':checked').length === otherCheckboxes.length) {
+                groupAllCheckbox.prop('checked', true);
+            } else {
+                groupAllCheckbox.prop('checked', false);
+            }
+        }
+        table.draw();
+    });
+    $('#resetFilters').on('click', function() {
+        $('form select').each(function(index) {
+            $(this).val('');
+        })
+        $('#dataTable_filter input').val('');
+        $("input[type=radio][value='']").prop('checked', true);
+        $("input[type=checkbox][customType='datatableFilter']").prop('checked', false);
+        $('.collapse').collapse('hide');
+        table.page.len(25).draw();
+        table.order([0, 'asc']).draw();
+        table.search('').draw();
+        table.columns().search('');
+        table.draw();
+    });
+    function getCheckedValues(name) {
+        var values = [];
+        $('input[name="' + name + '"]:checked').each(function() {
+            let val = $(this).val();
+            values.push(val);
+            return [...new Set(values)];  // Remove duplicates
+        });
+        return values;
+    }
+});
+
+# product_list.html
+{% extends "base.html" %} 
+{% load static %} 
+{% block title %}Product List{% endblock %} 
+{% block styles_bmain %}
+&lt;link href="https://cdn.datatables.net/v/bs5/dt-2.1.8/fc-5.0.4/fh-4.0.1/r-3.0.3/rg-1.5.1/rr-1.5.0/sc-2.4.3/datatables.min.css" rel="stylesheet"&gt;
+{% endblock %} 
+{% block styles %} 
+{% endblock %} 
+{% block content %}
+&lt;!-- Begin Page Content --&gt;
+&lt;div class="container-fluid"&gt;
+    &lt;!-- Page Heading --&gt;
+    &lt;div class="d-sm-flex align-items-center justify-content-between mb-4"&gt;
+    &lt;h1 class="h3 mb-0 text-gray-800"&gt;Products&lt;/h1&gt;
+    &lt;/div&gt;
+    &lt;!-- Content Row --&gt;
+    &lt;div class="row"&gt;
+    &lt;div class="col"&gt;
+        &lt;div class="card shadow mb-4"&gt;
+        &lt;div class="card-header py-3"&gt;
+            &lt;h6 class="m-0 font-weight-bold text-primary"&gt;Product - List&lt;/h6&gt;
+        &lt;/div&gt;
+        &lt;div class="card-body"&gt;
+            &lt;div class="table-responsive"&gt;
+            &lt;table id="dataTable" class="table table-sm table-striped table-hover"&gt;
+                &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;Product Code&lt;/th&gt;
+                    &lt;th&gt;Name&lt;/th&gt;
+                &lt;/tr&gt;
+                &lt;/thead&gt;
+                &lt;tbody&gt;&lt;/tbody&gt;
+            &lt;/table&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+            &lt;div class="row"&gt;
+                &lt;div class="col"&gt;&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- /.container-fluid --&gt;
+{% endblock %} 
+{% block scripts_bmain %}
+&lt;script src="https://cdn.datatables.net/v/bs5/dt-2.1.8/fc-5.0.4/fh-4.0.1/r-3.0.3/rg-1.5.1/rr-1.5.0/sc-2.4.3/datatables.min.js"&gt;&lt;/script&gt;
+{% endblock %} 
+{% block scripts %}
+&lt;script src="{% static 'js/product_list.js' %}"&gt;&lt;/script&gt;
+{% endblock %}
+
+# product_detail.html
+{% extends "base.html" %}
+{% block title %}Product Detail{% endblock %}
+{% block content %}
+    &lt;div class="container-fluid"&gt;
+    &lt;!-- Page Heading --&gt;
+    &lt;div class="d-sm-flex align-items-center justify-content-between mb-4"&gt;
+        &lt;h1 class="h3 mb-0 text-gray-800"&gt;Product&lt;/h1&gt;
+    &lt;/div&gt;
+    &lt;!-- Content Row --&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col-xl-6 col-lg-7"&gt;
+            &lt;div class="card shadow mb-4"&gt;
+                &lt;div class="card-header py-3"&gt;
+                    &lt;h6 class="m-0 font-weight-bold text-primary"&gt;Product Details&lt;/h6&gt;
+                &lt;/div&gt;
+                &lt;div class="card-body"&gt;
+                    &lt;table class="table table-hover table-bordered"&gt;
+                    &lt;tr&gt;
+                        &lt;th class="col-3" scope="row"&gt;Code:&lt;/th&gt;
+                        &lt;td&gt;{{object.code}}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th scope="row"&gt;Name:&lt;/th&gt;
+                        &lt;td&gt;{{ object.name }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th scope="row"&gt;Excerpt:&lt;/th&gt;
+                        &lt;td&gt;{{ object.excerpt }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th scope="row"&gt;Description:&lt;/th&gt;
+                        &lt;td&gt;{{ object.description }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th scope="row"&gt;Image Url:&lt;/th&gt;
+                        &lt;td&gt;{{ object.image_url }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;/table&gt;
+                    &lt;div class="text-right"&gt;
+                    &lt;a class="btn btn-secondary" href="{% url 'products:product-update' object.pk %}"&gt;Edit Product&lt;/a&gt; 
+                    &lt;a class="btn btn-secondary" href="{% url 'products:product-list' %}"&gt;Product List&lt;/a&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="col-xl-6 col-lg-5"&gt;
+            &lt;div class="card shadow mb-4"&gt;
+                &lt;div class="card-header py-3"&gt;
+                    &lt;h6 class="m-0 font-weight-bold text-info"&gt;Future Section&lt;/h6&gt;
+                &lt;/div&gt;
+                &lt;div class="card-body"&gt;
+                    &lt;p&gt;
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique omnis exercitationem adipisci eos modi, dignissimos aut expedita, mollitia delectus nam ut repellendus a? Modi, laboriosam deleniti placeat iure deserunt molestias.
+                    &lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+{% endblock %}
+
+# product_variation_list.html
+{% extends "base.html" %} 
+{% load static %} 
+{% block title %}Product Variation List{% endblock %} 
+{% block styles_bmain %}
+&lt;link href="https://cdn.datatables.net/v/bs5/dt-2.1.8/fc-5.0.4/fh-4.0.1/r-3.0.3/rg-1.5.1/rr-1.5.0/sc-2.4.3/datatables.min.css" rel="stylesheet"&gt;
+{% endblock %} 
+{% block styles %} 
+{% endblock %} 
+{% block content %}
+&lt;!-- Begin Page Content --&gt;
+&lt;div class="container-fluid"&gt;
+    &lt;!-- Page Heading --&gt;
+    &lt;div class="d-sm-flex align-items-center justify-content-between mb-4"&gt;
+    &lt;h1 class="h3 mb-0 text-gray-800"&gt;Product Variations&lt;/h1&gt;
+    &lt;/div&gt;
+    &lt;!-- Content Row --&gt;
+    &lt;div class="row"&gt;
+    &lt;div class="col"&gt;
+        &lt;div class="card shadow mb-4"&gt;
+        &lt;div class="card-header py-3"&gt;
+            &lt;h6 class="m-0 font-weight-bold text-primary"&gt;Product Variation - List&lt;/h6&gt;
+        &lt;/div&gt;
+        &lt;div class="card-body"&gt;
+            &lt;div&gt;
+            &lt;form&gt;
+                &lt;div id="accordionDatatableFilter" class="mb-3"&gt;
+                    &lt;div class="row accordion"&gt;
+                    &lt;!-- filter product --&gt;
+                    &lt;div class="card col-md"&gt;
+                        &lt;div
+                        class="card-header accordion-button collapsed"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseDF1"
+                        &gt;
+                        &lt;h5 class="mb-0"&gt;
+                            &lt;button type="button" class="btn"&gt;
+                            filter Product:
+                            &lt;/button&gt;
+                        &lt;/h5&gt;
+                        &lt;/div&gt;
+                        &lt;div id="collapseDF1" class="collapse"&gt;
+                        &lt;div class="card-body"&gt;
+                            &lt;input
+                            type="checkbox"
+                            name="chkProduct"
+                            id="chkProduct-0"
+                            value=""
+                            class="btn-check"
+                            customType="datatableFilter"
+                            /&gt;
+                            &lt;label class="btn btn-sm" for="chkProduct-0"
+                            &gt;ALL&lt;/label
+                            &gt;
+                            {% for product in products %}
+                            &lt;input
+                            type="checkbox"
+                            name="chkProduct"
+                            id="chkProduct-{{ forloop.counter }}"
+                            value="{{ product.name }}"
+                            class="btn-check"
+                            customType="datatableFilter"
+                            /&gt;
+                            &lt;label
+                            class="btn btn-sm"
+                            for="chkProduct-{{ forloop.counter }}"
+                            &gt;{{ product.name }}&lt;/label
+                            &gt;
+                            {% endfor %}
+                        &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;!-- filter unit --&gt;
+                    &lt;div class="card col-md"&gt;
+                        &lt;div
+                        class="card-header accordion-button collapsed"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseDF2"
+                        &gt;
+                        &lt;h5 class="mb-0"&gt;
+                            &lt;button type="button" class="btn"&gt;
+                            filter Unit:
+                            &lt;/button&gt;
+                        &lt;/h5&gt;
+                        &lt;/div&gt;
+                        &lt;div id="collapseDF2" class="collapse"&gt;
+                        &lt;div class="card-body"&gt;
+                            &lt;input
+                            type="checkbox"
+                            name="chkUnit"
+                            id="chkUnit-0"
+                            value=""
+                            class="btn-check"
+                            customType="datatableFilter"
+                            /&gt;
+                            &lt;label class="btn btn-sm" for="chkUnit-0"
+                            &gt;ALL&lt;/label
+                            &gt;
+                            {% for unit in units %}
+                            &lt;input
+                            type="checkbox"
+                            name="chkUnit"
+                            id="chkUnit-{{ forloop.counter }}"
+                            value="{{ unit.name }}"
+                            class="btn-check"
+                            customType="datatableFilter"
+                            /&gt;
+                            &lt;label
+                            class="btn btn-sm"
+                            for="chkUnit-{{ forloop.counter }}"
+                            &gt;{{ unit.name }}&lt;/label
+                            &gt;
+                            {% endfor %}
+                        &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class="row accordion"&gt;
+                    &lt;!-- filter size --&gt;
+                    &lt;div class="card col-md"&gt;
+                        &lt;div
+                        class="card-header accordion-button collapsed"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseDF3"
+                        &gt;
+                        &lt;h5 class="mb-0"&gt;
+                            &lt;button type="button" class="btn"&gt;
+                            filter Size:
+                            &lt;/button&gt;
+                        &lt;/h5&gt;
+                        &lt;/div&gt;
+                        &lt;div id="collapseDF3" class="collapse"&gt;
+                        &lt;div class="card-body"&gt;
+                            &lt;input
+                            type="checkbox"
+                            name="chkSize"
+                            id="chkSize-0"
+                            value=""
+                            class="btn-check"
+                            customType="datatableFilter"
+                            /&gt;
+                            &lt;label class="btn btn-sm" for="chkSize-0"
+                            &gt;ALL&lt;/label
+                            &gt;
+                            {% for size in sizes %}
+                            &lt;input
+                            type="checkbox"
+                            name="chkSize"
+                            id="chkSize-{{ forloop.counter }}"
+                            value="{{ size.name }}"
+                            class="btn-check"
+                            customType="datatableFilter"
+                            /&gt;
+                            &lt;label
+                            class="btn btn-sm"
+                            for="chkSize-{{ forloop.counter }}"
+                            &gt;{{ size.name }}&lt;/label
+                            &gt;
+                            {% endfor %}
+                        &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;!-- filter color --&gt;
+                    &lt;div class="card col-md"&gt;
+                        &lt;div
+                        class="card-header accordion-button collapsed"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseDF4"
+                        &gt;
+                        &lt;h5 class="mb-0"&gt;
+                            &lt;button type="button" class="btn"&gt;
+                            filter Color:
+                            &lt;/button&gt;
+                        &lt;/h5&gt;
+                        &lt;/div&gt;
+                        &lt;div id="collapseDF4" class="collapse"&gt;
+                        &lt;div class="card-body"&gt;
+                            &lt;input
+                            type="checkbox"
+                            name="chkColor"
+                            id="chkColor-0"
+                            value=""
+                            class="btn-check"
+                            customType="datatableFilter"
+                            /&gt;
+                            &lt;label class="btn btn-sm" for="chkColor-0"
+                            &gt;ALL&lt;/label
+                            &gt;
+                            {% for color in colors %}
+                            &lt;input
+                            type="checkbox"
+                            name="chkColor"
+                            id="chkColor-{{ forloop.counter }}"
+                            value="{{ color.name }}"
+                            class="btn-check"
+                            customType="datatableFilter"
+                            /&gt;
+                            &lt;label
+                            class="btn btn-sm"
+                            for="chkColor-{{ forloop.counter }}"
+                            &gt;{{ color.name }}&lt;/label
+                            &gt;
+                            {% endfor %}
+                        &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class="row"&gt;
+                    &lt;div class="col"&gt;
+                        &lt;div class="form-group"&gt;
+                        &lt;br /&gt;
+                        &lt;button type="button" class="btn btn-sm btn-secondary" id="resetFilters"&gt;
+                            Reset Filters
+                        &lt;/button&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/form&gt;
+            &lt;/div&gt;
+            &lt;div class="table-responsive"&gt;
+            &lt;table id="dataTable" class="table table-sm table-striped table-hover"&gt;
+                &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;Product Variation Code&lt;/th&gt;
+                    &lt;th&gt;Name&lt;/th&gt;
+                    &lt;th&gt;Size&lt;/th&gt;
+                    &lt;th&gt;Unit&lt;/th&gt;
+                    &lt;th&gt;Color&lt;/th&gt;
+                    &lt;th&gt;Product&lt;/th&gt;
+                    &lt;th&gt;Quantity Alert&lt;/th&gt;
+                &lt;/tr&gt;
+                &lt;/thead&gt;
+                &lt;tbody&gt;&lt;/tbody&gt;
+            &lt;/table&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+            &lt;div class="row"&gt;
+                &lt;div class="col"&gt;&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- /.container-fluid --&gt;
+{% endblock %} 
+{% block scripts_bmain %}
+&lt;script src="https://cdn.datatables.net/v/bs5/dt-2.1.8/fc-5.0.4/fh-4.0.1/r-3.0.3/rg-1.5.1/rr-1.5.0/sc-2.4.3/datatables.min.js"&gt;&lt;/script&gt;
+{% endblock %} 
+{% block scripts %}
+&lt;script src="{% static 'js/product_variation_list.js' %}"&gt;&lt;/script&gt;
+{% endblock %}
+
+# product_variation_detail.html
+{% extends "base.html" %}
+{% block title %}Product Variation Detail{% endblock %}
+{% block content %}
+    &lt;div class="container-fluid"&gt;
+    &lt;!-- Page Heading --&gt;
+    &lt;div class="d-sm-flex align-items-center justify-content-between mb-4"&gt;
+        &lt;h1 class="h3 mb-0 text-gray-800"&gt;Product Variation&lt;/h1&gt;
+    &lt;/div&gt;
+    &lt;!-- Content Row --&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col-xl-6 col-lg-7"&gt;
+            &lt;div class="card shadow mb-4"&gt;
+                &lt;div class="card-header py-3"&gt;
+                    &lt;h6 class="m-0 font-weight-bold text-primary"&gt;Product Variation Details&lt;/h6&gt;
+                &lt;/div&gt;
+                &lt;div class="card-body"&gt;
+                    &lt;table class="table table-hover table-bordered"&gt;
+                    &lt;tr&gt;
+                        &lt;th class="col-3" scope="row"&gt;Code:&lt;/th&gt;
+                        &lt;td&gt;{{object.code}}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th class="col-3" scope="row"&gt;Product:&lt;/th&gt;
+                        &lt;td&gt;{{object.product.name}}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th scope="row"&gt;Name:&lt;/th&gt;
+                        &lt;td&gt;{{ object.name }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th scope="row"&gt;Excerpt:&lt;/th&gt;
+                        &lt;td&gt;{{ object.excerpt }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th scope="row"&gt;Description:&lt;/th&gt;
+                        &lt;td&gt;{{ object.description }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th class="col-3" scope="row"&gt;Unit:&lt;/th&gt;
+                        &lt;td&gt;{{object.unit}}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th class="col-3" scope="row"&gt;Size:&lt;/th&gt;
+                        &lt;td&gt;{{object.Size}}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th class="col-3" scope="row"&gt;Color:&lt;/th&gt;
+                        &lt;td&gt;{{object.color}}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th scope="row"&gt;Image Url:&lt;/th&gt;
+                        &lt;td&gt;{{ object.image_url }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th scope="row"&gt;Quantity Alert:&lt;/th&gt;
+                        &lt;td&gt;{{ object.quantity_alert }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th class="col-3" scope="row"&gt;Inventory Manual Add&lt;/th&gt;
+                        &lt;td&gt;{{ annotated_product_variation.quantity_manual_add }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th class="col-3" scope="row"&gt;Inventory Manual Deduct&lt;/th&gt;
+                        &lt;td&gt;{{ annotated_product_variation.quantity_manual_deduct }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th class="col-3" scope="row"&gt;Purchasing&lt;/th&gt;
+                        &lt;td&gt;{{ annotated_product_variation.quantity_purchasing }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th class="col-3" scope="row"&gt;Purchase Received&lt;/th&gt;
+                        &lt;td&gt;{{ annotated_product_variation.quantity_purchasing_receive }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th class="col-3" scope="row"&gt;Sales Releasing&lt;/th&gt;
+                        &lt;td&gt;{{ annotated_product_variation.quantity_sale_releasing }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th class="col-3" scope="row"&gt;Sold&lt;/th&gt;
+                        &lt;td&gt;{{ annotated_product_variation.quantity_sold }}&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th class="col-3" scope="row"&gt;On Hand&lt;/th&gt;
+                        &lt;td&gt;{{ annotated_product_variation.quantity_on_hand }}&lt;/td&gt;
+                    &lt;/tr&gt;                    
+                    &lt;/table&gt;
+                    &lt;div class="text-right"&gt;
+                    &lt;a class="btn btn-secondary" href="{% url 'products:product-variation-update' object.pk %}"&gt;Edit Product Variation&lt;/a&gt; 
+                    &lt;a class="btn btn-secondary" href="{% url 'products:product-variation-list' %}"&gt;Product Variation List&lt;/a&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="col-xl-6 col-lg-5"&gt;
+            &lt;div class="card shadow mb-4"&gt;
+                &lt;div class="card-header py-3"&gt;
+                    &lt;h6 class="m-0 font-weight-bold text-info"&gt;Future Section&lt;/h6&gt;
+                &lt;/div&gt;
+                &lt;div class="card-body"&gt;
+                    &lt;p&gt;
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique omnis exercitationem adipisci eos modi, dignissimos aut expedita, mollitia delectus nam ut repellendus a? Modi, laboriosam deleniti placeat iure deserunt molestias.
+                    &lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+{% endblock %}
+
+
+
+
+
+# ListView ---
+
+# inventories/views.py
+class InventoryListView(LoginRequiredMixin, ListView):
+    model = ProductVariation
+    template_name = 'inventories/inventory_list.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+@login_required
+def ajx_inventory_list(request):
+    draw = int(request.GET.get('draw', 1))
+    start = int(request.GET.get('start', 0))
+    length = int(request.GET.get('length', 10))
+    search_value = request.GET.get('search[value]', '')
+    #
+    product_variations = ProductVariation.objects.all()
+    if search_value:
+        product_variations = product_variations.filter(
+            Q(code__icontains=search_value) |
+            Q(product__name__icontains=search_value) |
+            Q(name__icontains=search_value)
+        ).distinct()
+    # filter
+    # annotate
+    product_variations = product_variations.annotate(
+        quantity_manual_add_annotated=Coalesce(get_quantity_inventory_add_subquery(), 0),
+        quantity_manual_deduct_annotated=Coalesce(get_quantity_inventory_deduct_subquery(), 0),
+        quantity_purchasing_annotated=Coalesce(get_quantity_purchasing_subquery(), 0),
+        quantity_purchasing_receive_annotated=Coalesce(get_quantity_purchasing_receive_subquery(), 0),
+        quantity_sale_releasing_annotated=Coalesce(get_quantity_sale_releasing_subquery(), 0),
+        quantity_sold_annotated=Coalesce(get_quantity_sold_subquery(), 0),
+        quantity_on_hand_annotated=(
+            Coalesce(get_quantity_purchasing_receive_subquery(), 0)
+            + Coalesce(get_quantity_inventory_add_subquery(), 0)
+            - Coalesce(get_quantity_inventory_deduct_subquery(), 0)
+            - Coalesce(get_quantity_sold_subquery(), 0)
+        )
+    )
+    # Handle ordering
+    order_column_index = int(request.GET.get('order[0][column]', 0))
+    order_direction = request.GET.get('order[0][dir]', 'asc')
+    order_column = request.GET.get(f'columns[{order_column_index}][data]', 'id')
+    if order_column == 'product':
+        order_column = 'product__name'
+        if order_direction == 'desc':
+            product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+    elif order_column == 'qty_manual_add':
+        order_column = 'quantity_manual_add_annotated'
+        if order_direction == 'desc':
+            product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+    elif order_column == 'qty_manual_deduct':
+        order_column = 'quantity_manual_deduct_annotated'
+        if order_direction == 'desc':
+            product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+    elif order_column == 'qty_purchasing':
+        order_column = 'quantity_purchasing_annotated'
+        if order_direction == 'desc':
+            product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+    elif order_column == 'qty_purchasing_receive':
+        order_column = 'quantity_purchasing_receive_annotated'
+        if order_direction == 'desc':
+            product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+    elif order_column == 'qty_sale_releasing':
+        order_column = 'quantity_sale_releasing_annotated'
+        if order_direction == 'desc':
+            product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+    elif order_column == 'qty_sold':
+        order_column = 'quantity_sold_annotated'
+        if order_direction == 'desc':
+            product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+    elif order_column == 'qty_on_hand':
+        order_column = 'quantity_on_hand_annotated'
+        if order_direction == 'desc':
+            product_variations = product_variations.order_by(F(order_column).desc(nulls_last=True))
+        else:
+            product_variations = product_variations.order_by(F(order_column).asc(nulls_last=True))
+    else:
+        if order_direction == 'desc':
+            order_column = f'-{order_column}'
+        product_variations = product_variations.order_by(order_column)
+    #
+    product_variations = product_variations.select_related('product')
+    paginator = Paginator(product_variations, length)
+    total_records = paginator.count
+    product_variations_page = paginator.get_page(start // length + 1)
+    #
+    data = []
+    for pv in product_variations_page:
+        data.append({
+            'code': f"&lt;a href='/products/variations/{pv.id}/'&gt;{pv.code}&lt;/a&gt;",
+            'name': pv.name,
+            'product': pv.product.name if pv.product.name else '',
+            'qty_manual_add': pv.quantity_manual_add(),
+            'qty_manual_deduct': pv.quantity_manual_deduct(),
+            'qty_purchasing': pv.quantity_purchasing(),
+            'qty_purchasing_receive': pv.quantity_purchasing_receive(),
+            'qty_sale_releasing': pv.quantity_sale_releasing(),
+            'qty_sold': pv.quantity_sold(),
+            'qty_on_hand': pv.quantity_on_hand(),
+        })
+    response = {
+        'draw': draw,
+        'recordsTotal': total_records,
+        'recordsFiltered': total_records,
+        'data': data
+    }
+    return JsonResponse(response)
+
+# inventory_list.js
+$(document).ready(function() {
+    console.log('inventory_list.js ready');
+    let table = $('#dataTable').DataTable({
+        processing: true,
+        serverSide: true,
+        scrollX: true,
+        ajax: {
+            url: "/inventories/ajx_inventory_list/",
+            type: 'GET',
+            data: function(d) {}
+        },
+        columns: [
+            { data: 'code' },
+            { data: 'name' },
+            { data: 'product' },
+            { data: 'qty_manual_add' },
+            { data: 'qty_manual_deduct' },
+            { data: 'qty_purchasing' },
+            { data: 'qty_purchasing_receive' },
+            { data: 'qty_sale_releasing' },
+            { data: 'qty_sold' },
+            { data: 'qty_on_hand' },
+        ],
+        layout: {
+            // topStart: 'pageLength',
+            // topEnd: 'search',
+            // bottomStart: 'info',
+            // bottomEnd: 'paging'
+            // top2Start: 'pageLength',
+            topStart: 'search',
+            top2End: 'info',
+            topEnd: 'pageLength',
+            bottomStart: 'paging',
+            bottomEnd: 'info',
+            // bottom2Start: 'info',
+            // bottom2End: 'paging'
+        },
+        order: [[0, 'asc']],
+        pageLength: 25,
+    });
+});
+
+
+# inventory_list.html
+{% extends "base.html" %} 
+{% load static %} 
+{% block title %}Product Variation List{% endblock %} 
+{% block styles_bmain %}
+&lt;link href="https://cdn.datatables.net/v/bs5/dt-2.1.8/fc-5.0.4/fh-4.0.1/r-3.0.3/rg-1.5.1/rr-1.5.0/sc-2.4.3/datatables.min.css" rel="stylesheet"&gt;
+{% endblock %} 
+{% block styles %} 
+{% endblock %} 
+{% block content %}
+&lt;!-- Begin Page Content --&gt;
+&lt;div class="container-fluid"&gt;
+    &lt;!-- Page Heading --&gt;
+    &lt;div class="d-sm-flex align-items-center justify-content-between mb-4"&gt;
+    &lt;h1 class="h3 mb-0 text-gray-800"&gt;Inventories&lt;/h1&gt;
+    &lt;/div&gt;
+    &lt;!-- Content Row --&gt;
+    &lt;div class="row"&gt;
+    &lt;div class="col"&gt;
+        &lt;div class="card shadow mb-4"&gt;
+        &lt;div class="card-header py-3"&gt;
+            &lt;h6 class="m-0 font-weight-bold text-primary"&gt;Inventory - List&lt;/h6&gt;
+        &lt;/div&gt;
+        &lt;div class="card-body"&gt;
+            &lt;div&gt;
+            &lt;form&gt;
+                &lt;div id="accordionDatatableFilter" class="mb-3"&gt;
+                &lt;/div&gt;
+            &lt;/form&gt;
+            &lt;/div&gt;
+            &lt;div class="table-responsive"&gt;
+            &lt;table id="dataTable" class="table table-sm table-striped table-hover"&gt;
+                &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;Variation Code&lt;/th&gt;
+                    &lt;th&gt;Variation Name&lt;/th&gt;
+                    &lt;th&gt;Product&lt;/th&gt;
+                    &lt;th&gt;M. Add&lt;/th&gt;
+                    &lt;th&gt;M. Deduct&lt;/th&gt;
+                    &lt;th&gt;Purchasing&lt;/th&gt;
+                    &lt;th&gt;Purchase Received&lt;/th&gt;
+                    &lt;th&gt;Sale Releasing&lt;/th&gt;
+                    &lt;th&gt;Sold&lt;/th&gt;
+                    &lt;th&gt;On Hand&lt;/th&gt;
+                &lt;/tr&gt;
+                &lt;/thead&gt;
+                &lt;tbody&gt;&lt;/tbody&gt;
+            &lt;/table&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+            &lt;div class="row"&gt;
+                &lt;div class="col"&gt;&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- /.container-fluid --&gt;
+{% endblock %} 
+{% block scripts_bmain %}
+&lt;script src="https://cdn.datatables.net/v/bs5/dt-2.1.8/fc-5.0.4/fh-4.0.1/r-3.0.3/rg-1.5.1/rr-1.5.0/sc-2.4.3/datatables.min.js"&gt;&lt;/script&gt;
+{% endblock %} 
+{% block scripts %}
+&lt;script src="{% static 'js/inventory_list.js' %}"&gt;&lt;/script&gt;
+{% endblock %}
+</p>
