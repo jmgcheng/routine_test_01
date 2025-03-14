@@ -1,2 +1,192 @@
-<h6 class="card-title question">Sample question javascript 1</h6>
-<p class="card-text answer">Sample Answer javascript 1</p>
+<h6 class="card-title question-pre">Javascript: Basics
+# output    
+
+
+# identify typeof operators (string, number, boolean, object, function, undefined)
+typeof "John"
+typeof 3.14
+typeof NaN
+typeof false
+typeof [1,2,3,4]
+typeof {name:'John', age:34}
+typeof new Date()
+typeof function () {}
+typeof myCar
+typeof null
+
+
+
+# identify instanceof. true or false
+arr = [1, 2, 3];
+alert( arr instanceof Array );
+alert( arr instanceof Object );
+
+
+
+# identify if undefined, empty, null, or object
+var car;
+x = undefined;
+var car = "";
+person = null;
+typeof undefined
+typeof null
+    
+
+
+# type casting for number, integer, string
+
+
+
+# boolean results. identify if true or false
+Boolean(10 > 9)
+(10 > 9)
+10 > 9
+100
+3.14
+-15
+"Hello"
+"false"
+7 + 1 + 3.14
+x = 0;
+x = -0;
+x = "";
+x;
+x = null;
+x = false;
+x = 10 / "H";
+null === undefined
+null == undefined
+
+
+
+# if statement
+
+
+
+# ternary
+
+
+
+# select/switch statement
+
+
+
+# try catch
+
+    
+</h6>
+<p class="card-text answer-pre">
+# output    
+console.log('test')
+window.alert('test')
+document.getElementById("elementID").innerHTML = ""
+document.write('test') // depreciated
+window.print() //method in the browser to print the content of the current window.
+
+
+
+# identify typeof operators
+typeof "John" // Returns "string"
+typeof 3.14 // Returns "number"
+typeof NaN // Returns "number"
+typeof false // Returns "boolean"
+typeof [1,2,3,4] // Returns "object"
+typeof {name:'John', age:34} // Returns "object"
+typeof new Date() // Returns "object"
+typeof function () {} // Returns "function"
+typeof myCar // Returns "undefined"
+typeof null // Returns "object"
+
+
+
+# identify instanceof
+arr = [1, 2, 3];
+alert( arr instanceof Array ); // true
+alert( arr instanceof Object ); // true        
+
+
+
+# identify if undefined, empty, null, or object
+var car; // undefined
+x = undefined; // undefined
+var car = ""; // empty
+person = null; // null
+typeof undefined // undefined
+typeof null // object
+    
+
+
+# type casting
+Number("3.14") // 3.14
+parseInt("3.14") // 3
+String(123)
+(123).toString()
+
+
+
+# boolean results
+Boolean(10 > 9) // true
+(10 > 9) // true
+10 > 9 // true
+100 // true
+3.14 // true
+-15 // true
+"Hello" // true
+"false" // true
+7 + 1 + 3.14 // true
+x = 0; // returns false
+x = -0; // returns false
+x = ""; // returns false
+x; // returns false
+x = null; // returns false
+x = false; // returns false
+x = 10 / "H"; // returns false
+null === undefined // false
+null == undefined // true
+
+
+
+# if statement sample
+if (condition && condition) {} 
+else if (condition) {} 
+else {}
+
+
+
+# ternary
+let result = (condition) ? "pass" : "fail";
+
+
+
+# select/switch statement
+switch(expression) {
+    case x:
+        // code block
+        break;
+    case y:
+        // code block
+        break;
+    default:
+        // code block
+}
+
+
+
+# try catch
+try {
+    // code block
+}
+catch(err) {
+    // code block
+}
+finally {
+    // code block
+}
+
+
+
+# script ready
+window.addEventListener('DOMContentLoaded', () => {
+    console.log('ready');
+});
+</p>
