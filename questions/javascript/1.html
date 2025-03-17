@@ -148,7 +148,50 @@ null == undefined
 
 # try catch
 
-    
+
+
+# swap variables using destruct
+
+
+
+
+# destruct an array for the 1st 2 values then use rest for the remaining
+
+
+
+
+# set default values for destruct variable 
+
+
+
+
+# destruct an object
+
+
+
+
+# destruct an object with alias
+
+
+
+
+# destruct an object
+# prompt() user with the other variables
+
+
+
+
+# only desctruct a single property in an object
+
+
+
+
+# create an options object with title and items properties. items property is an array
+# create showMenu function that has a destruct argument that can accept options object
+
+
+
+
 </h6>
 <p class="card-text answer-pre">
 # output    
@@ -354,4 +397,93 @@ finally {
 window.addEventListener('DOMContentLoaded', () => {
     console.log('ready');
 });
+
+
+
+# swap variables using destruct
+let guest = "Jane";
+let admin = "Pete";
+// Swap values: make guest=Pete, admin=Jane
+[guest, admin] = [admin, guest];
+alert(`${guest} ${admin}`); // Pete Jane (successfully swapped!)
+
+
+
+# destruct an array for the 1st 2 values then use rest for the remaining
+let [name1, name2, ...rest] = ["Julius", "Caesar", "Consul", "of the Roman Republic"];
+alert(name1); // Julius
+alert(name2); // Caesar
+// Note that type of `rest` is Array.
+alert(rest[0]); // Consul
+alert(rest[1]); // of the Roman Republic
+alert(rest.length); // 2
+
+
+
+# set default values for destruct variable 
+let [name = "Guest", surname = "Anonymous"] = ["Julius"];
+alert(name); // Julius (from array)
+alert(surname); // Anonymous (default used)
+
+
+
+# destruct an object
+let {height, width, title} = { title: "Menu", height: 200, width: 100 }
+
+
+
+# destruct an object with alias
+let options = {
+	title: "Menu",
+	width: 100,
+	height: 200
+};
+// { sourceProperty: targetVariable }
+let {width: w, height: h, title} = options;
+// width -> w
+// height -> h
+// title -> title
+alert(title); // Menu
+alert(w); // 100
+alert(h); // 200
+
+
+
+# destruct an object
+# prompt() user with the other variables
+let options = {
+	title: "Menu"
+};
+let {width = prompt("width?"), title = prompt("title?")} = options;
+alert(title); // Menu
+alert(width); // (whatever the result of prompt is)
+
+
+
+# only desctruct a single property in an object
+let options = {
+	title: "Menu",
+	width: 100,
+	height: 200
+};
+// only extract title as a variable
+let { title } = options;
+alert(title); // Menu
+
+
+
+# create an options object with title and items properties. items property is an array
+# create showMenu function that has a destruct argument that can accept options object
+let options = {
+	title: "My menu",
+	items: ["Item1", "Item2"]
+};
+//
+showMenu({}); // ok, all values are default
+showMenu(); // this would give an error
+// fix
+function showMenu({ title = "Menu", width = 100, height = 200 } = {}) {
+	alert( `${title} ${width} ${height}` );
+}
+showMenu(); // Menu 100 200
 </p>
