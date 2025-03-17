@@ -302,6 +302,35 @@
 > add a new property 'nationality' to person object
 > delete age property of person object
 > create method fullName of person object that returns firstName and lastName of the person. Use it
+
+
+
+# fix 'this' issue by using '.bind' and arrow function
+const person = {
+    name: "John",
+    greet: function() {
+        setTimeout(function() {
+            console.log(`Hello, my name is ${this.name}`);
+        }, 1000);
+    }
+};    
+person.greet(); // ❌ Output: "Hello, my name is undefined" (or an error in strict mode)
+//
+const person = {
+    name: "John",
+    greet: function() {
+        setTimeout(function() {
+            console.log(`Hello, my name is ${this.name}`);
+        }.bind(this), 1000);
+    }
+};    
+
+
+
+# polyfilling - show an example of polyfilling a String object
+
+
+
 </h6>
 <p class="card-text answer-pre">
 # define/identify each clearly
@@ -785,4 +814,53 @@
 > add a new property 'nationality' to person object
 > delete age property of person object
 > create method fullName of person object that returns firstName and lastName of the person. Use it
+
+
+
+
+# fix 'this' issue by using '.bind' and arrow function
+const person = {
+    name: "John",
+    greet: function() {
+        setTimeout(function() {
+            console.log(`Hello, my name is ${this.name}`);
+        }, 1000);
+    }
+};    
+person.greet(); // ❌ Output: "Hello, my name is undefined" (or an error in strict mode)
+//
+const person = {
+    name: "John",
+    greet: function() {
+        setTimeout(function() {
+            console.log(`Hello, my name is ${this.name}`);
+        }.bind(this), 1000);
+    }
+};    
+person.greet(); // ✅ Output: "Hello, my name is John"
+//
+const person = {
+    name: "John",
+    greet: function() {
+        setTimeout(() => {
+            console.log(`Hello, my name is ${this.name}`);
+        }, 1000);
+    }
+};    
+person.greet(); // ✅ Output: "Hello, my name is John"
+
+
+
+# polyfilling - show an example of polyfilling a String object
+if (!String.prototype.repeat) { // if there's no such method
+    // add it to the prototype
+    String.prototype.repeat = function(n) {
+        // repeat the string n times
+        // actually, the code should be a little bit more complex than that
+        // (the full algorithm is in the specification)
+        // but even an imperfect polyfill is often considered good enough
+        return new Array(n + 1).join(this);
+    };
+}
+alert( "La".repeat(3) ); // LaLaLa
 </p>
