@@ -1,2 +1,119 @@
-<h6 class="card-title question">Javascript: functions</h6>
-<p class="card-text answer-pre"></p>
+<h6 class="card-title question-pre">Javascript: functions
+
+</h6>
+<p class="card-text answer-pre">
+
+    # create a sample function(declaration) with 3 arguments
+    function name(arg1, arg2, arg3) {
+        // code 
+    }
+
+
+
+    # create a function with 2 arguments with default values
+    function x(y=1, z=2) {}
+
+
+
+    # create a function expression with 2 arguments. Call it
+    let x = function (a, b) {return a * b};
+    x(4, 3);
+
+
+    
+    # create a function constructor with 2 argumens. Call it
+    let myFunction = new Function("a", "b", "return a * b");
+    myFunction(4, 3);
+
+
+
+    # create a function as values
+    var x = myFunction(4, 3);
+
+
+
+    # create a self invoking function
+    (function () {
+        var x = "Hello!!";
+    })();
+
+
+
+    # create an arrow function with 2 arguments and returns it product
+    const x = (x, y) => x * y;
+    // or
+    const x = (x, y) => { return x * y };
+
+
+
+    # create an arrow function with no argument and returns a string
+    hello = () => "hello";
+
+
+
+    # create a function constructor with 2 arguments that use 'this' in the body.
+    # use it to create an object and call its properties
+    function myFunction(arg1, arg2) {
+        this.firstName = arg1;
+        this.lastName = arg2;
+    }
+    var x = new myFunction("John", "Doe");
+    x.firstName;
+        
+
+
+    # create a function with 2 arguments. Call it using '.call()'   
+    function introduce(name, age) {
+        console.log(`Hi, I'm ${name} and I'm ${age} years old.`);
+    }    
+    introduce.call(null, "John", 25); // Passing arguments individually
+    
+
+
+    # create a function with 2 arguments. Call it using '.apply()'
+    function introduce(name, age) {
+        console.log(`Hi, I'm ${name} and I'm ${age} years old.`);
+    }    
+    introduce.apply(null, ["Alice", 30]); // Passing arguments as an array
+    
+
+
+    # create a person object with fullName method that has 2 arguments and use 'this'
+    # create a person1 object with firstName and lastName properties
+    # using '.call()' and '.apply()', call person fullName method using person1
+    const person = {
+        fullName: function(city, country) {
+            console.log(`${this.firstName} ${this.lastName} from ${city}, ${country}`);
+        }
+    };
+    const person1 = { firstName: "Jane", lastName: "Doe" };    
+    person.fullName.call(person1, "New York", "USA");  // Call with individual arguments
+    person.fullName.apply(person1, ["Paris", "France"]);  // Apply with an array of arguments
+    
+
+
+    # show a counter (a)function and (b)function expression to explain closure
+    function makeCounter() {
+        let count = 0;
+        return function() {
+            return count++;
+        };
+    }
+    let counter = makeCounter();
+    alert( counter() ); // 0
+    alert( counter() ); // 1
+    alert( counter() ); // 2
+    //
+    var add = (function () {
+        var counter = 0;
+        return function () {counter += 1; return counter}
+    })();
+    add();
+    add();
+    add();
+    // the counter is now 3   
+    
+    
+
+    # 
+</p>

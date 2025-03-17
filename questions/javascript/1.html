@@ -59,6 +59,81 @@ null == undefined
 
 
 
+# identify output
+#eg - ||
+	alert( true || true );
+	alert( false || true );
+	alert( true || false );
+	alert( false || false );
+#eg -
+	if (1 || 0) {
+		alert( 'truthy!' );
+	}
+#eg -
+	let hour = 12;
+	let isWeekend = true;
+	if (hour < 10 || hour > 18 || isWeekend) {
+		alert( 'The office is closed.' );
+	}
+#eg -
+	alert( 1 || 0 ); 
+	alert( null || 1 ); 
+	alert( null || 0 || 1 ); 
+	alert( undefined || null || 0 ); 
+#eg -
+	let firstName = "";
+	let lastName = "";
+	let nickName = "SuperCoder";
+	alert( firstName || lastName || nickName || "Anonymous"); 
+#eg -
+	true || alert("not printed");
+	false || alert("printed");
+#eg - &&
+	alert( true && true );
+	alert( false && true );
+	alert( true && false );
+	alert( false && false );
+#eg -
+	if (1 && 0) { 
+	    alert( "won't work, because the result is falsy" );
+	}
+#eg -
+	alert( 1 && 0 ); 
+	alert( 1 && 5 ); 
+	alert( null && 5 ); 
+	alert( 0 && "no matter what" ); 
+#eg -
+	alert( 1 && 2 && null && 3 ); 
+	alert( 1 && 2 && 3 ); 
+#eg - !
+	alert( !true ); 
+	alert( !0 ); 
+#eg - !!
+	alert( !!"non-empty string" ); 
+	alert( !!null ); 
+	alert( Boolean("non-empty string") ); 
+	alert( Boolean(null) ); 
+#eg - show long syntax
+	x = a ?? b
+#eg - a ?? b - explain output
+
+#eg -
+	let firstName = null;
+	let lastName = null;
+	let nickName = "Supercoder";
+	alert(firstName ?? lastName ?? nickName ?? "Anonymous");
+#eg - Comparison with ||
+	let height = 0;
+	alert(height || 100); 
+	alert(height ?? 100); 
+#eg -
+	let height = null;
+	let width = null;
+	let area = (height ?? 100) * (width ?? 50);
+	alert(area);
+
+
+
 # if statement
 
 
@@ -143,6 +218,96 @@ x = false; // returns false
 x = 10 / "H"; // returns false
 null === undefined // false
 null == undefined // true
+
+
+
+# identify output
+#eg - ||
+	alert( true || true ); // true
+	alert( false || true ); // true
+	alert( true || false ); // true
+	alert( false || false ); // false
+#eg -
+	//If an operand is not a boolean, it’s converted to a boolean for the evaluation
+	if (1 || 0) { // works just like if( true || false )
+		alert( 'truthy!' );
+	}
+#eg -
+	let hour = 12;
+	let isWeekend = true;
+	if (hour < 10 || hour > 18 || isWeekend) {
+		alert( 'The office is closed.' ); // it is the weekend
+	}
+#eg -
+	alert( 1 || 0 ); // 1 (1 is truthy)
+	alert( null || 1 ); // 1 (1 is the first truthy value)
+	alert( null || 0 || 1 ); // 1 (the first truthy value)
+	alert( undefined || null || 0 ); // 0 (all falsy, returns the last value)
+#eg -
+	let firstName = "";
+	let lastName = "";
+	let nickName = "SuperCoder";
+	alert( firstName || lastName || nickName || "Anonymous"); // SuperCoder
+#eg -
+	true || alert("not printed");
+	false || alert("printed");
+#eg - &&
+	alert( true && true ); // true
+	alert( false && true ); // false
+	alert( true && false ); // false
+	alert( false && false ); // false
+#eg -
+	if (1 && 0) { // evaluated as true && false
+	alert( "won't work, because the result is falsy" );
+	}
+#eg -
+	// if the first operand is truthy,
+	// AND returns the second operand:
+	alert( 1 && 0 ); // 0
+	alert( 1 && 5 ); // 5
+	// if the first operand is falsy,
+	// AND returns it. The second operand is ignored
+	alert( null && 5 ); // null
+	alert( 0 && "no matter what" ); // 0
+#eg -
+	alert( 1 && 2 && null && 3 ); // null
+	alert( 1 && 2 && 3 ); // 3, the last one
+#eg - !
+	alert( !true ); // false
+	alert( !0 ); // true
+#eg - !!
+	//A double NOT !! is sometimes used for converting a value to boolean type:
+	alert( !!"non-empty string" ); // true
+	alert( !!null ); // false
+	//same
+	alert( Boolean("non-empty string") ); // true
+	alert( Boolean(null) ); // false
+#eg - show long syntax
+	x = a ?? b
+	//same
+	x = (a !== null && a !== undefined) ? a : b;
+#eg - a ?? b - explain output
+	//a if it’s not null or undefined,
+	//b, otherwise.
+#eg -
+	let firstName = null;
+	let lastName = null;
+	let nickName = "Supercoder";
+	// show the first not-null/undefined value
+	alert(firstName ?? lastName ?? nickName ?? "Anonymous"); // Supercoder
+#eg - Comparison with ||
+	// || returns the first truthy value.
+	// ?? returns the first defined value.
+	//
+	let height = 0;
+	alert(height || 100); // 100
+	alert(height ?? 100); // 0
+#eg -
+	let height = null;
+	let width = null;
+	// important: use parentheses
+	let area = (height ?? 100) * (width ?? 50);
+	alert(area); // 5000
 
 
 
