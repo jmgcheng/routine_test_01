@@ -1,2 +1,471 @@
-<h6 class="card-title question">Javascript: class</h6>
-<p class="card-text answer-pre"></p>
+<h6 class="card-title question-pre">Javascript: class
+# create a class template
+
+
+
+# create class User with constructor that accepts name argument for property name
+# create sayHi method in the class that alerts the instance name
+# create a new instance using User class and use sayHi method
+
+
+
+# create a nameless class expression
+let User = class {
+    sayHi() {
+        alert("Hello");
+    }
+};
+
+
+
+# create a named class expression
+
+
+
+# create a function makeClass that returns a nameless class expression with a sayHi method. Use it
+
+
+
+# create User class with constructor that accepts name arg
+# create a sample of getter and setter methods in the class
+
+
+
+# create a User class with sayHi method with computed names
+
+
+
+# create User class with a name class field
+
+
+
+# create a class Animal with constructor that sets name and speed but only has argument for name
+# create method run that accepts speed arg and sets it
+# create method stop that sets speed property to 0
+# create a class Rabbit that inherits to Animal
+# create method hide in Rabbit class that just 'alert(`${this.name} hides!`);'
+# create instance for both Animal and Rabbit then use them 
+
+
+
+# recreate both Animal and Rabbit class in the previous exercise
+# create stop method in Rabbit class that overrides stop method in Animal
+
+
+
+# recreate both Animal and Rabbit class in the previous exercise
+# create a constructor in Rabbit that overrides??? or extends the Animal constructor 
+
+
+
+# create a User class with an example of static method
+
+
+
+# create an empty User class with no fields, constructor, and methods
+# outside the User class, create a static method for the User class
+
+
+
+# create a class Article with constructor that sets title and date coming both from arguments
+# create a static method compare that can be use by Array.sort() to sort the artciles in array by date
+# create variable articles which is an array or Article
+# use the Array.sort with static method compare
+
+
+
+# create class Article
+# create a static method createTodays for article that creates a new Article class when its class
+# create a new instance of article by using Article.createTodays()
+
+
+
+# create class Article with static publisher field. Use it
+
+
+
+# going back to Animal and Rabbit class
+# create a static field planet in Animal class 'static planet = "Earth";'
+# create a static method compare in Animal class that will be use by Array.sort
+# create a rabbits array instance. Use the static methods
+
+
+
+# create a CoffeeMachine class with constructor for power property
+# create a field _waterAmount that will be treated as 'protected'
+# create a setter and getter method to update _waterAmount value
+
+
+
+# create a PowerArray class that extends to Array
+# create an isEmpty method inside to return true if the array.length is 0
+# create an array instance using PowerArray class and use your customize method 
+
+
+
+# create a rabbit instance and check if its an instance of Rabbit
+# create an array instance and check if its an instance of Array
+# create an array instance and check if its an instance of Object
+
+    
+</h6>
+<p class="card-text answer-pre">
+# create a class template
+class MyClass {
+    constructor() { ... }
+    method1() { ... }
+    method2() { ... }
+    method3() { ... }
+    ...
+}
+
+
+
+# create class User with constructor that accepts name argument for property name
+# create sayHi method in the class that alerts the instance name
+# create a new instance using User class and use sayHi method
+class User {
+    constructor(name) {
+        this.name = name;
+    }
+    sayHi() {
+        alert(this.name);
+    }
+}
+// Usage:
+let user = new User("John");
+user.sayHi();
+
+
+
+# create a nameless class expression
+let User = class {
+    sayHi() {
+        alert("Hello");
+    }
+};
+
+
+
+# create a named class expression
+let User = class MyClass {
+    sayHi() {
+        alert(MyClass); // MyClass name is visible only inside the class
+    }
+};
+new User().sayHi(); // works, shows MyClass definition
+alert(MyClass); // error, MyClass name isn't visible outside of the class
+
+
+
+
+# create a function makeClass that returns a nameless class expression with a sayHi method. Use it
+function makeClass(phrase) {
+    // declare a class and return it
+    return class {
+        sayHi() {
+            alert(phrase);
+        };
+    };
+}
+// Create a new class
+let User = makeClass("Hello");
+new User().sayHi(); // Hello
+
+
+
+
+# create User class with constructor that accepts name arg
+# create a sample of getter and setter methods in the class
+class User {
+    constructor(name) {
+        // invokes the setter
+        this.name = name;
+    }
+    get name() {
+        return this._name;
+    }
+    set name(value) {
+        if (value.length < 4) {
+            alert("Name is too short.");
+            return;
+        }
+        this._name = value;
+    }
+}
+let user = new User("John");
+alert(user.name); // John
+user = new User(""); // Name is too short.
+
+
+
+# create a User class with sayHi method with computed names
+class User {
+    ['say' + 'Hi']() {
+        alert("Hello");
+    }
+}
+new User().sayHi();
+
+
+
+# create User class with a name class field
+class User {
+    name = "John";
+    sayHi() {
+        alert(`Hello, ${this.name}!`);
+    }
+}
+new User().sayHi(); // Hello, John!
+
+
+
+
+# create a class Animal with constructor that sets name and speed but only has argument for name
+# create method run that accepts speed arg and sets it
+# create method stop that sets speed property to 0
+# create a class Rabbit that inherits to Animal
+# create method hide in Rabbit class that just 'alert(`${this.name} hides!`);'
+# create instance for both Animal and Rabbit then use them 
+class Animal {
+    constructor(name) {
+        this.speed = 0;
+        this.name = name;
+    }
+    run(speed) {
+        this.speed = speed;
+        alert(`${this.name} runs with speed ${this.speed}.`);
+    }
+    stop() {
+        this.speed = 0;
+        alert(`${this.name} stands still.`);
+    }
+}
+let animal = new Animal("My animal");
+class Rabbit extends Animal {
+    hide() {
+        alert(`${this.name} hides!`);
+    }
+}
+let rabbit = new Rabbit("White Rabbit");
+rabbit.run(5); // White Rabbit runs with speed 5.
+rabbit.hide(); // White Rabbit hides!
+
+
+
+# recreate both Animal and Rabbit class in the previous exercise
+# create stop method in Rabbit class that overrides stop method in Animal
+class Animal {
+    constructor(name) {
+        this.speed = 0;
+        this.name = name;
+    }
+    run(speed) {
+        this.speed = speed;
+        alert(`${this.name} runs with speed ${this.speed}.`);
+    }
+    stop() {
+        this.speed = 0;
+        alert(`${this.name} stands still.`);
+    }
+}
+class Rabbit extends Animal {
+    hide() {
+        alert(`${this.name} hides!`);
+    }
+    stop() {
+        super.stop(); // call parent stop
+        this.hide(); // and then hide
+    }
+}
+let rabbit = new Rabbit("White Rabbit");
+rabbit.run(5); // White Rabbit runs with speed 5.
+rabbit.stop(); // White Rabbit stands still. White rabbit hides!
+
+
+
+# recreate both Animal and Rabbit class in the previous exercise
+# create a constructor in Rabbit that overrides??? or extends the Animal constructor 
+class Animal {
+    constructor(name) {
+        this.speed = 0;
+        this.name = name;
+    }
+    // ...
+}
+class Rabbit extends Animal {
+    constructor(name, earLength) {
+        super(name);
+        this.earLength = earLength;
+    }
+    // ...
+}
+let rabbit = new Rabbit("White Rabbit", 10);
+alert(rabbit.name); // White Rabbit
+alert(rabbit.earLength); // 10
+
+
+
+# create a User class with an example of static method
+class User {
+    static staticMethod() {
+        alert(this === User);
+    }
+}
+User.staticMethod(); // true
+
+
+
+# create an empty User class with no fields, constructor, and methods
+# outside the User class, create a static method for the User class
+class User { }
+User.staticMethod = function() {
+    alert(this === User);
+};
+User.staticMethod(); // true
+
+
+
+# create a class Article with constructor that sets title and date coming both from arguments
+# create a static method compare that can be use by Array.sort() to sort the artciles in array by date
+# create variable articles which is an array or Article
+# use the Array.sort with static method compare
+class Article {
+    constructor(title, date) {
+        this.title = title;
+        this.date = date;
+    }
+    static compare(articleA, articleB) {
+        return articleA.date - articleB.date;
+    }
+}
+// usage
+let articles = [
+    new Article("HTML", new Date(2019, 1, 1)),
+    new Article("CSS", new Date(2019, 0, 1)),
+    new Article("JavaScript", new Date(2019, 11, 1))
+];
+articles.sort(Article.compare);
+alert( articles[0].title ); // CSS
+
+
+
+
+# create class Article
+# create a static method createTodays for article that creates a new Article class when its class
+# create a new instance of article by using Article.createTodays()
+class Article {
+    constructor(title, date) {
+        this.title = title;
+        this.date = date;
+    }
+    static createTodays() {
+        // remember, this = Article
+        return new this("Today's digest", new Date());
+    }
+}
+let article = Article.createTodays();
+alert( article.title ); // Today's digest
+
+
+
+# create class Article with static publisher field. Use it
+class Article {
+    static publisher = "Ilya Kantor";
+}
+alert( Article.publisher ); // Ilya Kantor
+//
+Article.publisher = "Ilya Kantor";
+
+
+
+# going back to Animal and Rabbit class
+# create a static field planet in Animal class 'static planet = "Earth";'
+# create a static method compare in Animal class that will be use by Array.sort
+# create a rabbits array instance. Use the static methods
+class Animal {
+    static planet = "Earth";
+    constructor(name, speed) {
+        this.speed = speed;
+        this.name = name;
+    }
+    run(speed = 0) {
+        this.speed += speed;
+        alert(`${this.name} runs with speed ${this.speed}.`);
+    }
+    static compare(animalA, animalB) {
+        return animalA.speed - animalB.speed;
+    }
+}
+// Inherit from Animal
+class Rabbit extends Animal {
+    hide() {
+        alert(`${this.name} hides!`);
+    }
+}
+let rabbits = [
+    new Rabbit("White Rabbit", 10),
+    new Rabbit("Black Rabbit", 5)
+];
+rabbits.sort(Rabbit.compare);
+rabbits[0].run(); // Black Rabbit runs with speed 5.
+alert(Rabbit.planet); // Earth
+
+
+
+# create a CoffeeMachine class with constructor for power property
+# create a field _waterAmount that will be treated as 'protected'
+# create a setter and getter method to update _waterAmount value
+class CoffeeMachine {
+    _waterAmount = 0;
+    constructor(power) {
+        this._power = power;
+    }
+    set waterAmount(value) {
+        if (value < 0) throw new Error("Negative water");
+        this._waterAmount = value;
+    }
+    get waterAmount() {
+        return this._waterAmount;
+    }
+}
+// create the coffee machine
+let coffeeMachine = new CoffeeMachine(100);
+// add water
+coffeeMachine.waterAmount = -10; // Error: Negative water
+
+
+
+# create a PowerArray class that extends to Array
+# create an isEmpty method inside to return true if the array.length is 0
+# create an array instance using PowerArray class and use your customize method 
+class PowerArray extends Array {
+    isEmpty() {
+        return this.length === 0;
+    }
+}
+let arr = new PowerArray(1, 2, 5, 10, 50);
+alert(arr.isEmpty()); // false
+let filteredArr = arr.filter(item => item >= 10);
+alert(filteredArr); // 10, 50
+alert(filteredArr.isEmpty()); // false
+//eg - No static inheritance in built-ins
+
+
+
+# create a rabbit instance and check if its an instance of Rabbit
+# create an array instance and check if its an instance of Array
+# create an array instance and check if its an instance of Object
+class Rabbit {}
+let rabbit = new Rabbit();
+// is it an object of Rabbit class?
+alert( rabbit instanceof Rabbit ); // true
+//
+// instead of class
+function Rabbit() {}
+alert( new Rabbit() instanceof Rabbit ); // true
+//
+let arr = [1, 2, 3];
+alert( arr instanceof Array ); // true
+alert( arr instanceof Object ); // true    
+</p>
