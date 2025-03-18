@@ -1,4 +1,385 @@
-<h6 class="card-title question-pre">Docker - </h6>
+<h6 class="card-title question-pre">Docker - Images and Containers
+# list running containers
+
+
+
+# check all containers including stop ones
+
+
+
+# start a new container from using ubuntu image and interact with it
+
+
+
+# start a stop existing container
+
+
+
+# Dockerfile - identify
+- FROM → 
+- WORKDIR → 
+- COPY → 
+- ADD → 
+- RUN → 
+- ENV → 
+- EXPOSE → 
+- USER → 
+- CMD → 
+- ENTRYPOINT → 
+
+
+
+# differentiate chmod and chown
+
+
+
+#  create Dockerfile for a simple app
+# Uses Node.js version 14.16.0 with Alpine Linux 3.13 as the base image
+# Creates a new system user (app) with no home directory and group (app) in the container.
+# Switches to the app user (instead of root) for better security.
+# Sets /app as the working directory inside the container.
+# Copies package.json and package-lock.json into the container while ensuring ownership is set to the app user.
+# Installs dependencies using npm install
+# Creates a directory called data inside the container
+# Copies all files from the project folder into the container while setting ownership to app:app
+# Defines an environment variable API_URL with the value http://api.myapp.com/
+# Declares that the container will use port 3000
+# Specify the default command to run when the container starts (npm start)
+
+
+
+# build a new image using current directory and tag it
+
+
+
+# list docker images
+
+
+
+# run/start a container with 'react-app' image and interact with it using shell
+
+
+
+# run/start a container with 'react-app' image
+# expose port 3000 outside(your host) and listen to 3000 inside(in container)
+
+
+
+# show ways to remove images
+
+
+
+# show ways to tagging an image
+
+
+
+# publish your image sample
+
+
+
+# get image in repo sample
+
+
+
+# run/start a container with 'react-app' image in detached mode
+# expose port 3000 outside(your host) and listen to 3000 inside(in container)
+
+
+
+# run/start a container with 'react-app' image in detached mode
+# give your container a name
+# expose port 3001 outside(your host) and listen to 3000 inside(in container)
+
+
+
+# check the logs of a running container and follow it
+
+
+
+# go inside the container and execute a command
+
+
+
+# stop a running container
+
+
+
+# sample of removing containers
+
+
+
+# remove all stop container
+
+
+
+# create a volume and inspect it
+
+
+
+# start a container and give it a volume that you created
+# exec inside the container and create a data.txt
+# exit and remove the container
+# create a new container to connect to the volume again
+# recheck the data.txt inside the container
+
+
+
+# sample of copying files between host and container and vice versa
+
+
+
+# sample of sharing source code with a container
+
+
+
+</h6>
 <p class="card-text answer-pre">
-    
+# list running containers
+> docker ps
+
+
+
+# check all containers including stop ones
+> docker ps -a
+
+
+
+# start a new container from using ubuntu image and interact with it
+> docker run -it ubuntu
+
+
+
+# start a stop existing container
+> docker start -i 2f7containerID	
+
+
+
+# Dockerfile - identify
+- FROM → Sets the base image for the container (e.g., FROM python:3.9).
+- WORKDIR → Sets the working directory inside the container.
+- COPY → Copies files from the host machine to the container.
+- ADD → Similar to COPY, but also extracts compressed files and supports URLs.
+- RUN → Executes a command during the image build process (e.g., install dependencies).
+- ENV → Sets environment variables inside the container.
+- EXPOSE → Declares which port the container listens on (but doesn’t publish it).
+- USER → Sets the user that runs inside the container (e.g., USER node).
+- CMD → Provides the default command to run when the container starts.
+- ENTRYPOINT → Defines a fixed executable that always runs, even if CMD is overridden.
+
+
+
+# differentiate chmod and chown
+- chmod	
+    - Changes file permissions (who can read, write, or execute)	
+    - chmod 755 script.sh (Owner: all permissions, Others: read & execute)
+- chown	
+    - Changes file ownership (who owns the file)	
+    - chown app:app myfile.txt (Sets app as owner and group)
+
+
+
+#  create Dockerfile for a simple app
+# Uses Node.js version 14.16.0 with Alpine Linux 3.13 as the base image
+# Creates a new system user (app) with no home directory and group (app) in the container.
+# Switches to the app user (instead of root) for better security.
+# Sets /app as the working directory inside the container.
+# Copies package.json and package-lock.json into the container while ensuring ownership is set to the app user.
+# Installs dependencies using npm install
+# Creates a directory called data inside the container
+# Copies all files from the project folder into the container while setting ownership to app:app
+# Defines an environment variable API_URL with the value http://api.myapp.com/
+# Declares that the container will use port 3000
+# Specify the default command to run when the container starts (npm start)
+FROM node:14.16.0-alpine3.13
+RUN addgroup app && adduser -S -G app app
+USER app
+WORKDIR /app
+COPY --chown=app:app package*.json .
+RUN npm install
+RUN mkdir data
+COPY --chown=app:app . .
+ENV API_URL=http://api.myapp.com/
+EXPOSE 3000
+CMD ["npm", "start"]
+
+
+
+# build a new image using current directory and tag it
+> docker build -t tagName .
+> docker build -t react-app .
+
+
+
+# list docker images
+> docker image ls
+or
+> docker images
+
+
+
+# run/start a container with 'react-app' image and interact with it using shell
+> docker run -it react-app sh
+# test some commands inside the shell
+> ls -lh
+> node --version
+> printenv
+> echo $API_URL
+> whoami
+
+
+
+# run/start a container with 'react-app' image
+# expose port 3000 outside(your host) and listen to 3000 inside(in container)
+> docker run -p 3000:3000 react-app
+
+
+
+# show ways to remove images
+> docker ps -a
+> docker container prune
+> docker images
+> docker image prune
+> docker image rm repoOrImageID
+
+
+
+# show ways to tagging an image
+> docker images
+> docker build -t react-app:1 .
+# tag an image after building
+> docker image tag imageId yourAppCodeName:latest
+> docker image tag react-app:latest react-app:1
+
+
+
+# publish your image sample
+> docker image tag b06imageId jmgcheng/react-app:2
+> docker images
+> docker login
+> docker push jmgcheng/react-app:2
+
+
+
+# get image in repo sample
+> docker pull jmgcheng/react-app:2
+
+
+
+# run/start a container with 'react-app' image in detached mode
+# expose port 3000 outside(your host) and listen to 3000 inside(in container)
+> docker run -d -p 3000:3000 react-app
+
+
+
+# run/start a container with 'react-app' image in detached mode
+# give your container a name
+# expose port 3001 outside(your host) and listen to 3000 inside(in container)
+> docker run -d -p 3001:3000 --name pinkstart react-app
+- visit http://localhost:3001/
+
+
+
+# check the logs of a running container and follow it
+> docker ps
+> docker logs -f containerID
+
+
+
+# go inside the container and execute a command
+> docker exec nameofcontainer command
+> docker exec pinkstart ls
+# open shell for session
+> docker exec -it pinkstart sh
+> exit
+
+
+
+# stop a running container
+> docker stop containername
+> docker stop pinkstart
+# start container again
+> docker start pinkstart
+
+
+
+# sample of removing containers
+> docker container rm name
+> docker container rm pinkstart
+OR
+> docker rm pinkstart
+
+
+
+# remove all stop container
+> docker container prune
+
+
+
+# create a volume and inspect it
+> docker volume create volumeName
+> docker volume create app-data
+> docker volume inspect app-data
+
+
+
+# start a container and give it a volume that you created
+# exec inside the container and create a data.txt
+# exit and remove the container
+# create a new container to connect to the volume again
+# recheck the data.txt inside the container
+> docker run -d -p 5000:3000 -v volumeName:/fileSystemOfTheContainer imageName
+> docker run -d -p 5000:3000 -v volumeName:/fileSystemOfTheContainer --name nameToBeCreated imageName
+> docker run -d -p 5000:3000 -v app-data:/app/data --name redstart react-app
+> docker exec -it redstart sh
+> cd data
+> echo hello > data.txt
+> ls
+> exit
+# force remove this running container
+> docker rm -f redstart
+# create new container that will use existing volume
+> docker run -d -p 6000:3000 -v app-data:/app/data --name yellowstart react-app
+> docker exec -it yellowstart sh
+> cd data
+# check that the data before in other container still exist
+> cat data.txt
+
+
+
+# sample of copying files between host and container and vice versa
+# container to host
+> docker ps
+> docker exec -it yellowstart sh
+> echo hello > log.txt
+> exit
+# . current directory in the host, "host" which is "Docker Pracs\dockertest03"
+> cd C:\Users\Kael\Documents\Visual Studio Code\Docker Pracs\dockertest03
+> docker cp yellowstart:/app/log.txt .
+- check the file in C:\Users\Kael\Documents\Visual Studio Code\Docker Pracs\dockertest03
+# host to container 
+> cd C:\Users\Kael\Documents\Visual Studio Code\Docker Pracs\dockertest03
+> echo warcraft > secret.txt
+> docker cp secret.txt yellowstart:/app
+> docker exec -it yellowstart sh
+> ls
+
+
+
+# sample of sharing source code with a container
+/*
+    Notes:
+        - you do this so you can see your changes after refresh VS building a new image
+        - this will take very long time
+            - thats why you need docker log -f to see if it finally done/finish setting up
+*/
+> cd C:\Users\Kael\Documents\Visual Studio Code\Docker Pracs\dockertest03
+> docker run -d -p 7000:3000 -v $(pwd):/app --name applestart react-app
+> docker logs -f applestart
+OR add "" if path has space
+> docker run -d -p 7001:3000 -v "%cd%":/app --name applestart react-app
+> docker logs -f applestart
+OR there is some issue in the webpack and you need to add -e WATCHPACK_POLLING=true and refresh to see the update
+> docker run -d -p 7001:3000 -v %cd%:/app --name redsalamander -e WATCHPACK_POLLING=true react-app
+> docker run -d -p 7002:3000 -v "%cd%":/app --name greensalamander -e WATCHPACK_POLLING=true react-app
+> docker logs -f greensalamander
 </p>
