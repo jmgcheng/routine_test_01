@@ -1,0 +1,346 @@
+<h6 class="card-title question-pre">Linux - Commands - Basics
+#  check curent working directory 
+
+
+
+#  check current files in current directory
+
+
+
+#  check current login user
+
+
+
+#  package manager for linux
+
+
+
+#  list all package in apt database
+
+
+
+#  update package database
+
+
+
+#  install nano and other apps
+
+
+
+#  uninstall nano
+
+
+
+#  list files in /etc and save output in files.txt
+#  check content of files.txt
+
+
+
+#  find hello text in file1.txt
+
+
+
+#  find etc directory
+
+
+
+# search for directories only
+
+
+
+# search for files that starts with f
+
+
+
+# case not sensitive
+
+
+
+# find all python files in / and write it in python-files.txt
+
+
+
+# chain command - create test directory, go inside text directory, print done
+
+
+
+# chain command - stop execute if previous command failed - create test directory, go inside text directory, print done
+
+
+
+# chain command - sample of run 1st command or the other if 1st fail
+
+
+
+# chain command - list /bin directory slowly by page so we can check slowly
+# single pipe means redirect output to the next command
+
+
+
+# see all environment variables in this machine
+
+
+
+# check value of PATH variable
+
+
+
+# define a new variable and append it inside .bashrc
+# check content of .bashrc
+# reload .bashrc
+
+
+
+# create a user john
+
+
+
+# setting bash for the user rather than sh
+
+
+
+# removing a user named john
+
+
+
+# check all groups avaiable
+
+
+
+# add new group
+
+
+
+# add john to the group
+
+
+
+# list groups of a user
+
+
+
+#  file permissions
+# create deploy.sh with echo hello inside it
+# check its contents
+# list directory to check files permissions
+# change its permission to u+x
+# run deploy.sh
+
+
+
+</h6>
+<p class="card-text answer-pre">
+#  check curent working directory 
+> pwd
+
+
+
+#  check current files in current directory
+> ls
+> ll
+
+
+
+#  check current login user
+> whoami
+
+
+
+#  package manager for linux
+/*
+Notes:
+    - npm - node
+    - pip - python
+    - yarn -
+    - NuGet - 
+    - apt - ubuntu
+*/
+# old
+> apt-get
+# newer
+> apt
+
+
+
+#  list all package in apt database
+> apt list
+
+
+
+#  update package database
+> apt update 
+
+
+
+#  install nano and other apps
+> apt install nano
+> apt install less
+
+
+
+#  uninstall nano
+> apt remove nano
+
+
+
+#  list files in /etc and save output in files.txt
+#  check content of files.txt
+> ls -l /etc > files.txt
+> cat files.txt
+
+
+
+#  find hello text in file1.txt
+> grep hello file1.txt
+# -i means not case sensitive
+> grep -i hello file1.txt
+> grep -i root /etc/passwd
+> grep -i hello file*
+# r means recursive to check all files in directory
+> grep -ir hello .
+
+
+
+#  find etc directory
+> find /etc
+
+
+
+# search for directories only
+> find -type d
+
+
+
+# search for files that starts with f
+> find -type f -name "f*"
+
+
+
+# case not sensitive
+> find -type f -iname "f*"
+
+
+
+# find all python files in / and write it in python-files.txt
+> find / -type f -name "*.py" > python-files.txt
+
+
+
+# chain command - create test directory, go inside text directory, print done
+> mkdir test ; cd test ; echo done
+
+
+
+# chain command - stop execute if previous command failed - create test directory, go inside text directory, print done
+> mkdir test && cd test && echo done
+
+
+
+# chain command - sample of run 1st command or the other if 1st fail
+> mkdir test || echo "directory exist"
+
+
+
+# chain command - list /bin directory slowly by page so we can check slowly
+# single pipe means redirect output to the next command
+> ls /bin | less 
+
+
+
+# see all environment variables in this machine
+> printenv
+
+
+
+# check value of PATH variable
+> printenv PATH
+OR
+> echo $PATH
+
+
+
+# define a new variable and append it inside .bashrc
+# check content of .bashrc
+# reload .bashrc
+# >> means append at the bottom of the contents while > replace the whole content of the file
+> echo DB_USER=mosh >> .bashrc
+> tail .bashrc
+# reload 
+> source .bashrc
+> echo $DB_USER
+
+
+
+# create a user john
+> useradd -m john
+> cat /etc/passwd
+# useradd vs adduser
+- useradd
+- original api
+- adduser
+- more interactive
+- use useradd under the hood
+# create user using adduser
+> adduser bob
+
+
+
+# setting bash for the user rather than sh
+# -s is for setting shell
+# useful for alpine where you only have the default one
+> usermod -s /bin/bash john
+> cat /etc/passwd
+
+
+
+# removing a user named john
+> userdel john
+
+
+
+# check all groups avaiable
+> cat /etc/group
+
+
+
+# add new group
+> groupadd developers
+> cat /etc/group
+
+
+
+# add john to the group
+> usermod
+> usermod -G developers john
+> cat /etc/passwd | grep john
+> grep john /etc/passwd
+
+
+
+# list groups of a user
+> groups username
+> groups john
+
+
+
+#  file permissions
+# create deploy.sh with echo hello inside it
+# check its contents
+# list directory to check files permissions
+# change its permission to u+x
+# run deploy.sh
+> cd ~
+> echo echo hello > deploy.sh
+> cat deploy.sh
+> ls -l
+> chmod u+x deploy.sh
+> ls -l
+# idk why you need ./ where you are already in the same directory
+# it seems you need ./ when running a bash script
+> ./deploy.sh
+> chmod o+x deploy.sh
+> ls -l
+> chmod og+x deploy.sh
+> chmod og+x+r-w deploy.sh deploy01.sh *.sh
+> ls -l
+</p>
