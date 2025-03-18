@@ -1,2 +1,489 @@
-<h6 class="card-title question">Sample question javascript 1</h6>
-<p class="card-text answer">Sample Answer javascript 1</p>
+<h6 class="card-title question-pre">Javascript: Basics
+# output    
+
+
+# identify typeof operators (string, number, boolean, object, function, undefined)
+typeof "John"
+typeof 3.14
+typeof NaN
+typeof false
+typeof [1,2,3,4]
+typeof {name:'John', age:34}
+typeof new Date()
+typeof function () {}
+typeof myCar
+typeof null
+
+
+
+# identify instanceof. true or false
+arr = [1, 2, 3];
+alert( arr instanceof Array );
+alert( arr instanceof Object );
+
+
+
+# identify if undefined, empty, null, or object
+var car;
+x = undefined;
+var car = "";
+person = null;
+typeof undefined
+typeof null
+    
+
+
+# type casting for number, integer, string
+
+
+
+# boolean results. identify if true or false
+Boolean(10 > 9)
+(10 > 9)
+10 > 9
+100
+3.14
+-15
+"Hello"
+"false"
+7 + 1 + 3.14
+x = 0;
+x = -0;
+x = "";
+x;
+x = null;
+x = false;
+x = 10 / "H";
+null === undefined
+null == undefined
+
+
+
+# identify output
+#eg - ||
+	alert( true || true );
+	alert( false || true );
+	alert( true || false );
+	alert( false || false );
+#eg -
+	if (1 || 0) {
+		alert( 'truthy!' );
+	}
+#eg -
+	let hour = 12;
+	let isWeekend = true;
+	if (hour < 10 || hour > 18 || isWeekend) {
+		alert( 'The office is closed.' );
+	}
+#eg -
+	alert( 1 || 0 ); 
+	alert( null || 1 ); 
+	alert( null || 0 || 1 ); 
+	alert( undefined || null || 0 ); 
+#eg -
+	let firstName = "";
+	let lastName = "";
+	let nickName = "SuperCoder";
+	alert( firstName || lastName || nickName || "Anonymous"); 
+#eg -
+	true || alert("not printed");
+	false || alert("printed");
+#eg - &&
+	alert( true && true );
+	alert( false && true );
+	alert( true && false );
+	alert( false && false );
+#eg -
+	if (1 && 0) { 
+	    alert( "won't work, because the result is falsy" );
+	}
+#eg -
+	alert( 1 && 0 ); 
+	alert( 1 && 5 ); 
+	alert( null && 5 ); 
+	alert( 0 && "no matter what" ); 
+#eg -
+	alert( 1 && 2 && null && 3 ); 
+	alert( 1 && 2 && 3 ); 
+#eg - !
+	alert( !true ); 
+	alert( !0 ); 
+#eg - !!
+	alert( !!"non-empty string" ); 
+	alert( !!null ); 
+	alert( Boolean("non-empty string") ); 
+	alert( Boolean(null) ); 
+#eg - show long syntax
+	x = a ?? b
+#eg - a ?? b - explain output
+
+#eg -
+	let firstName = null;
+	let lastName = null;
+	let nickName = "Supercoder";
+	alert(firstName ?? lastName ?? nickName ?? "Anonymous");
+#eg - Comparison with ||
+	let height = 0;
+	alert(height || 100); 
+	alert(height ?? 100); 
+#eg -
+	let height = null;
+	let width = null;
+	let area = (height ?? 100) * (width ?? 50);
+	alert(area);
+
+
+
+# if statement
+
+
+
+# ternary
+
+
+
+# select/switch statement
+
+
+
+# try catch
+
+
+
+# swap variables using destruct
+
+
+
+
+# destruct an array for the 1st 2 values then use rest for the remaining
+
+
+
+
+# set default values for destruct variable 
+
+
+
+
+# destruct an object
+
+
+
+
+# destruct an object with alias
+
+
+
+
+# destruct an object
+# prompt() user with the other variables
+
+
+
+
+# only desctruct a single property in an object
+
+
+
+
+# create an options object with title and items properties. items property is an array
+# create showMenu function that has a destruct argument that can accept options object
+
+
+
+
+</h6>
+<p class="card-text answer-pre">
+# output    
+console.log('test')
+window.alert('test')
+document.getElementById("elementID").innerHTML = ""
+document.write('test') // depreciated
+window.print() //method in the browser to print the content of the current window.
+
+
+
+# identify typeof operators
+typeof "John" // Returns "string"
+typeof 3.14 // Returns "number"
+typeof NaN // Returns "number"
+typeof false // Returns "boolean"
+typeof [1,2,3,4] // Returns "object"
+typeof {name:'John', age:34} // Returns "object"
+typeof new Date() // Returns "object"
+typeof function () {} // Returns "function"
+typeof myCar // Returns "undefined"
+typeof null // Returns "object"
+
+
+
+# identify instanceof
+arr = [1, 2, 3];
+alert( arr instanceof Array ); // true
+alert( arr instanceof Object ); // true        
+
+
+
+# identify if undefined, empty, null, or object
+var car; // undefined
+x = undefined; // undefined
+var car = ""; // empty
+person = null; // null
+typeof undefined // undefined
+typeof null // object
+    
+
+
+# type casting
+Number("3.14") // 3.14
+parseInt("3.14") // 3
+String(123)
+(123).toString()
+
+
+
+# boolean results
+Boolean(10 > 9) // true
+(10 > 9) // true
+10 > 9 // true
+100 // true
+3.14 // true
+-15 // true
+"Hello" // true
+"false" // true
+7 + 1 + 3.14 // true
+x = 0; // returns false
+x = -0; // returns false
+x = ""; // returns false
+x; // returns false
+x = null; // returns false
+x = false; // returns false
+x = 10 / "H"; // returns false
+null === undefined // false
+null == undefined // true
+
+
+
+# identify output
+#eg - ||
+	alert( true || true ); // true
+	alert( false || true ); // true
+	alert( true || false ); // true
+	alert( false || false ); // false
+#eg -
+	//If an operand is not a boolean, it’s converted to a boolean for the evaluation
+	if (1 || 0) { // works just like if( true || false )
+		alert( 'truthy!' );
+	}
+#eg -
+	let hour = 12;
+	let isWeekend = true;
+	if (hour < 10 || hour > 18 || isWeekend) {
+		alert( 'The office is closed.' ); // it is the weekend
+	}
+#eg -
+	alert( 1 || 0 ); // 1 (1 is truthy)
+	alert( null || 1 ); // 1 (1 is the first truthy value)
+	alert( null || 0 || 1 ); // 1 (the first truthy value)
+	alert( undefined || null || 0 ); // 0 (all falsy, returns the last value)
+#eg -
+	let firstName = "";
+	let lastName = "";
+	let nickName = "SuperCoder";
+	alert( firstName || lastName || nickName || "Anonymous"); // SuperCoder
+#eg -
+	true || alert("not printed");
+	false || alert("printed");
+#eg - &&
+	alert( true && true ); // true
+	alert( false && true ); // false
+	alert( true && false ); // false
+	alert( false && false ); // false
+#eg -
+	if (1 && 0) { // evaluated as true && false
+	alert( "won't work, because the result is falsy" );
+	}
+#eg -
+	// if the first operand is truthy,
+	// AND returns the second operand:
+	alert( 1 && 0 ); // 0
+	alert( 1 && 5 ); // 5
+	// if the first operand is falsy,
+	// AND returns it. The second operand is ignored
+	alert( null && 5 ); // null
+	alert( 0 && "no matter what" ); // 0
+#eg -
+	alert( 1 && 2 && null && 3 ); // null
+	alert( 1 && 2 && 3 ); // 3, the last one
+#eg - !
+	alert( !true ); // false
+	alert( !0 ); // true
+#eg - !!
+	//A double NOT !! is sometimes used for converting a value to boolean type:
+	alert( !!"non-empty string" ); // true
+	alert( !!null ); // false
+	//same
+	alert( Boolean("non-empty string") ); // true
+	alert( Boolean(null) ); // false
+#eg - show long syntax
+	x = a ?? b
+	//same
+	x = (a !== null && a !== undefined) ? a : b;
+#eg - a ?? b - explain output
+	//a if it’s not null or undefined,
+	//b, otherwise.
+#eg -
+	let firstName = null;
+	let lastName = null;
+	let nickName = "Supercoder";
+	// show the first not-null/undefined value
+	alert(firstName ?? lastName ?? nickName ?? "Anonymous"); // Supercoder
+#eg - Comparison with ||
+	// || returns the first truthy value.
+	// ?? returns the first defined value.
+	//
+	let height = 0;
+	alert(height || 100); // 100
+	alert(height ?? 100); // 0
+#eg -
+	let height = null;
+	let width = null;
+	// important: use parentheses
+	let area = (height ?? 100) * (width ?? 50);
+	alert(area); // 5000
+
+
+
+# if statement sample
+if (condition && condition) {} 
+else if (condition) {} 
+else {}
+
+
+
+# ternary
+let result = (condition) ? "pass" : "fail";
+
+
+
+# select/switch statement
+switch(expression) {
+    case x:
+        // code block
+        break;
+    case y:
+        // code block
+        break;
+    default:
+        // code block
+}
+
+
+
+# try catch
+try {
+    // code block
+}
+catch(err) {
+    // code block
+}
+finally {
+    // code block
+}
+
+
+
+# script ready
+window.addEventListener('DOMContentLoaded', () => {
+    console.log('ready');
+});
+
+
+
+# swap variables using destruct
+let guest = "Jane";
+let admin = "Pete";
+// Swap values: make guest=Pete, admin=Jane
+[guest, admin] = [admin, guest];
+alert(`${guest} ${admin}`); // Pete Jane (successfully swapped!)
+
+
+
+# destruct an array for the 1st 2 values then use rest for the remaining
+let [name1, name2, ...rest] = ["Julius", "Caesar", "Consul", "of the Roman Republic"];
+alert(name1); // Julius
+alert(name2); // Caesar
+// Note that type of `rest` is Array.
+alert(rest[0]); // Consul
+alert(rest[1]); // of the Roman Republic
+alert(rest.length); // 2
+
+
+
+# set default values for destruct variable 
+let [name = "Guest", surname = "Anonymous"] = ["Julius"];
+alert(name); // Julius (from array)
+alert(surname); // Anonymous (default used)
+
+
+
+# destruct an object
+let {height, width, title} = { title: "Menu", height: 200, width: 100 }
+
+
+
+# destruct an object with alias
+let options = {
+	title: "Menu",
+	width: 100,
+	height: 200
+};
+// { sourceProperty: targetVariable }
+let {width: w, height: h, title} = options;
+// width -> w
+// height -> h
+// title -> title
+alert(title); // Menu
+alert(w); // 100
+alert(h); // 200
+
+
+
+# destruct an object
+# prompt() user with the other variables
+let options = {
+	title: "Menu"
+};
+let {width = prompt("width?"), title = prompt("title?")} = options;
+alert(title); // Menu
+alert(width); // (whatever the result of prompt is)
+
+
+
+# only desctruct a single property in an object
+let options = {
+	title: "Menu",
+	width: 100,
+	height: 200
+};
+// only extract title as a variable
+let { title } = options;
+alert(title); // Menu
+
+
+
+# create an options object with title and items properties. items property is an array
+# create showMenu function that has a destruct argument that can accept options object
+let options = {
+	title: "My menu",
+	items: ["Item1", "Item2"]
+};
+//
+showMenu({}); // ok, all values are default
+showMenu(); // this would give an error
+// fix
+function showMenu({ title = "Menu", width = 100, height = 200 } = {}) {
+	alert( `${title} ${width} ${height}` );
+}
+showMenu(); // Menu 100 200
+</p>

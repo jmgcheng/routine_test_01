@@ -1,2 +1,383 @@
-<h6 class="card-title question">Sample question sql 1</h6>
-<p class="card-text answer">Sample Answer sql 1</p>
+<h6 class="card-title question-pre">SQL - Basics
+# identify
+-- JOIN - 
+-- INNER JOIN - 
+-- LEFT JOIN - 
+-- RIGH JOIN - 
+-- FULL JOIN - 
+-- Drop Table - 
+-- DROP DATABASE - 
+-- TRUNCATE TABLE - 
+-- DELETE - 
+
+
+
+# sql - select columns in a table
+
+
+
+# sql - select columns in table using WHERE
+
+
+
+# sql - select all from customers where country is in germany and with city berlin or munchen
+
+
+
+# sql - select all from a table where a column is in value1, value2, etc 
+
+
+
+# sql - select all form a table where column between value1 and value2
+
+
+
+# sql - select all from a table order by a column1 asc and column2 in desc
+
+
+
+# sql - using inner join, select join Orders and Customer 
+
+
+
+# sql - using left join. select join table1 and table2
+
+
+
+# sql - show template of INSERT INTO
+
+
+
+# sql - show template of UPDATE
+
+
+
+# sql - show template of DELETE
+
+
+
+# sql - show template of UNION
+
+
+
+# sql - show template create database
+
+
+
+# sql - show template create table
+
+
+
+# sql - define constraints
+NOT NULL - 
+UNIQUE - 
+PRIMARY KEY - 
+FOREIGN KEY - 
+CHECK - 
+DEFAULT - 
+
+
+
+# sql - show constraint sample - NOT NULL
+
+
+
+# sql - show constraint sample - UNIQUE
+
+
+
+# sql - show constraint sample - PRIMARY KEY
+
+
+
+# sql - show constraint sample - FOREIGN KEY
+
+
+
+# sql - show constraint sample - CHECK
+
+
+
+# sql - show constraint sample - DEFAULT
+
+
+
+# sql - create an index on a column
+
+
+
+# sql - show constraint sample - NOT NULL and AUTO_INCREMENT
+
+
+
+# sql - show sample of dropping a table, database, index, and view
+
+
+
+# sql - show sample truncating a table
+
+
+
+# sql - create a sample select query where subquery is in WHERE clause
+# select * employee where salary is greater than the average salary
+
+
+
+# sql - create a sample select query where subquery is in SELECT clause
+
+
+
+# sql - create a sample select query where subquery is in FROM clause
+# select the max age from all age from a table
+
+
+
+</h6>
+<p class="card-text answer-pre">
+# identify
+-- JOIN - return rows when there is at least one match in both tables
+-- INNER JOIN - return rows when there is at least one match in both tables. Same as JOIN
+-- LEFT JOIN - return all rows from the left table even if there are no matches in the right table
+-- RIGH JOIN - return all rows from the right table even if there are no matches in the left table
+-- FULL JOIN - return rows when there is a match in one of the tables
+-- Drop Table - is used to delete a table
+-- DROP DATABASE - is used to delete a database
+-- TRUNCATE TABLE - deletes data inside the table
+-- DELETE - uses to delete rows in a table
+
+
+
+# sql - select columns in a table
+SELECT
+    column_name,column_name
+FROM
+    table_name;
+
+
+
+# sql - select columns in table using WHERE
+SELECT
+    column_name,column_name
+FROM
+    table_name
+WHERE
+    column_name operator value;
+
+
+
+# sql - select all from customers where country is in germany and with city berlin or munchen
+//
+SELECT * FROM Customers
+WHERE Country='Germany'
+AND (City='Berlin' OR City='München');
+
+
+
+# sql - select all from a table where a column is in value1, value2, etc 
+SELECT
+    column_name(s)
+FROM
+    table_name
+WHERE
+    column_name
+IN 	
+    (value1,value2,...);
+
+
+
+# sql - select all form a table where column between value1 and value2
+SELECT
+    column_name(s)
+FROM
+    table_name
+WHERE
+    column_name
+BETWEEN 
+    value1 AND value2;
+
+
+
+# sql - select all from a table order by a column1 asc and column2 in desc
+SELECT
+column_name, column_name
+FROM
+table_name
+ORDER BY
+column_name ASC|DESC, column_name ASC|DESC;
+
+
+
+# sql - using inner join, select join Orders and Customer 
+SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate
+FROM Orders
+INNER JOIN
+Customers
+ON
+Orders.CustomerID = Customers.CustomerID;
+
+
+
+# sql - using left join. select join table1 and table2
+SELECT column_name(s)
+FROM table1
+LEFT JOIN
+table2
+ON table1.column_name = table2.column_name;
+
+
+
+# sql - show template of INSERT INTO
+INSERT INTO table_name
+(column1,column2,column3,...)
+VALUES
+(value1,value2,value3,...);
+
+
+
+# sql - show template of UPDATE
+UPDATE table_name
+SET column1=value1,column2=value2,...
+WHERE
+some_column=some_value;
+
+
+
+# sql - show template of DELETE
+DELETE FROM table_name
+WHERE
+some_column=some_value;
+
+
+
+# sql - show template of UNION
+SELECT column_name(s) FROM table1
+UNION
+SELECT column_name(s) FROM table2;
+
+
+
+# sql - show template create database
+CREATE DATABASE dbname;
+
+
+
+# sql - show template create table
+CREATE TABLE table_name
+(
+column_name1 data_type(size),
+column_name2 data_type(size) constraint_name,
+...
+);
+
+
+
+# sql - define constraints
+NOT NULL - Indicates that a column cannot store NULL value
+UNIQUE - Ensures that each row for a column must have a unique value
+PRIMARY KEY - A combination of a NOT NULL and UNIQUE. Ensures tha column (or combination of two or more columns) have an unique identity which helps to find a particular record in a table more easily and quickly
+FOREIGN KEY - Ensure the referential integrity of the data in one table tmatch values in another table
+CHECK - Ensures that the value in a column meets a specific condition
+DEFAULT - Specifies a default value when specified none for this column
+
+
+
+# sql - show constraint sample - NOT NULL
+P_Id int NOT NULL,
+
+
+
+# sql - show constraint sample - UNIQUE
+UNIQUE (P_Id)
+
+
+
+# sql - show constraint sample - PRIMARY KEY
+PRIMARY KEY (P_Id)
+
+
+
+# sql - show constraint sample - FOREIGN KEY
+FOREIGN KEY (P_Id) REFERENCES Persons(P_Id)
+
+
+
+# sql - show constraint sample - CHECK
+CHECK (P_Id>0)
+
+
+
+# sql - show constraint sample - DEFAULT
+City varchar(255) DEFAULT 'Sandnes'
+
+
+
+# sql - create an index on a column
+CREATE INDEX index_name
+ON table_name (column_name)
+
+
+
+# sql - show constraint sample - NOT NULL and AUTO_INCREMENT
+ID int NOT NULL AUTO_INCREMENT
+
+
+
+# sql - show sample of dropping a table, database, index, and view
+DROP TABLE table_name
+DROP DATABASE database_name
+ALTER TABLE table_name DROP INDEX index_name //MySQL
+DROP VIEW view_name
+
+
+
+# sql - show sample truncating a table
+TRUNCATE TABLE table_name
+
+
+
+# sql - create a sample select query where subquery is in WHERE clause
+# select * employee where salary is greater than the average salary
+//SELECT statement that is nested within another statement
+//inside WHERE clause
+select
+    employee_name
+from
+    employee
+where
+    employee_salary >
+    -- this is a subquery:
+    (
+        select avg(employee_salary)
+        from employee
+    )
+
+
+
+# sql - create a sample select query where subquery is in SELECT clause
+//inside SELECT clause
+SELECT
+    itt.family_nme,
+    itt.given_nme,
+    itt.birth_dt,
+(
+    SELECT english_desc
+    FROM vcode_value
+    WHERE code_value_id = itt.birth_country_cd
+) AS 'birth_country'
+FROM
+    identity_tombstone_id AS itt;
+
+
+
+# sql - create a sample select query where subquery is in FROM clause
+# select the max age from all age from a table
+//a subquery ALWAYS inside FROM clause
+select
+    max(age)
+from
+(
+    -- this part of the query is a derived table:
+    select age from table
+) as Age -- must give derived table an alias
+    
+</p>

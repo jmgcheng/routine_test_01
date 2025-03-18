@@ -1,0 +1,103 @@
+<h6 class="card-title question-pre">JS HTML DOM - Basics
+# get element by id
+
+
+
+# get element by class and loop through them
+# change each of their text color to blue
+
+
+
+# change content of an element
+
+
+
+# using querySelectorAll, select all element that has class example
+# loop through them and change their background color 
+
+
+
+# create a list using javascript
+# append the newly created script to a div#list-container
+
+
+
+# add event listener click and mouseover
+
+
+
+# create an event listener when user resize the window
+
+
+
+# stop bubble propagation event
+
+
+
+</h6>
+<p class="card-text answer-pre">
+# get element by id
+document.getElementById('id')
+
+
+# get element by class and loop through them
+# change each of their text color to blue
+const elements = document.getElementsByClassName("item");
+for (let i = 0; i < elements.length; i++) {
+    elements[i].style.color = "blue"; // Change text color to blue
+}
+
+# change content of an element
+document.getElementById("text").innerHTML = "Text has been changed!";
+
+
+# using querySelectorAll, select all element that has class example
+# loop through them and change their background color 
+const elements = document.querySelectorAll(".example");
+elements.forEach(element => {
+    element.style.backgroundColor = "yellow"; // Highlight all paragraphs
+});    
+
+
+# create a list using javascript
+# append the newly created script to a div#list-container
+const ul = document.createElement("ul");
+for (let i = 1; i <= 3; i++) {
+    const li = document.createElement("li");
+    li.textContent = `Item ${i}`;
+    ul.appendChild(li);
+}
+document.getElementById("list-container").appendChild(ul);
+
+
+
+# add event listener click and mouseover
+//
+element.addEventListener(event, function, useCapture);
+element.addEventListener("click", myFunction);
+element.addEventListener("mouseover", myFunction);
+element.addEventListener("click", function(){ alert("Hello World!"); });
+//
+document.getElementById("myBtn").onclick = displayDate;
+document.getElementById(id).onclick=function(){code}
+//
+element.removeEventListener("mousemove", myFunction);
+
+
+
+# create an event listener when user resize the window
+window.addEventListener("resize", function(){
+    screen.width
+    screen.height
+    screen.availWidth
+    screen.availHeight        
+});
+
+
+
+# stop bubble propagation event
+function func1(event) {
+    alert("DIV 1");
+    event.stopPropagation();
+}
+</p>

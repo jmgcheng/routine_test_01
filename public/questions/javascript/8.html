@@ -1,0 +1,40 @@
+<h6 class="card-title question-pre">Javascript: json and jsonp
+# create a person object that has a name property and age method that returns a number
+# stringify it
+
+
+
+# convert string below back to object
+
+
+
+# use a parse reviver to bring back the date correctly
+
+
+
+</h6>
+<p class="card-text answer-pre">
+# create a person object that has a name property and age method that returns a number
+# stringify it
+var person = {name:"John", age:function () {return 30;}};
+person.age = person.age.toString();
+var myString = JSON.stringify(person);
+document.getElementById("demo").innerHTML = myString;
+
+
+
+# convert string below back to object
+let userData = '{ "name": "John", "age": 35, "isAdmin": false, "friends": [0,1,2,3] }';
+let user = JSON.parse(userData);
+alert( user.friends[1] ); // 1
+
+
+
+# use a parse reviver to bring back the date correctly
+let str = '{"title":"Conference","date":"2017-11-30T12:00:00.000Z"}';
+let meetup = JSON.parse(str, function(key, value) {
+    if (key == 'date') return new Date(value);
+    return value;
+});
+alert( meetup.date.getDate() ); // now works!
+</p>

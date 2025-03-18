@@ -1,0 +1,866 @@
+<h6 class="card-title question-pre">Javascript: objects
+# define/identify each clearly
+> Static Methods
+    > Object.assign() - 
+    > Object.create() - 
+    > Object.defineProperty() - 
+    > Object.defineProperties() - 
+    > Object.entries() - 
+    > Object.freeze() - 
+    > Object.fromEntries() - 
+    > Object.getOwnPropertyDescriptor() - 
+    > Object.getOwnPropertyDescriptors() - 
+    > Object.getOwnPropertyNames() - 
+    > Object.getOwnPropertySymbols() - 
+    > Object.getPrototypeOf() - 
+    > Object.is() - 
+    > Object.isExtensible() - 
+    > Object.isFrozen() - 
+    > Object.isSealed() - 
+    > Object.keys() - 
+    > Object.preventExtensions() - 
+    > Object.seal() - 
+    > Object.setPrototypeOf() - 
+    > Object.values() - 
+> Instance Methods
+    > Object.hasOwnProperty() - 
+    > Object.isPrototypeOf() - 
+    > Object.propertyIsEnumerable() - 
+    > Object.toLocaleString() - 
+    > Object.toString() - 
+    > Object.unwatch() - 
+    > Object.valueOf() - 
+    > Object.watch() - 
+
+
+
+
+# show usage for each for the following
+> Object()
+> exam: syntax
+
+
+> exam: sample usage
+    
+
+
+
+
+> Object.assign() - Copies the values of all enumerable own properties from one or more source objects to a target object.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.create() - Creates a new object with the specified prototype object and properties.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.defineProperty() - Adds the named property described by a given descriptor to an object.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.defineProperties() - Adds the named properties described by the given descriptors to an object.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.entries() - Returns an array containing all of the [key, value] pairs of a given object's own enumerable string properties.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.freeze() - Freezes an object. Other code cannot delete or change its properties.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.fromEntries() - Returns a new object from an iterable of [key, value] pairs. (This is the reverse of Object.entries).
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.getOwnPropertyDescriptor() - Returns a property descriptor for a named property on an object.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.getOwnPropertyDescriptors() - Returns an object containing all own property descriptors for an object.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.getOwnPropertyNames() - Returns an array containing the names of all of the given object's own enumerable and non-enumerable properties.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.getOwnPropertySymbols() - Returns an array of all symbol properties found directly upon a given object.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.getPrototypeOf() - Returns the prototype (internal [[Prototype]] property) of the specified object.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.is() - Compares if two values are the same value. Equates all NaN values (which differs from both Abstract Equality Comparison and Strict Equality Comparison).
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.isExtensible() - Determines if extending of an object is allowed.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.isFrozen() - Determines if an object was frozen.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.isSealed() - Determines if an object is sealed.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.keys() - Returns an array containing the names of all of the given object's own enumerable string properties.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.preventExtensions() - Prevents any extensions of an object.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.seal() - Prevents other code from deleting properties of an object.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.setPrototypeOf() - Sets the object's prototype (its internal [[Prototype]] property).
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+> Object.values() - Returns an array containing the values that correspond to all of a given object's own enumerable string properties.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.constructor
+> exam: syntax
+> exam: sample usage
+    
+
+
+
+
+> Object.hasOwnProperty() - Returns a boolean indicating whether an object contains the specified property as a direct property of that object and not inherited through the prototype chain.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.isPrototypeOf() - Returns a boolean indicating whether the object this method is called upon is in the prototype chain of the specified object.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.propertyIsEnumerable() - Returns a boolean indicating if the internal ECMAScript [[Enumerable]] attribute is set.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.toLocaleString() - Calls toString().
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.toString() - Returns a string representation of the object.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> Object.valueOf() - Returns the primitive value of the specified object.
+> exam: syntax
+    
+> exam: sample usage
+    
+
+
+
+
+> create a person literal object with firstName, lastName, age, and eyeColor properties with values
+> show how to access the person property
+> use for...in loop to access both property and values of person object
+> add a new property 'nationality' to person object
+> delete age property of person object
+> create method fullName of person object that returns firstName and lastName of the person. Use it
+
+
+
+# fix 'this' issue by using '.bind' and arrow function
+const person = {
+    name: "John",
+    greet: function() {
+        setTimeout(function() {
+            console.log(`Hello, my name is ${this.name}`);
+        }, 1000);
+    }
+};    
+person.greet(); // ❌ Output: "Hello, my name is undefined" (or an error in strict mode)
+//
+const person = {
+    name: "John",
+    greet: function() {
+        setTimeout(function() {
+            console.log(`Hello, my name is ${this.name}`);
+        }.bind(this), 1000);
+    }
+};    
+
+
+
+# polyfilling - show an example of polyfilling a String object
+
+
+
+</h6>
+<p class="card-text answer-pre">
+# define/identify each clearly
+> Static Methods
+    > Object.assign() - Copies the values of all enumerable own properties from one or more source objects to a target object.
+    > Object.create() - Creates a new object with the specified prototype object and properties.
+    > Object.defineProperty() - Adds the named property described by a given descriptor to an object.
+    > Object.defineProperties() - Adds the named properties described by the given descriptors to an object.
+    > Object.entries() - Returns an array containing all of the [key, value] pairs of a given object's own enumerable string properties.
+    > Object.freeze() - Freezes an object. Other code cannot delete or change its properties.
+    > Object.fromEntries() - Returns a new object from an iterable of [key, value] pairs. (This is the reverse of Object.entries).
+    > Object.getOwnPropertyDescriptor() - Returns a property descriptor for a named property on an object.
+    > Object.getOwnPropertyDescriptors() - Returns an object containing all own property descriptors for an object.
+    > Object.getOwnPropertyNames() - Returns an array containing the names of all of the given object's own enumerable and non-enumerable properties.
+    > Object.getOwnPropertySymbols() - Returns an array of all symbol properties found directly upon a given object.
+    > Object.getPrototypeOf() - Returns the prototype (internal [[Prototype]] property) of the specified object.
+    > Object.is() - Compares if two values are the same value. Equates all NaN values (which differs from both Abstract Equality Comparison and Strict Equality Comparison).
+    > Object.isExtensible() - Determines if extending of an object is allowed.
+    > Object.isFrozen() - Determines if an object was frozen.
+    > Object.isSealed() - Determines if an object is sealed.
+    > Object.keys() - Returns an array containing the names of all of the given object's own enumerable string properties.
+    > Object.preventExtensions() - Prevents any extensions of an object.
+    > Object.seal() - Prevents other code from deleting properties of an object.
+    > Object.setPrototypeOf() - Sets the object's prototype (its internal [[Prototype]] property).
+    > Object.values() - Returns an array containing the values that correspond to all of a given object's own enumerable string properties.
+> Instance Methods
+    > Object.hasOwnProperty() - Returns a boolean indicating whether an object contains the specified property as a direct property of that object and not inherited through the prototype chain.
+    > Object.isPrototypeOf() - Returns a boolean indicating whether the object this method is called upon is in the prototype chain of the specified object.
+    > Object.propertyIsEnumerable() - Returns a boolean indicating if the internal ECMAScript [[Enumerable]] attribute is set.
+    > Object.toLocaleString() - Calls toString().
+    > Object.toString() - Returns a string representation of the object.
+    > Object.unwatch() - Removes a watchpoint from a property of the object.
+    > Object.valueOf() - Returns the primitive value of the specified object.
+    > Object.watch() - Adds a watchpoint to a property of the object.    
+
+
+
+
+# show usage for each for the following
+> Object()
+> exam: syntax
+    new Object()
+    new Object(value)
+> exam: sample usage
+    let o = new Object()
+    o.foo = 42
+    console.log(o)
+    // Object { foo: 42 }
+
+
+
+> Object.assign() - Copies the values of all enumerable own properties from one or more source objects to a target object.
+> exam: syntax
+    Object.assign(target, ...sources)
+> exam: sample usage
+    const target = { a: 1, b: 2 };
+    const source = { b: 4, c: 5 };
+    const returnedTarget = Object.assign(target, source);
+    console.log(target);
+    // expected output: Object { a: 1, b: 4, c: 5 }
+    console.log(returnedTarget);
+    // expected output: Object { a: 1, b: 4, c: 5 }
+
+
+
+> Object.create() - Creates a new object with the specified prototype object and properties.
+> exam: syntax
+    Object.create(proto, [propertiesObject])
+> exam: sample usage
+    const person = {
+        isHuman: false,
+        printIntroduction: function() {
+            console.log(`My name is ${this.name}. Am I human? ${this.isHuman}`);
+        }
+    };
+    const me = Object.create(person);
+    me.name = 'Matthew'; // "name" is a property set on "me", but not on "person"
+    me.isHuman = true; // inherited properties can be overwritten
+    me.printIntroduction();
+    // expected output: "My name is Matthew. Am I human? true"
+
+
+
+> Object.defineProperty() - Adds the named property described by a given descriptor to an object.
+> exam: syntax
+    Object.defineProperty(obj, prop, descriptor)
+> exam: sample usage
+    const object1 = {};
+    Object.defineProperty(object1, 'property1', {
+        value: 42,
+        writable: false
+    });
+    object1.property1 = 77;
+    // throws an error in strict mode
+    console.log(object1.property1);
+    // expected output: 42
+
+
+
+> Object.defineProperties() - Adds the named properties described by the given descriptors to an object.
+> exam: syntax
+    Object.defineProperties(obj, props)
+> exam: sample usage
+    const object1 = {};
+    Object.defineProperties(object1, {
+        property1: {
+            value: 42,
+            writable: true
+        },
+        property2: {}
+    });
+    console.log(object1.property1);
+    // expected output: 42
+
+
+
+> Object.entries() - Returns an array containing all of the [key, value] pairs of a given object's own enumerable string properties.
+> exam: syntax
+    Object.entries(obj)
+> exam: sample usage
+    const object1 = {
+        a: 'somestring',
+        b: 42
+    };
+    for (const [key, value] of Object.entries(object1)) {
+        console.log(`${key}: ${value}`);
+    }
+    // expected output:
+    // "a: somestring"
+    // "b: 42"
+    // order is not guaranteed
+
+
+
+> Object.freeze() - Freezes an object. Other code cannot delete or change its properties.
+> exam: syntax
+    Object.freeze(obj)
+> exam: sample usage
+    const obj = {
+        prop: 42
+    };
+    Object.freeze(obj);
+    obj.prop = 33;
+    // Throws an error in strict mode
+    console.log(obj.prop);
+    // expected output: 42
+
+
+
+> Object.fromEntries() - Returns a new object from an iterable of [key, value] pairs. (This is the reverse of Object.entries).
+> exam: syntax
+    Object.fromEntries(iterable);
+> exam: sample usage
+    const entries = new Map([
+        ['foo', 'bar'],
+        ['baz', 42]
+    ]);
+    const obj = Object.fromEntries(entries);
+    console.log(obj);
+    // expected output: Object { foo: "bar", baz: 42 }
+
+
+
+> Object.getOwnPropertyDescriptor() - Returns a property descriptor for a named property on an object.
+> exam: syntax
+    Object.getOwnPropertyDescriptor(obj, prop)
+> exam: sample usage
+    const object1 = {
+        property1: 42
+    };
+    const descriptor1 = Object.getOwnPropertyDescriptor(object1, 'property1');
+    console.log(descriptor1.configurable);
+    // expected output: true
+    console.log(descriptor1.value);
+    // expected output: 42
+
+
+
+> Object.getOwnPropertyDescriptors() - Returns an object containing all own property descriptors for an object.
+> exam: syntax
+    Object.getOwnPropertyDescriptors(obj)
+> exam: sample usage
+    const object1 = {
+        property1: 42
+    };
+    const descriptors1 = Object.getOwnPropertyDescriptors(object1);
+    console.log(descriptors1.property1.writable);
+    // expected output: true
+    console.log(descriptors1.property1.value);
+    // expected output: 42
+
+
+
+> Object.getOwnPropertyNames() - Returns an array containing the names of all of the given object's own enumerable and non-enumerable properties.
+> exam: syntax
+    Object.getOwnPropertyNames(obj)
+> exam: sample usage
+    const object1 = {
+        a: 1,
+        b: 2,
+        c: 3
+    };
+    console.log(Object.getOwnPropertyNames(object1));
+    // expected output: Array ["a", "b", "c"]
+
+
+
+> Object.getOwnPropertySymbols() - Returns an array of all symbol properties found directly upon a given object.
+> exam: syntax
+    Object.getOwnPropertySymbols(obj)
+> exam: sample usage
+    const object1 = {};
+    const a = Symbol('a');
+    const b = Symbol.for('b');
+    object1[a] = 'localSymbol';
+    object1[b] = 'globalSymbol';
+    const objectSymbols = Object.getOwnPropertySymbols(object1);
+    console.log(objectSymbols.length);
+    // expected output: 2
+
+
+
+> Object.getPrototypeOf() - Returns the prototype (internal [[Prototype]] property) of the specified object.
+> exam: syntax
+    Object.getPrototypeOf(obj)
+> exam: sample usage
+    const prototype1 = {};
+    const object1 = Object.create(prototype1);
+    console.log(Object.getPrototypeOf(object1) === prototype1);
+    // expected output: true
+
+
+
+> Object.is() - Compares if two values are the same value. Equates all NaN values (which differs from both Abstract Equality Comparison and Strict Equality Comparison).
+> exam: syntax
+    Object.is(value1, value2);
+> exam: sample usage
+    Object.is('foo', 'foo'); // true
+    Object.is(window, window); // true
+    Object.is('foo', 'bar'); // false
+    Object.is([], []); // false
+    var foo = { a: 1 };
+    var bar = { a: 1 };
+    Object.is(foo, foo); // true
+    Object.is(foo, bar); // false
+    Object.is(null, null); // true
+    // Special Cases
+    Object.is(0, -0); // false
+    Object.is(-0, -0); // true
+    Object.is(NaN, 0/0); // true
+
+
+
+> Object.isExtensible() - Determines if extending of an object is allowed.
+> exam: syntax
+    Object.isExtensible(obj)
+> exam: sample usage
+    const object1 = {};
+    console.log(Object.isExtensible(object1));
+    // expected output: true
+    Object.preventExtensions(object1);
+    console.log(Object.isExtensible(object1));
+    // expected output: false
+
+
+
+> Object.isFrozen() - Determines if an object was frozen.
+> exam: syntax
+    Object.isFrozen(obj)
+> exam: sample usage
+    const object1 = {
+        property1: 42
+    };
+    console.log(Object.isFrozen(object1));
+    // expected output: false
+    Object.freeze(object1);
+    console.log(Object.isFrozen(object1));
+    // expected output: true
+
+
+
+> Object.isSealed() - Determines if an object is sealed.
+> exam: syntax
+    Object.isSealed(obj)
+> exam: sample usage
+    const object1 = {
+        property1: 42
+    };
+    console.log(Object.isSealed(object1));
+    // expected output: false
+    Object.seal(object1);
+    console.log(Object.isSealed(object1));
+    // expected output: true
+
+
+
+> Object.keys() - Returns an array containing the names of all of the given object's own enumerable string properties.
+> exam: syntax
+    Object.keys(obj)
+> exam: sample usage
+    const object1 = {
+        a: 'somestring',
+        b: 42,
+        c: false
+    };
+    console.log(Object.keys(object1));
+    // expected output: Array ["a", "b", "c"]
+
+
+
+> Object.preventExtensions() - Prevents any extensions of an object.
+> exam: syntax
+    Object.preventExtensions(obj)
+> exam: sample usage
+    const object1 = {};
+    Object.preventExtensions(object1);
+    try {
+        Object.defineProperty(object1, 'property1', {
+            value: 42
+        });
+    } catch (e) {
+        console.log(e);
+        // expected output: TypeError: Cannot define property property1, object is not extensible
+    }
+
+
+
+> Object.seal() - Prevents other code from deleting properties of an object.
+> exam: syntax
+    Object.seal(obj)
+> exam: sample usage
+    const object1 = {
+        property1: 42
+    };
+    Object.seal(object1);
+    object1.property1 = 33;
+    console.log(object1.property1);
+    // expected output: 33
+    delete object1.property1; // cannot delete when sealed
+    console.log(object1.property1);
+    // expected output: 33
+
+
+
+> Object.setPrototypeOf() - Sets the object's prototype (its internal [[Prototype]] property).
+> exam: syntax
+    Object.setPrototypeOf(obj, prototype)
+> exam: sample usage
+    var dict = Object.setPrototypeOf({}, null);
+
+
+
+> Object.values() - Returns an array containing the values that correspond to all of a given object's own enumerable string properties.
+> exam: syntax
+    Object.values(obj)
+> exam: sample usage
+    const object1 = {
+        a: 'somestring',
+        b: 42,
+        c: false
+    };
+    console.log(Object.values(object1));
+    // expected output: Array ["somestring", 42, false]
+
+
+
+> Object.constructor
+> exam: syntax
+> exam: sample usage
+    let o = {}
+    o.constructor === Object // true
+    let o = new Object
+    o.constructor === Object // true
+    let a = []
+    a.constructor === Array // true
+    let a = new Array
+    a.constructor === Array // true
+    let n = new Number(3)
+    n.constructor === Number // true
+
+
+
+> Object.hasOwnProperty() - Returns a boolean indicating whether an object contains the specified property as a direct property of that object and not inherited through the prototype chain.
+> exam: syntax
+    obj.hasOwnProperty(prop)
+> exam: sample usage
+    const object1 = {};
+    object1.property1 = 42;
+    console.log(object1.hasOwnProperty('property1'));
+    // expected output: true
+    console.log(object1.hasOwnProperty('toString'));
+    // expected output: false
+    console.log(object1.hasOwnProperty('hasOwnProperty'));
+    // expected output: false
+
+
+
+> Object.isPrototypeOf() - Returns a boolean indicating whether the object this method is called upon is in the prototype chain of the specified object.
+> exam: syntax
+    prototypeObj.isPrototypeOf(object)
+> exam: sample usage
+    function object1() {}
+    function object2() {}
+    object1.prototype = Object.create(object2.prototype);
+    const object3 = new object1();
+    console.log(object1.prototype.isPrototypeOf(object3));
+    // expected output: true
+    console.log(object2.prototype.isPrototypeOf(object3));
+    // expected output: true
+
+
+
+> Object.propertyIsEnumerable() - Returns a boolean indicating if the internal ECMAScript [[Enumerable]] attribute is set.
+> exam: syntax
+    obj.propertyIsEnumerable(prop)
+> exam: sample usage
+    const object1 = {};
+    const array1 = [];
+    object1.property1 = 42;
+    array1[0] = 42;
+    console.log(object1.propertyIsEnumerable('property1'));
+    // expected output: true
+    console.log(array1.propertyIsEnumerable(0));
+    // expected output: true
+    console.log(array1.propertyIsEnumerable('length'));
+    // expected output: false
+
+
+
+> Object.toLocaleString() - Calls toString().
+> exam: syntax
+    obj.toLocaleString()
+> exam: sample usage
+    const date1 = new Date(Date.UTC(2012, 11, 20, 3, 0, 0));
+    console.log(date1.toLocaleString('ar-EG'));
+    // expected output: "٢٠/١٢/٢٠١٢ ٤:٠٠:٠٠ ص"
+    const number1 = 123456.789;
+    console.log(number1.toLocaleString('de-DE'));
+    // expected output: "123.456,789"
+
+
+
+> Object.toString() - Returns a string representation of the object.
+> exam: syntax
+    obj.toString()
+> exam: sample usage
+    function Dog(name) {
+        this.name = name;
+    }
+    const dog1 = new Dog('Gabby');
+    Dog.prototype.toString = function dogToString() {
+        return `${this.name}`;
+    };
+    console.log(dog1.toString());
+    // expected output: "Gabby"
+
+
+
+> Object.valueOf() - Returns the primitive value of the specified object.
+> exam: syntax
+    object.valueOf()
+> exam: sample usage
+    function MyNumberType(n) {
+        this.number = n;
+    }
+    MyNumberType.prototype.valueOf = function() {
+        return this.number;
+    };
+    const object1 = new MyNumberType(4);
+    console.log(object1 + 3);
+    // expected output: 7
+
+
+
+
+
+
+> create a person literal object with firstName, lastName, age, and eyeColor properties with values
+> show how to access the person property
+> use for...in loop to access both property and values of person object
+> add a new property 'nationality' to person object
+> delete age property of person object
+> create method fullName of person object that returns firstName and lastName of the person. Use it
+
+
+
+
+# fix 'this' issue by using '.bind' and arrow function
+const person = {
+    name: "John",
+    greet: function() {
+        setTimeout(function() {
+            console.log(`Hello, my name is ${this.name}`);
+        }, 1000);
+    }
+};    
+person.greet(); // ❌ Output: "Hello, my name is undefined" (or an error in strict mode)
+//
+const person = {
+    name: "John",
+    greet: function() {
+        setTimeout(function() {
+            console.log(`Hello, my name is ${this.name}`);
+        }.bind(this), 1000);
+    }
+};    
+person.greet(); // ✅ Output: "Hello, my name is John"
+//
+const person = {
+    name: "John",
+    greet: function() {
+        setTimeout(() => {
+            console.log(`Hello, my name is ${this.name}`);
+        }, 1000);
+    }
+};    
+person.greet(); // ✅ Output: "Hello, my name is John"
+
+
+
+# polyfilling - show an example of polyfilling a String object
+if (!String.prototype.repeat) { // if there's no such method
+    // add it to the prototype
+    String.prototype.repeat = function(n) {
+        // repeat the string n times
+        // actually, the code should be a little bit more complex than that
+        // (the full algorithm is in the specification)
+        // but even an imperfect polyfill is often considered good enough
+        return new Array(n + 1).join(this);
+    };
+}
+alert( "La".repeat(3) ); // LaLaLa
+</p>
