@@ -459,6 +459,20 @@ from django.db.models import Subquery, OuterRef
 # views.py
 
 
+
+
+# get in you db psql container
+# insert several data for a simple model with name and description columns
+
+
+
+# using django shell for inserting
+# get in your django container and run shell
+# insert a bunch of records with columns name and slug
+# slug needs to be slugify when inserting
+
+
+
 </h6>
 <p class="card-text answer-pre">
 # create sample models. Blog(category), Author, Entry, Book
@@ -1427,4 +1441,39 @@ response = {
 
 return JsonResponse(response)
 
+
+
+# get in you db psql container
+# insert several data for a simple model with name and description columns
+> docker exec -it &lt;your_db_container_name&gt; psql -U &lt;your_db_user&gt; -d &lt;your_db_name&gt;
+> INSERT INTO employees_employeeposition (name, description) VALUES
+('TABLE GAME MANAGER', ''),
+('SLOTS MANAGER', '');
+
+
+
+# using django shell for inserting
+# get in your django container and run shell
+# insert a bunch of records with columns name and slug
+# slug needs to be slugify when inserting
+> docker exec -it &lt;your_django_container&gt; python manage.py shell
+from business_codes.models import BusinessCode
+from django.utils.text import slugify
+from django.db.utils import IntegrityError
+# List of new business codes
+business_codes = [
+    "CW-NON OPS",
+    ...
+    "SP-TM",
+]
+# Insert data with error handling
+for code in business_codes:
+    try:
+        obj, created = BusinessCode.objects.get_or_create(name=code, slug=slugify(code))
+        if created:
+            print(f"Inserted: {code}")
+        else:
+            print(f"Skipped (already exists): {code}")
+    except IntegrityError:
+        print(f"Error inserting: {code}. It might already exist.")
 </p>

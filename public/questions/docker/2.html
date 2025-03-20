@@ -1,0 +1,319 @@
+<h6 class="card-title question-pre">Docker - docker-compose
+# check docker compose version
+
+
+
+# list all image id
+
+
+
+# start docker compose up
+
+
+
+# convert json below to yml
+- json
+{
+    "name": "The Ultimate Docker Course",
+    "price": 149,
+    "is_published": true,
+    "tags": ["software", "devops"],
+    "author": {
+        "first_name": "Mosh",
+        "last_name": "Hamedani"
+    }
+}
+
+
+
+# create a bash script docker-entrypoint.sh that waits for db:27017 to start
+# it then npm run a dp:up then npm start
+
+
+
+# create a Dockerfile
+# Uses Node.js version 14.16.0 with Alpine Linux 3.13 as the base image
+# Creates a new system user (app) with no home directory and group (app) in the container.
+# Switches to the app user (instead of root) for better security.
+# Sets /app as the working directory inside the container.
+# Copies package.json and package-lock.json into the container
+# Installs dependencies using npm install
+# Copies all files from the project folder into the container
+# Declares that the container will use port 3000
+# Specify the default command to run when the container starts (npm start)
+
+
+
+# create a docker-compose file
+# create services frontend, backend, and db
+# the frontend service depends on the backend service, build on './frontend', and use port 3000:3000
+# the backend service depends on db service, build on './backend', ports on 3001:3001, has enrironment variable 'DB_URL: mongodb://db/vidly', volume at './backend:/app', and with a command './docker-entrypoint.sh'
+# the db service use image 'mongo:4.0-xenial', port with 27017:27017, and use volume 'vidly:/data/db'
+# also inside the yml file, create a volume called vidly
+
+
+
+# build your docker-compose
+
+
+
+# full rebuild your docker-compose
+
+
+
+# see all containers relevent to this application
+
+
+
+# run the docker-compose
+
+
+
+# run the docker-compose in detach mode
+
+
+
+# stop docker-compose
+
+
+
+# check docker network
+
+
+
+# start a docker-compose
+# ping a different container while inside of another container
+
+
+
+# sample check mongodb container
+
+
+
+# sample check psql container
+
+
+
+# check logs for specific container 
+
+
+
+</h6>
+<p class="card-text answer-pre">
+# check docker compose version
+> docker-compose --version
+
+
+
+# list all image id
+> docker image ls -q
+
+
+
+# start docker compose up
+docker-compose up
+
+
+
+# convert json below to yml
+- json
+{
+    "name": "The Ultimate Docker Course",
+    "price": 149,
+    "is_published": true,
+    "tags": ["software", "devops"],
+    "author": {
+        "first_name": "Mosh",
+        "last_name": "Hamedani"
+    }
+}
+- yml
+---
+name: The Ultimate Docker Course
+price: 149
+is_published: true
+tags:
+    - software
+    - devops
+author:
+    first_name: Mosh
+    last_name: Hamedani
+
+
+
+# create a bash script docker-entrypoint.sh that waits for db:27017 to start
+# it then npm run a dp:up then npm start
+- backend/docker-entrypoint.sh
+#!/bin/sh
+echo "Waiting for MongoDB to start..."
+# ./wait-for 06-running-multi-container-applications-12-migrating-the-database.mp4
+./wait-for db:27017 
+echo "Migrating the databse..."
+npm run db:up 
+echo "Starting the server..."
+npm start 		
+
+
+
+# create a Dockerfile
+# Uses Node.js version 14.16.0 with Alpine Linux 3.13 as the base image
+# Creates a new system user (app) with no home directory and group (app) in the container.
+# Switches to the app user (instead of root) for better security.
+# Sets /app as the working directory inside the container.
+# Copies package.json and package-lock.json into the container
+# Installs dependencies using npm install
+# Copies all files from the project folder into the container
+# Declares that the container will use port 3000
+# Specify the default command to run when the container starts (npm start)
+- backend/Dockerfile
+FROM node:14.16.0-alpine3.13
+RUN addgroup app && adduser -S -G app app
+USER app
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . . 
+EXPOSE 3001 
+CMD ["npm", "start"]	
+
+
+
+# create a docker-compose file
+# create services frontend, backend, and db
+# the frontend service depends on the backend service, build on './frontend', and use port 3000:3000
+# the backend service depends on db service, build on './backend', ports on 3001:3001, has enrironment variable 'DB_URL: mongodb://db/vidly', volume at './backend:/app', and with a command './docker-entrypoint.sh'
+# the db service use image 'mongo:4.0-xenial', port with 27017:27017, and use volume 'vidly:/data/db'
+# also inside the yml file, create a volume called vidly
+- docker-compose.yml
+services:
+    # names inside services are arbitrary, meaning its up to you on how you name it
+    # each service should have their own Dockerfile that we can call here
+    frontend:
+        # ensures that the backend service is started before the frontend service
+        depends_on: 
+            - backend
+        # location of the Dockerfile for building the frontend service
+        build: ./frontend
+        # Maps port 3000 from the host to port 3000 in the container
+        ports:
+            - 3000:3000
+    backend: 
+        # ensures that the db service is started before the backend service
+        depends_on: 
+            - db
+        # location of the Dockerfile for building the backend service
+        build: ./backend
+        # Maps port 3001 from the host to port 3001 in the container
+        ports: 
+            - 3001:3001
+        # Sets the environment variable DB_URL with the value mongodb://db/vidly
+        environment: 
+            # DB_URL is just a variable name
+            # mongodb is a mongo db connection string, these connection strings always starts with mongodb://
+            # db is the name of the host. In our case here we have 3 host and those are db, backend, and  frontend. We put db here
+            # vidly is the database name
+            # other examples
+                # expressjs	
+                    const mongodbUrl = "mongodb://localhost:27017/";
+                # w3school connect to atlat
+                    mongosh "mongodb+srv://cluster0.ex4ht.mongodb.net/myFirstDatabase" --apiVersion 1 --username YOUR_USER_NAME
+            DB_URL: mongodb://db/vidly
+        # this is so that you can see you code changes without rebuilding the images
+        # nodemon should have -L for this to effect in package.json
+        volumes:
+            - ./backend:/app
+        # Specifies the command to run when starting the container. In this case, it's executing the docker-entrypoint.sh script
+        # this is to make sure database is loaded, migrated, before npm start of backend
+        # this command will overwrite the CMD ["npm", "start"] in the Dockerfile of backend
+        command: ./docker-entrypoint.sh
+    db:
+        # Specifies the Docker image to use for the db service, in this case, MongoDB version 4.0
+        image: mongo:4.0-xenial
+        # Maps port 27017 from the host to port 27017 in the container.
+        ports:
+            - 27017:27017
+        # Creates a named volume named vidly and mounts it to the /data/db directory in the container.
+        # This is used to persist MongoDB data.
+        volumes:
+            # vidly here is a volume name
+            # /data/db 
+                # is a directory inside this container
+                # whatever is written in /data/db also goes to vidly so data is retained even if this container is removed or if vidly volume is used by a different container
+            - vidly:/data/db
+# Defines a named volume named vidly. 
+# This volume is used by the db service to persist MongoDB data
+volumes:
+    vidly:
+
+    
+
+# build your docker-compose
+> docker-compose build
+> docker image ls
+
+
+
+# full rebuild your docker-compose
+> docker-compose build --no-cache
+
+
+
+# see all containers relevent to this application
+> docker-compose ps
+
+
+
+# run the docker-compose
+> docker-compose up
+
+
+
+# run the docker-compose in detach mode
+> docker-compose up -d
+
+
+
+# stop docker-compose
+> docker-compose down
+
+
+
+# check docker network
+> docker network ls
+
+
+# start a docker-compose
+# ping a different container while inside of another container
+> docker ps
+> docker exec -it conatineridofweb sh
+# or interact shell using root
+> docker exec -it -u root conatineridofweb sh
+> ping backend
+> ctrl c
+# check ipaddress of current container
+> ifconfig
+
+
+
+# sample check mongodb container
+> docker exec -it -u root conatineridofmongo sh
+> mongo
+> show dbs
+> use vidly
+> show collections
+> db.movies.find()
+
+
+
+# sample check psql container
+> docker exec it containerOfPsqlDb bash
+> psql -U username -d databasename
+> \dt
+> exit
+
+
+
+# check logs for specific container 
+> docker ps
+> docker logs -f containerid
+</p>
